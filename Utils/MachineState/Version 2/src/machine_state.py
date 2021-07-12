@@ -36,9 +36,9 @@ class MachineState(object):
         self.simulation_defaults_set = False
 
     # Initialises CATAP hardware factories
-    def initialiseCATAP(self, mode):
+    def initialiseCATAP(self, mode, crest_phases=None):
         if not self.CATAPInitialised:
-            self.getDataFromCATAP.initCATAP(mode)
+            self.getDataFromCATAP.initCATAP(mode, crest_phases=crest_phases)
             self.CATAPInitialised = True
         else:
             print("CATAP already initialised")

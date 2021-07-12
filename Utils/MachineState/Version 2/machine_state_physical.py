@@ -1,5 +1,8 @@
 import os, sys
 sys.path.append(os.path.join(sys.path[0],'src'))
+# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56\\new_pc\\build\\PythonInterface\\Release\\CATAP')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin\\CATAP')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\SimFrame')
 import src.machine_state as machine_state
 from CATAP.HardwareFactory import *
 import time
@@ -7,9 +10,16 @@ import time
 # Get machine state class
 machinestate = machine_state.MachineState()
 
+gun_name = 'CLA-GUN-LRF-CTRL-01'
+l01_name = 'CLA-L01-LRF-CTRL-01'
+
+crest_phases = {}
+crest_phases.update({gun_name: 0})
+crest_phases.update({l01_name: 0})
+
 # Set up CATAP
 mode = STATE.PHYSICAL
-machinestate.initialiseCATAP(mode)
+machinestate.initialiseCATAP(mode, crest_phases=crest_phases)
 time.sleep(1)
 
 # Get the dictionary containing all CATAP hardware objects (used for controlling and monitoring the machine)
@@ -28,28 +38,28 @@ time.sleep(1)
 # Saves the physical machine state to a .yml file
 machinestate.exportParameterValuesToYAMLFile("catap-test.yaml",catapdata)
 
-# Reads the machine state file
-machinestatefile = machinestate.parseParameterInputFile("catap-test.yaml")
+# # Reads the machine state file
+# machinestatefile = machinestate.parseParameterInputFile("catap-test.yaml")
 
-# Set the end point of the simulation (by machine area)
-machinestate.updateLatticeEnd(machinestatefile, 'CLA-C2V')
+# # Set the end point of the simulation (by machine area)
+# machinestate.updateLatticeEnd(machinestatefile, 'CLA-C2V')
 
-# Set up simframe
-machinestate.getMachineStateFromSimFrame('test','Lattices/CLA10-BA1_OM.def')
-time.sleep(1)
-machinestate.initialiseSimFrameData()
-simframedata = machinestate.getSimFrameDataDict()
-framework = machinestate.getFramework()
+# # Set up simframe
+# machinestate.getMachineStateFromSimFrame('test','Lattices/CLA10-BA1_OM.def')
+# time.sleep(1)
+# machinestate.initialiseSimFrameData()
+# simframedata = machinestate.getSimFrameDataDict()
+# framework = machinestate.getFramework()
 
-# We have to fudge this for now as the conversion between current and solenoid strength doesn't work
-catapdata['INJ']['CLA-GUN-MAG-SOL-02'].update({'field_amplitude': 0.255})
-catapdata['INJ']['CLA-LRG1-MAG-SOL-01'].update({'field_amplitude': -0.07})
+# # We have to fudge this for now as the conversion between current and solenoid strength doesn't work
+# catapdata['INJ']['CLA-GUN-MAG-SOL-02'].update({'field_amplitude': 0.255})
+# catapdata['INJ']['CLA-LRG1-MAG-SOL-01'].update({'field_amplitude': -0.07})
 
-# # Write machine state dictionary to simframe and runs simulation to the 'test' directory
-simframefileupdate = machinestate.writeMachineStateToSimFrame('test', framework,
-                                                              'Lattices/CLA10-BA1_OM.def', datadict=catapdata,
-                                                              run=True, type='CATAP',
-                                                              sections=['INJ', 'CLA-S02', 'CLA-C2V'])
+# # # Write machine state dictionary to simframe and runs simulation to the 'test' directory
+# simframefileupdate = machinestate.writeMachineStateToSimFrame('test', framework,
+                                                              # 'Lattices/CLA10-BA1_OM.def', datadict=catapdata,
+                                                              # run=True, type='CATAP',
+                                                              # sections=['INJ', 'CLA-S02', 'CLA-C2V'])
 
-# Saves the machine state from the simulation to a .yml file
-machinestate.exportParameterValuesToYAMLFile("simframe-test.yaml", simframefileupdate)
+# # Saves the machine state from the simulation to a .yml file
+# machinestate.exportParameterValuesToYAMLFile("simframe-test.yaml", simframefileupdate)

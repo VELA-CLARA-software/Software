@@ -12,7 +12,8 @@ for item in sys.path:
     continue
   else:
     sys.path.remove(item)
-sys.path.append("\\\\192.168.83.14\\claranet\\test\\CATAP\\bin\\")
+# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56\\new_pc\\build\\PythonInterface\\Release\\CATAP')
+sys.path.append('\\\\192.168.83.14\\claranet\\packages\\CATAP\\bin\\')
 sys.path.append('\\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64')
 
 

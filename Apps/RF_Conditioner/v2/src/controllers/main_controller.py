@@ -435,9 +435,10 @@ class main_controller(object):
         '''
         rcd = rf_conditioning_data
         #TODO AJG: update the time/pulses until BDR is low enough to ramp countdowns
-
-        if self.data.values[rcd.breakdown_rate_low] == False:
-            self.data.breakdown_rate_able_to_ramp_countdown()
+        #TODO AJG: ************** This crashes when BDR is high - why now? it was fine before ***************************
+        # if self.data.values[rcd.breakdown_rate_low] == False:
+        #     self.data.breakdown_rate_able_to_ramp_countdown()
+        #TODO AJG: ******************************************************************************************************
 
         #print('\nFrom can_ramp_state\ncan_ramp_status_OLD = {}\ncan_ramp_status = {}'.format(self.data.values[rcd.BD_state_OLD],
         # self.data.values[rcd.BD_state]))

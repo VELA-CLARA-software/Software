@@ -17,14 +17,14 @@ mag_control = init.getMagnetController(MACHINE_MODE.PHYSICAL,MACHINE_AREA.CLARA_
 
 
 # sine wave paramters
-mean_current_sol = 105 # the nominal setting of the solenoid Max 250, (or maybe 300)
-Amplitude_sol  = 105# +- Amps from nominal_current (peak of sin wave)
+mean_current_sol = 155 # the nominal setting of the solenoid Max 250, (or maybe 300)
+Amplitude_sol  = 55# +- Amps from nominal_current (peak of sin wave)
 mean_current_bsol = -1.0*0.9*mean_current_sol # the nominal setting of the solenoid Max 250, (or maybe 300) 
 #mean_current_bsol = -100 # the nominal setting of the solenoid Max 250, (or maybe 300) 
 Amplitude_bsol  = 0.9*Amplitude_sol # +- Amps from nominal_current (peak of sin wave)
 #Amplitude_bsol  = 75# +- Amps from nominal_current (peak of sin wave)
-numPoints_sol = 109 # number of points per period
-numPoints_Bsol = 109 # number of points per period
+numPoints_sol = 120# number of points per period
+numPoints_Bsol = 120 # number of points per period
 wait_time = 1 # time in seconds between set points
 # magnet to wobble, name as defined in mag_control 
 solenoid = 'LRG-SOL'
@@ -38,7 +38,7 @@ for point in range(0, numPoints_sol):
 for point in range(0, numPoints_Bsol):
 	current_changes_bsol.append( mean_current_bsol -  Amplitude_bsol * np.sin( ( 2*np.pi / numPoints_Bsol) * point ) )
 	#print current_changes[point]
-# set the tolerance for the magnet  current readi = seti
+# set the tolerance for the magnet  curparent readi = seti
 mag_control.setRITolerance(solenoid,5.0)
 mag_control.setRITolerance(bsolenoid,5.0)
 

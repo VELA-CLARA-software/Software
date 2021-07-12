@@ -359,7 +359,7 @@ class GetDataFromCATAP(object):
             self.magnetdata[name]['SETI'] = self.magDict[name].getSETI()
             self.magnetdata[name]['type'] = self.type_alias[self.magFac.getMagnetType(name)]
             self.magnetdata[name]['psu_state'] = str(self.magDict[name].psu_state)
-            # self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].getFieldIntegralCoefficients()
+            self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].getFieldIntegralCoefficients()
             self.magnetdata[name]['magnetic_length'] = self.magDict[name].magnetic_length * 0.001
             self.energy_at_magnet = 0
             if "GUN" in name or "LRG1" in name:
@@ -372,7 +372,7 @@ class GetDataFromCATAP(object):
                 self.energy_at_magnet = energy[self.linac_position['L01']]
             self.unitConversion.currentToK(self.magnetdata[name]['type'],
                                            self.magDict[name].READI,
-                                           self.magDict[name].getFieldIntegralCoefficients(),
+                                           self.magnetdata[name]['field_integral_coefficients'],
                                            self.magnetdata[name]['magnetic_length'],
                                            self.energy_at_magnet,
                                            self.magnetdata[name],
