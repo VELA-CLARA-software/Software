@@ -1,4 +1,4 @@
-from CATAP.HardwareFactory import TYPE
+from CATAP.HardwareFactory import TYPE, STATE
 
 alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                "L01": "CLA-L01-CAV",
@@ -67,6 +67,20 @@ type_alias = {TYPE.QUADRUPOLE: "quadrupole",
               "SOL": 'solenoid',
               "HCOR": 'kicker',
               "VCOR": 'kicker'}
+
+state_alias = {STATE.GOOD: "GOOD",
+              STATE.BAD: "BAD",
+              STATE.NONLINEAR: "NONLINEAR"}
+
+vc_rf_centre = {'x_pix': 984,
+                'y_pix': 1113,
+                'x_mm': 5.898,
+                'y_mm': 6.678}
+
+vc_mechanical_centre = {'x_pix': 1080,
+                'y_pix': 1000,
+                'x_mm': 6.48,
+                'y_mm': 6.0}
 
 gun_kly_fwd_power_max = 9.9 * 10 ** 6
 
