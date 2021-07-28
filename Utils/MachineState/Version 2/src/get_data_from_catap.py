@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, time
 import numpy
 import CATAP.HardwareFactory
 import CATAP.EPICSTools
@@ -93,17 +93,18 @@ class GetDataFromCATAP(object):
             self.mode = CATAP.HardwareFactory.STATE.OFFLINE
         self.hf = CATAP.HardwareFactory.HardwareFactory(self.mode)
         self.epics_tools = CATAP.HardwareFactory.EPICSTools(self.mode)
-        self.hf.debugMessagesOff()
-        self.hf.messagesOff()
+
         self.llrf_types = [CATAP.HardwareFactory.TYPE.LRRG_GUN, CATAP.HardwareFactory.TYPE.L01]
         # self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
         self.llrf_factory = self.hf.getLLRFFactory(self.llrf_types)
-        # self.llrf_factory.messagesOff()
-        # self.llrf_factory.debugMessagesOff()
+        time.sleep(1)
+        self.llrf_factory.messagesOff()
+        self.llrf_factory.debugMessagesOff()
         self.llrf_names = self.llrf_factory.getLLRFNames()
         self.gunname = self.llrf_names[0]
         self.linacnames = self.llrf_names[1:]
         self.gunLLRFObj = self.llrf_factory.getLLRF(self.llrf_names[0])
+        time.sleep(1)
         # self.gunLLRFObj.messagesOff()
         # self.gunLLRFObj.debugMessagesOff()
         self.linacLLRFObj = {}
@@ -118,6 +119,7 @@ class GetDataFromCATAP(object):
             self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
         for key in self.linacnames:
             self.linacLLRFObj[key] = self.llrf_factory.getLLRF(key)
+            time.sleep(1)
             # self.linacLLRFObj[key].messagesOff()
             # self.linacLLRFObj[key].debugMessagesOff()
             self.linacStartTimes.update({key: 0.1})  # MAGIC NUMBER
@@ -127,24 +129,31 @@ class GetDataFromCATAP(object):
             self.linacDataSet.update({key: False})
             self.linacEnergyGain.update({key: 0.0})
         self.chargeFac = self.hf.getChargeFactory()
+        time.sleep(1)
         self.bpmFac = self.hf.getBPMFactory()
+        time.sleep(1)
         self.scrFac = self.hf.getScreenFactory()
+        time.sleep(1)
         self.magFac = self.hf.getMagnetFactory()
-        # self.chargeFac.messagesOff()
-        # self.chargeFac.debugMessagesOff()
-        # self.bpmFac.messagesOff()
-        # self.bpmFac.debugMessagesOff()
-        # self.magFac.messagesOff()
-        # self.magFac.debugMessagesOff()
+        time.sleep(1)
+        self.chargeFac.messagesOff()
+        self.chargeFac.debugMessagesOff()
+        self.bpmFac.messagesOff()
+        self.bpmFac.debugMessagesOff()
+        self.magFac.messagesOff()
+        self.magFac.debugMessagesOff()
         if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
             self.magFac.switchOnAll()
         if not self.epics_tools_types['camera']:
             self.camFac = self.hf.getCameraFactory()
-            # self.camFac.messagesOff()
-            # self.camFac.debugMessagesOff()
+            time.sleep(1)
+            self.camFac.messagesOff()
+            self.camFac.debugMessagesOff()
 
         # #self.pilFac = hf.getPILa()
         # #self.camFac = hf.getcam()
+        self.hf.debugMessagesOff()
+        self.hf.messagesOff()
         return True
 
     def useOnlineModelLattice(self, om=False):
@@ -309,33 +318,33 @@ class GetDataFromCATAP(object):
                 self.cameradata[name]['screen'] = self.cameraDict[name].getScreen()
                 if self.cameradata[name]['screen'] in self.screen_alias.keys():
                     self.cameradata[name].update({'screen': self.screen_alias[self.cameradata[name]['screen']]})
-                # if self.cameradata[name]['acquiring']:
-                self.cameradata[name]['x_pix_abs'] = self.cameraDict[name].getXPix()
-                self.cameradata[name]['y_pix_abs'] = self.cameraDict[name].getYPix()
-                self.cameradata[name]['x_pix'] = self.cameradata[name]['x_pix_abs'] - \
-                                                 aliases.vc_mechanical_centre[
-                                                     'x_pix']
-                self.cameradata[name]['y_pix'] = self.cameradata[name]['y_pix_abs'] - \
-                                                 aliases.vc_mechanical_centre[
-                                                     'y_pix']
-                # self.cameradata[name]['xy_pix'] = self.cameraDict[name].getXYPix()
-                self.cameradata[name]['x_mm_abs'] = self.cameraDict[name].getXmm()
-                self.cameradata[name]['y_mm_abs'] = self.cameraDict[name].getYmm()
-                self.cameradata[name]['x_mm'] = self.cameradata[name]['x_mm_abs'] - \
-                                                aliases.vc_mechanical_centre[
-                                                    'x_mm']
-                self.cameradata[name]['y_mm'] = self.cameradata[name]['y_mm_abs'] - \
-                                                aliases.vc_mechanical_centre[
-                                                    'y_mm']
-                # self.cameradata[name]['xy_mm'] = self.cameraDict[name].getXYmm()
-                self.cameradata[name]['x_pix_sig'] = self.cameraDict[name].getSigXPix()
-                self.cameradata[name]['y_pix_sig'] = self.cameraDict[name].getSigYPix()
-                # self.cameradata[name]['xy_pix_sig'] = self.cameraDict[name].getSigXYPix()
-                self.cameradata[name]['x_mm_sig'] = self.cameraDict[name].getSigXmm()
-                self.cameradata[name]['y_mm_sig'] = self.cameraDict[name].getSigYmm()
-                # self.cameradata[name]['xy_mm_sig'] = self.cameraDict[name].getSigXYmm()
-                self.cameradata[name]['sum_intensity'] = self.cameraDict[name].getSumIntensity()
-                self.cameradata[name]['avg_intensity'] = self.cameraDict[name].getAvgIntensity()
+                if self.cameradata[name]['acquiring']:
+                    self.cameradata[name]['x_pix_abs'] = self.cameraDict[name].getXPix()
+                    self.cameradata[name]['y_pix_abs'] = self.cameraDict[name].getYPix()
+                    self.cameradata[name]['x_pix'] = self.cameradata[name]['x_pix_abs'] - \
+                                                     aliases.vc_mechanical_centre[
+                                                         'x_pix']
+                    self.cameradata[name]['y_pix'] = self.cameradata[name]['y_pix_abs'] - \
+                                                     aliases.vc_mechanical_centre[
+                                                         'y_pix']
+                    # self.cameradata[name]['xy_pix'] = self.cameraDict[name].getXYPix()
+                    self.cameradata[name]['x_mm_abs'] = self.cameraDict[name].getXmm()
+                    self.cameradata[name]['y_mm_abs'] = self.cameraDict[name].getYmm()
+                    self.cameradata[name]['x_mm'] = self.cameradata[name]['x_mm_abs'] - \
+                                                    aliases.vc_mechanical_centre[
+                                                        'x_mm']
+                    self.cameradata[name]['y_mm'] = self.cameradata[name]['y_mm_abs'] - \
+                                                    aliases.vc_mechanical_centre[
+                                                        'y_mm']
+                    # self.cameradata[name]['xy_mm'] = self.cameraDict[name].getXYmm()
+                    self.cameradata[name]['x_pix_sig'] = self.cameraDict[name].getSigXPix()
+                    self.cameradata[name]['y_pix_sig'] = self.cameraDict[name].getSigYPix()
+                    # self.cameradata[name]['xy_pix_sig'] = self.cameraDict[name].getSigXYPix()
+                    self.cameradata[name]['x_mm_sig'] = self.cameraDict[name].getSigXmm()
+                    self.cameradata[name]['y_mm_sig'] = self.cameraDict[name].getSigYmm()
+                    # self.cameradata[name]['xy_mm_sig'] = self.cameraDict[name].getSigXYmm()
+                    self.cameradata[name]['sum_intensity'] = self.cameraDict[name].getSumIntensity()
+                    self.cameradata[name]['avg_intensity'] = self.cameraDict[name].getAvgIntensity()
             else:
                 for key, value in aliases.camera_epics_tools.items():
                     self.cameradata[name][key] = float(

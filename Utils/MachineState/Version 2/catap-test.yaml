@@ -1,81 +1,67 @@
 CLA-C2V:
   CLA-C2V-DIA-BPM-01:
-    q: 0.0
-    resolution: 0.0
+    q: 45.1171953235291
+    resolution: 0.00034170711516865485
     type: bpm
-    x: .nan
-    y: .nan
+    x: 1.6960408920319205
+    y: -4.129136379319404
   CLA-C2V-DIA-CAM-01:
     acquiring: false
-    avg_intensity: 97.76232259114583
     screen: CLA-C2V-DIA-SCR-01
-    sum_intensity: 540586539.0
     type: camera
-    x_mm: 14.18521329464497
-    x_mm_abs: 20.66521329464497
-    x_mm_sig: 4.523166845249738
-    x_pix: 74.48118964497053
-    x_pix_abs: 1154.4811896449705
-    x_pix_sig: 252.69088520948262
-    y_mm: 20.639116656402244
-    y_mm_abs: 26.639116656402244
-    y_mm_sig: 5.004169602351204
-    y_pix: 488.21880762023716
-    y_pix_abs: 1488.2188076202372
-    y_pix_sig: 279.5625476173857
   CLA-C2V-DIA-SCR-01:
     state: VRF
     type: screen
   CLA-C2V-MAG-DIP-01:
-    READI: -0.04
-    SETI: 0.0
-    angle: -0.15304855930549152
-    energy: 4.392442333398349
+    READI: 70.8
+    SETI: 70.8
+    angle: 82.36490321270384
+    energy: 36.622242149356914
     magnetic_length: 399.21600341796875
     position: 6.226873397827148
     psu_state: ON
     type: dipole
   CLA-C2V-MAG-DIP-02:
-    READI: -0.03
+    READI: -0.04
     SETI: 0.0
-    angle: 6.781978541726508
-    energy: 4.392442333398349
+    angle: 0.7401992513168953
+    energy: 36.622242149356914
     magnetic_length: 397.75201416015625
     position: 7.972725868225098
     psu_state: ON
     type: dipole
   CLA-C2V-MAG-HCOR-01:
-    READI: 0.712575
-    SETI: 0.71
-    angle: 6.9909444135060115
-    energy: 4.392442333398349
+    READI: 0.00225932
+    SETI: 0.0
+    angle: 0.030129122800669508
+    energy: 36.622242149356914
     magnetic_length: 137.0
     position: 6.536928176879883
     psu_state: ON
     type: kicker
   CLA-C2V-MAG-QUAD-01:
-    READI: -0.09
-    SETI: 0.0
-    energy: 4.392442333398349
-    k1: -0.0006960614499078767
+    READI: 6.94
+    SETI: 7.0
+    energy: 36.622242149356914
+    k1: 2.308934118044636
     magnetic_length: 121.56727600097656
     position: 6.6601481437683105
     psu_state: ON
     type: quadrupole
   CLA-C2V-MAG-QUAD-02:
-    READI: -0.05
-    SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.008489119264863537
+    READI: -6.1000000000000005
+    SETI: -6.125
+    energy: 36.622242149356914
+    k1: -0.0050658713369952525
     magnetic_length: 121.51190185546875
     position: 6.950148105621338
     psu_state: ON
     type: quadrupole
   CLA-C2V-MAG-QUAD-03:
-    READI: -0.01
-    SETI: 0.0
-    energy: 4.392442333398349
-    k1: -7.493777372031403e-05
+    READI: 6.98
+    SETI: 7.0
+    energy: 36.622242149356914
+    k1: 0.344451499601851
     magnetic_length: 121.55075073242188
     position: 7.240148067474365
     psu_state: ON
@@ -83,146 +69,104 @@ CLA-C2V:
   CLA-C2V-MAG-VCOR-01:
     READI: 0.00570516
     SETI: 0.0
-    angle: 0.290115482424892
-    energy: 4.392442333398349
+    angle: 0.03479621813924785
+    energy: 36.622242149356914
     magnetic_length: 140.0
     position: 6.536928176879883
     psu_state: ON
     type: kicker
 CLA-S01:
   CLA-S01-DIA-BPM-01:
-    q: 45.077937244105776
-    resolution: 0.0012272019662098823
+    q: 43.80324225252578
+    resolution: 0.001227238540608845
     type: bpm
-    x: 0.32475231238087643
-    y: -0.09721999081747731
+    x: 1.0712087803184394
+    y: 1.1190335692806495
   CLA-S01-DIA-CAM-01:
-    acquiring: false
-    avg_intensity: 95.89897117332175
+    acquiring: true
+    avg_intensity: 97.07631058304398
     screen: CLA-S01-DIA-SCR-01
-    sum_intensity: 530282951.0
+    sum_intensity: 536793167.0
     type: camera
-    x_mm: 0.5943497237103523
-    x_mm_abs: 7.074349723710353
-    x_mm_sig: 0.7071690080641467
-    x_pix: -552.0634534544513
-    x_pix_abs: 527.9365465455487
-    x_pix_sig: 52.77380657195125
-    y_mm: 0.8354624740960643
-    y_mm_abs: 6.835462474096064
-    y_mm_sig: 0.5156555595850943
-    y_pix: -489.89086014208476
-    y_pix_abs: 510.10913985791524
-    y_pix_sig: 38.48175817799211
+    x_mm: -3.3370305186199465
+    x_mm_abs: 3.142969481380054
+    x_mm_sig: 0.3172685433252581
+    x_pix: -556.1717531033244
+    x_pix_abs: 523.8282468966756
+    x_pix_sig: 52.878090554209685
+    y_mm: -2.9519792887355036
+    y_mm_abs: 3.0480207112644964
+    y_mm_sig: 0.22754730520767186
+    y_pix: -491.99654812258393
+    y_pix_abs: 508.00345187741607
+    y_pix_sig: 37.92455086794531
   CLA-S01-DIA-SCR-01:
     state: VRF
     type: screen
   CLA-S01-DIA-WCM-01:
-    q: 81.26208403875833
+    q: 78.46099686145851
     type: charge
   CLA-S01-MAG-HCOR-01:
-    READI: -2.69
-    SETI: -2.69
-    angle: -4.102387890861274
-    energy: 4.385044375635556
+    READI: -2.00001
+    SETI: -2.0
+    angle: -2.9839108336956093
+    energy: 4.391018147163783
     magnetic_length: 131.2453155517578
     position: 0.35482001304626465
     psu_state: ON
     type: kicker
   CLA-S01-MAG-HCOR-02:
-    READI: -0.780009
-    SETI: -0.78
-    angle: -1.2480763528640146
-    energy: 4.385044375635556
+    READI: 0.55
+    SETI: 0.55
+    angle: 0.8788464265950293
+    energy: 4.391018147163783
     magnetic_length: 125.0
     position: 0.9376999735832214
     psu_state: ON
     type: kicker
   CLA-S01-MAG-VCOR-01:
-    READI: -0.289993
-    SETI: -0.29
-    angle: -0.22163511158647867
-    energy: 4.385044375635556
+    READI: 0.400003
+    SETI: 0.4
+    angle: 0.8695729984035241
+    energy: 4.391018147163783
     magnetic_length: 128.6509552001953
     position: 0.35482001304626465
     psu_state: ON
     type: kicker
   CLA-S01-MAG-VCOR-02:
-    READI: 0.649988
-    SETI: 0.65
-    angle: 1.0400324258378753
-    energy: 4.385044375635556
+    READI: -0.099997
+    SETI: -0.1
+    angle: -0.15978546567313298
+    energy: 4.391018147163783
     magnetic_length: 125.0
     position: 0.9376999735832214
     psu_state: ON
     type: kicker
 CLA-S02:
   CLA-S02-DIA-BPM-01:
-    q: 26.41825219584776
-    resolution: -8.854322024156185e-05
+    q: 52.46314823449535
+    resolution: -0.0004970537701876483
     type: bpm
-    x: -2.138303565543955
-    y: 1.3621574450557816
+    x: 0.9600307483661066
+    y: -0.48280077520607917
   CLA-S02-DIA-BPM-02:
-    q: 50.2491130087967
-    resolution: -0.0014206209320043544
+    q: 47.12999835478196
+    resolution: -0.0006500560990565518
     type: bpm
-    x: 15.050424848332401
-    y: 0.7207891905302075
+    x: 15.046792747883469
+    y: 0.2580844492964307
   CLA-S02-DIA-CAM-01:
     acquiring: false
-    avg_intensity: 97.12323260271991
     screen: CLA-S02-DIA-SCR-01
-    sum_intensity: 537052627.0
     type: camera
-    x_mm: 16.259464037866515
-    x_mm_abs: 22.739464037866515
-    x_mm_sig: 3.9904342883143693
-    x_pix: 18.52483274717474
-    x_pix_abs: 1098.5248327471747
-    x_pix_sig: 192.77460330021108
-    y_mm: 18.829747000042154
-    y_mm_abs: 24.829747000042154
-    y_mm_sig: 4.69228524176194
-    y_pix: 199.50468599237456
-    y_pix_abs: 1199.5046859923746
-    y_pix_sig: 226.6804464619295
   CLA-S02-DIA-CAM-02:
     acquiring: false
-    avg_intensity: 122.36449580439815
     screen: CLA-S02-DIA-SCR-02
-    sum_intensity: 676626716.0
     type: camera
-    x_mm: 8.38142706929511
-    x_mm_abs: 14.861427069295111
-    x_mm_sig: 0.43829869834967805
-    x_pix: 138.14975977828772
-    x_pix_abs: 1218.1497597782877
-    x_pix_sig: 35.92612281554738
-    y_mm: 8.74163194433952
-    y_mm_abs: 14.74163194433952
-    y_mm_sig: 0.3880056219943717
-    y_pix: 208.3304872409442
-    y_pix_abs: 1208.3304872409442
-    y_pix_sig: 31.803739507735386
   CLA-S02-DIA-CAM-03:
     acquiring: false
-    avg_intensity: 96.54037778501157
     screen: CLA-S02-DIA-SCR-03
-    sum_intensity: 533829673.0
     type: camera
-    x_mm: 5.150713996643102
-    x_mm_abs: 11.630713996643102
-    x_mm_sig: 1.6107548611894738
-    x_pix: -437.41911620756343
-    x_pix_abs: 642.5808837924366
-    x_pix_sig: 88.99198128118638
-    y_mm: 3.692471033640633
-    y_mm_abs: 9.692471033640633
-    y_mm_sig: 0.8237388937108384
-    y_pix: -464.5043627822855
-    y_pix_abs: 535.4956372177145
-    y_pix_sig: 45.5104361166209
   CLA-S02-DIA-SCR-01:
     state: VRF
     type: screen
@@ -233,19 +177,19 @@ CLA-S02:
     state: VRF
     type: screen
   CLA-S02-MAG-HCOR-01:
-    READI: -0.0361322
-    SETI: -0.04
-    angle: -0.1444637628298064
-    energy: 4.392442333398349
+    READI: -0.176289
+    SETI: -0.18
+    angle: -0.36053130355317625
+    energy: 36.622242149356914
     magnetic_length: 163.0
     position: 3.44808030128479
     psu_state: ON
     type: kicker
   CLA-S02-MAG-HCOR-02:
-    READI: -0.266839
-    SETI: -0.27
-    angle: -4.854648878433441
-    energy: 4.392442333398349
+    READI: 0.00333399
+    SETI: 0.0
+    angle: 0.07931468989847681
+    energy: 36.622242149356914
     magnetic_length: 163.0
     position: 3.44808030128479
     psu_state: ON
@@ -253,17 +197,17 @@ CLA-S02:
   CLA-S02-MAG-HCOR-03:
     READI: 0.00503359
     SETI: 0.0
-    angle: 0.695990403801021
-    energy: 4.392442333398349
+    angle: 0.08347653048731475
+    energy: 36.622242149356914
     magnetic_length: 163.0
     position: 3.44808030128479
     psu_state: ON
     type: kicker
   CLA-S02-MAG-QUAD-01:
-    READI: -0.1
+    READI: -0.09
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.005185739164828185
+    energy: 36.622242149356914
+    k1: 0.000622454227532445
     magnetic_length: 128.68478393554688
     position: 3.577500343322754
     psu_state: ON
@@ -271,8 +215,8 @@ CLA-S02:
   CLA-S02-MAG-QUAD-02:
     READI: -0.11
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.005236949326584263
+    energy: 36.622242149356914
+    k1: 0.0006281154994862766
     magnetic_length: 126.8172836303711
     position: 3.9775002002716064
     psu_state: ON
@@ -280,8 +224,8 @@ CLA-S02:
   CLA-S02-MAG-QUAD-03:
     READI: -0.07
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.005083984898352719
+    energy: 36.622242149356914
+    k1: 0.000609769068720838
     magnetic_length: 127.24199676513672
     position: 5.277500152587891
     psu_state: ON
@@ -289,8 +233,8 @@ CLA-S02:
   CLA-S02-MAG-QUAD-04:
     READI: -0.09
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.0050121602191597675
+    energy: 36.622242149356914
+    k1: 0.0006011544743390076
     magnetic_length: 127.42166137695312
     position: 5.677500247955322
     psu_state: ON
@@ -298,35 +242,35 @@ CLA-S02:
   CLA-S02-MAG-QUAD-05:
     READI: -0.1
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.005008081670558021
+    energy: 36.622242149356914
+    k1: 0.0006006652964928215
     magnetic_length: 127.16256713867188
     position: 11.662802696228027
     psu_state: ON
     type: quadrupole
   CLA-S02-MAG-VCOR-01:
-    READI: 0.102801
-    SETI: 0.1
-    angle: 2.6920416661527073
-    energy: 4.392442333398349
+    READI: -0.0968243
+    SETI: -0.1
+    angle: -0.16594468679639265
+    energy: 36.622242149356914
     magnetic_length: 163.0
     position: 3.44808030128479
     psu_state: ON
     type: kicker
   CLA-S02-MAG-VCOR-02:
-    READI: 0.712353
-    SETI: 0.01
-    angle: 15.136853685505526
-    energy: 4.392442333398349
+    READI: -0.0982854
+    SETI: -0.1
+    angle: -0.16952250821575665
+    energy: 36.622242149356914
     magnetic_length: 163.0
     position: 3.44808030128479
     psu_state: ON
     type: kicker
   CLA-S02-MAG-VCOR-03:
-    READI: -0.264785
-    SETI: 0.07
-    angle: -4.812713745929979
-    energy: 4.392442333398349
+    READI: 0.00545607
+    SETI: 0.0
+    angle: 0.08451106473771028
+    energy: 36.622242149356914
     magnetic_length: 163.0
     position: 3.44808030128479
     psu_state: ON
@@ -357,46 +301,46 @@ EBT-BA1:
     x: 1.4678699177461119
     y: -1.9729958384992572
   EBT-BA1-MAG-DIP-01:
-    READI: 0.1066008530438545
+    READI: 0.10319275195470247
     SETI: 0.0
     angle: 0.0
-    energy: 0.007397957762792545
+    energy: 32.23122400219313
     magnetic_length: 0.0
     position: 0.0
     psu_state: ON
     type: dipole
   EBT-BA1-MAG-HCOR-01:
-    READI: 0.946961128
+    READI: 0.95977852
     SETI: 1.0
-    angle: 0.0
-    energy: 0.007397957762792545
+    angle: 0
+    energy: 32.23122400219313
     magnetic_length: 182.25352478027344
     position: 0.0
-    psu_state: ON
+    psu_state: ERR
     type: kicker
   EBT-BA1-MAG-HCOR-02:
-    READI: -0.0076294
+    READI: 0.003662112
     SETI: 0.0
     angle: 0
-    energy: 0.007397957762792545
+    energy: 32.23122400219313
     magnetic_length: 182.25352478027344
     position: 0.0
     psu_state: ERR
     type: kicker
   EBT-BA1-MAG-HCOR-03:
-    READI: -0.001831056
+    READI: 0.000305176
     SETI: 0.0
-    angle: 0
-    energy: 0.007397957762792545
+    angle: 0.0
+    energy: 32.23122400219313
     magnetic_length: 182.25352478027344
     position: 0.0
-    psu_state: ERR
+    psu_state: ON
     type: kicker
   EBT-BA1-MAG-QUAD-01:
     READI: -0.0
     SETI: 0.0
-    energy: 0.007397957762792545
-    k1: 917.755141170626
+    energy: 32.23122400219313
+    k1: 0.210650199648143
     magnetic_length: 70.42359924316406
     position: 0.0
     psu_state: ON
@@ -404,8 +348,8 @@ EBT-BA1:
   EBT-BA1-MAG-QUAD-02:
     READI: -0.0
     SETI: 0.0
-    energy: 0.007397957762792545
-    k1: 916.1611687760185
+    energy: 32.23122400219313
+    k1: 0.21028433887755726
     magnetic_length: 70.42359924316406
     position: 0.0
     psu_state: ON
@@ -413,8 +357,8 @@ EBT-BA1:
   EBT-BA1-MAG-QUAD-03:
     READI: -0.0
     SETI: 0.0
-    energy: 0.007397957762792545
-    k1: 915.0448324697036
+    energy: 32.23122400219313
+    k1: 0.2100281088056671
     magnetic_length: 70.42359924316406
     position: 0.0
     psu_state: ON
@@ -422,8 +366,8 @@ EBT-BA1:
   EBT-BA1-MAG-QUAD-04:
     READI: -0.0
     SETI: 0.0
-    energy: 0.007397957762792545
-    k1: -64384.42345666065
+    energy: 32.23122400219313
+    k1: -14.778006732903318
     magnetic_length: -1.0
     position: 0.0
     psu_state: ON
@@ -431,8 +375,8 @@ EBT-BA1:
   EBT-BA1-MAG-QUAD-05:
     READI: -0.0
     SETI: 0.0
-    energy: 0.007397957762792545
-    k1: -64553.40963160139
+    energy: 32.23122400219313
+    k1: -14.81679373598525
     magnetic_length: -1.0
     position: 0.0
     psu_state: ON
@@ -440,8 +384,8 @@ EBT-BA1:
   EBT-BA1-MAG-QUAD-06:
     READI: -0.0
     SETI: 0.0
-    energy: 0.007397957762792545
-    k1: -64280.281094825004
+    energy: 32.23122400219313
+    k1: -14.75410317919015
     magnetic_length: -1.0
     position: 0.0
     psu_state: ON
@@ -449,44 +393,44 @@ EBT-BA1:
   EBT-BA1-MAG-QUAD-07:
     READI: -0.003
     SETI: 0.0
-    energy: 0.007397957762792545
-    k1: -13.617173956234218
+    energy: 32.23122400219313
+    k1: -0.0031255182170545166
     magnetic_length: -1.0
     position: 0.0
     psu_state: ON
     type: quadrupole
   EBT-BA1-MAG-VCOR-01:
-    READI: -0.007324224
+    READI: 0.004272464
     SETI: 0.0
     angle: 0
-    energy: 0.007397957762792545
+    energy: 32.23122400219313
     magnetic_length: 182.25352478027344
     position: 0.0
     psu_state: ERR
     type: kicker
   EBT-BA1-MAG-VCOR-02:
-    READI: -0.008850104
+    READI: 0.000305176
     SETI: 0.0
     angle: 0
-    energy: 0.007397957762792545
+    energy: 32.23122400219313
     magnetic_length: 182.25352478027344
     position: 0.0
     psu_state: ERR
     type: kicker
   EBT-BA1-MAG-VCOR-03:
-    READI: -0.00457764
+    READI: -0.004272464
     SETI: 0.0
-    angle: 0
-    energy: 0.007397957762792545
+    angle: 0.0
+    energy: 32.23122400219313
     magnetic_length: 182.25352478027344
     position: 0.0
-    psu_state: ERR
+    psu_state: ON
     type: kicker
   EBT-BA1-MAG-VCOR-04:
-    READI: -0.01373292
+    READI: -0.001220704
     SETI: 0.0
     angle: 0
-    energy: 0.007397957762792545
+    energy: 32.23122400219313
     magnetic_length: 182.25352478027344
     position: 0.0
     psu_state: ERR
@@ -499,11 +443,11 @@ EBT-INJ:
     x: .nan
     y: .nan
   EBT-INJ-DIA-BPM-03:
-    q: 3.038300662654164
-    resolution: 0.016662840218418514
+    q: 4.230116918791501
+    resolution: 0.008296512065329694
     type: bpm
-    x: 18.237407315157206
-    y: 3.072603644683628
+    x: 18.057732442756237
+    y: 1.641415915184376
   EBT-INJ-DIA-BPM-04:
     q: 73.6947421261336
     resolution: -0.0013222911280571556
@@ -524,328 +468,76 @@ EBT-INJ:
     y: .nan
   EBT-INJ-DIA-CAM-02:
     acquiring: false
-    avg_intensity: 2197.7081012378426
     screen: INJ-SCR-01
-    sum_intensity: 3181578064.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -467.45365381501665
-    x_pix_abs: 612.5463461849833
-    x_pix_sig: 248.01383071921407
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -478.9749524843214
-    y_pix_abs: 521.0250475156786
-    y_pix_sig: 217.0444981010463
   EBT-INJ-DIA-CAM-03:
     acquiring: false
-    avg_intensity: 2869.9803492484525
     screen: INJ-SCR-02
-    sum_intensity: 4154813152.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -467.476167401369
-    x_pix_abs: 612.523832598631
-    x_pix_sig: 247.9287806068713
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -479.2428501545472
-    y_pix_abs: 520.7571498454528
-    y_pix_sig: 216.1524311702771
   EBT-INJ-DIA-CAM-04:
     acquiring: false
-    avg_intensity: 3042.6564102564103
     screen: INJ-SCR-03
-    sum_intensity: 4404792832.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -465.41858318678555
-    x_pix_abs: 614.5814168132144
-    x_pix_sig: 246.86196543047475
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -478.49027397190093
-    y_pix_abs: 521.5097260280991
-    y_pix_sig: 218.97418695393975
   EBT-INJ-DIA-CAM-05:
     acquiring: false
-    avg_intensity: 5483.327320954907
     screen: EBT-INJ-DIA-YAG-04
-    sum_intensity: 7938103296.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -470.44480578668595
-    x_pix_abs: 609.555194213314
-    x_pix_sig: 247.2332892520398
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -474.3218371647155
-    y_pix_abs: 525.6781628352845
-    y_pix_sig: 217.89994911960525
   EBT-INJ-DIA-CAM-06:
     acquiring: false
-    avg_intensity: 966.8972259062776
     screen: EBT-INJ-DIA-YAG-05
-    sum_intensity: 1399757776.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -471.7552315460024
-    x_pix_abs: 608.2447684539976
-    x_pix_sig: 247.11851887581682
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -481.2636507334082
-    y_pix_abs: 518.7363492665918
-    y_pix_sig: 218.3535494578107
   EBT-INJ-DIA-CAM-07:
     acquiring: false
-    avg_intensity: 26.074646330680814
     screen: EBT-INJ-DIA-YAG-06
-    sum_intensity: 37747744.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -463.1343815491588
-    x_pix_abs: 616.8656184508412
-    x_pix_sig: 247.43102922558464
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -477.090411441175
-    y_pix_abs: 522.909588558825
-    y_pix_sig: 219.86181257155295
   EBT-INJ-DIA-CAM-08:
     acquiring: false
-    avg_intensity: 650.4575817860301
     screen: EBT-INJ-DIA-YAG-07
-    sum_intensity: 941654432.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -465.8907045843374
-    x_pix_abs: 614.1092954156626
-    x_pix_sig: 248.0736632319008
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -482.25819076643415
-    y_pix_abs: 517.7418092335658
-    y_pix_sig: 217.70117319698434
   EBT-INJ-DIA-CAM-09:
     acquiring: false
-    avg_intensity: 1887.2118037135278
     screen: ELECTRON_DIFFRACTION
-    sum_intensity: 2732078784.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -465.9009213866839
-    x_pix_abs: 614.0990786133161
-    x_pix_sig: 247.1373618139172
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -483.29121129336613
-    y_pix_abs: 516.7087887066339
-    y_pix_sig: 219.4835885414675
   EBT-INJ-DIA-CAM-10:
     acquiring: false
-    avg_intensity: 1290.336217948718
     screen: EBT-INJ-DIA-YAG-08
-    sum_intensity: 1867993936.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -466.1680800474395
-    x_pix_abs: 613.8319199525605
-    x_pix_sig: 247.35313861452664
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -479.70403249422304
-    y_pix_abs: 520.295967505777
-    y_pix_sig: 218.1072387061308
   EBT-INJ-DIA-CAM-11:
     acquiring: false
-    avg_intensity: 1176.3610853227233
     screen: EBT-INJ-DIA-YAG-09
-    sum_intensity: 1702994416.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -465.75379745736245
-    x_pix_abs: 614.2462025426375
-    x_pix_sig: 246.9427886259768
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -482.07649673133676
-    y_pix_abs: 517.9235032686632
-    y_pix_sig: 219.70002132989165
   EBT-INJ-DIA-CAM-12:
     acquiring: false
-    avg_intensity: 6.590307250221043
     screen: BA1-SCR-01
-    sum_intensity: 9540656.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -513.452473976589
-    x_pix_abs: 566.547526023411
-    x_pix_sig: 263.6661344666204
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -431.1481341128699
-    y_pix_abs: 568.8518658871301
-    y_pix_sig: 171.40262559073332
   EBT-INJ-DIA-CAM-13:
     acquiring: false
-    avg_intensity: 22.797979166666668
     screen: BA1-SCR-02
-    sum_intensity: 52526544.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -106.23673799395988
-    x_pix_abs: 973.7632620060401
-    x_pix_sig: 424.3977472768171
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -421.0578055604865
-    y_pix_abs: 578.9421944395135
-    y_pix_sig: 265.02773457060385
   EBT-INJ-DIA-CAM-14:
     acquiring: false
-    avg_intensity: 0.42900088417329796
     screen: BA1-SCR-03
-    sum_intensity: 621056.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -421.0501274426508
-    x_pix_abs: 658.9498725573492
-    x_pix_sig: 228.79073712779717
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -592.7281223449447
-    y_pix_abs: 407.2718776550552
-    y_pix_sig: 184.58429493433738
   EBT-INJ-DIA-CAM-16:
     acquiring: false
-    avg_intensity: 2335.8827475685234
     screen: INJ-SCR-10
-    sum_intensity: 3381610736.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -465.34444969320793
-    x_pix_abs: 614.6555503067921
-    x_pix_sig: 246.98595822214375
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -482.8670417187137
-    y_pix_abs: 517.1329582812863
-    y_pix_sig: 219.189393615255
   EBT-INJ-DIA-CAM-17:
     acquiring: false
-    avg_intensity: 11.099259504862953
     screen: BA1-COFF-01
-    sum_intensity: 16068176.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -458.64882500120825
-    x_pix_abs: 621.3511749987917
-    x_pix_sig: 242.73644207280432
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -348.48256450096073
-    y_pix_abs: 651.5174354990393
-    y_pix_sig: 194.84891169409852
   EBT-INJ-DIA-CAM-18:
     acquiring: false
-    avg_intensity: 14967.164235190097
     screen: BA1-COFF-02
-    sum_intensity: 21667664320.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -465.1716736350071
-    x_pix_abs: 614.8283263649929
-    x_pix_sig: 246.83285778486973
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -484.0495665257455
-    y_pix_abs: 515.9504334742545
-    y_pix_sig: 214.88304065559456
   EBT-INJ-DIA-CAM-19:
     acquiring: false
-    avg_intensity: 1582.9859858532272
     screen: BA1-COFF-03
-    sum_intensity: 2291657152.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -466.09305308880084
-    x_pix_abs: 613.9069469111992
-    x_pix_sig: 240.88160194101704
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -398.6421453629483
-    y_pix_abs: 601.3578546370517
-    y_pix_sig: 207.10482986884887
   EBT-INJ-DIA-CAM-20:
     acquiring: false
-    avg_intensity: 4912.671816976127
     screen: BA1-COFF-04
-    sum_intensity: 7111976736.0
     type: camera
-    x_mm: -6.48
-    x_mm_abs: 0.0
-    x_mm_sig: 0.0
-    x_pix: -470.4983591221975
-    x_pix_abs: 609.5016408778025
-    x_pix_sig: 247.52980030394576
-    y_mm: -6.0
-    y_mm_abs: 0.0
-    y_mm_sig: 0.0
-    y_pix: -487.8773312875875
-    y_pix_abs: 512.1226687124125
-    y_pix_sig: 215.87619991717642
   EBT-INJ-DIA-YAG-05:
     state: RETRACTED
     type: screen
@@ -863,9 +555,9 @@ EBT-INJ:
     type: screen
   EBT-INJ-MAG-DIP-02:
     READI: 0.0
-    SETI: 0.0
-    angle: -20.433195996037245
-    energy: 4.392442333398349
+    SETI: 1.0
+    angle: -2.450741129764379
+    energy: 36.622242149356914
     magnetic_length: 413.8240051269531
     position: 16.16900062561035
     psu_state: ON
@@ -873,71 +565,71 @@ EBT-INJ:
   EBT-INJ-MAG-DIP-03:
     READI: 0.0
     SETI: 0.0
-    angle: 536.6783454152929
-    energy: 4.392442333398349
+    angle: 0
+    energy: 36.622242149356914
     magnetic_length: 414.40899658203125
     position: 17.858999252319336
-    psu_state: ON
+    psu_state: OFF
     type: dipole
   EBT-INJ-MAG-HCOR-05:
-    READI: -0.008239752
+    READI: 0.003662112
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.24359130859375
     position: 4.6479997634887695
     psu_state: ERR
     type: kicker
   EBT-INJ-MAG-HCOR-06:
-    READI: -0.001831056
+    READI: -0.004272464
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.72579956054688
     position: 7.238999843597412
     psu_state: ERR
     type: kicker
   EBT-INJ-MAG-HCOR-07:
-    READI: -0.003967288
+    READI: -0.003356936
     SETI: 0.0
-    angle: 0
-    energy: 4.392442333398349
+    angle: -0.0028314825630554614
+    energy: 36.622242149356914
     magnetic_length: 183.07940673828125
     position: 9.831000328063965
-    psu_state: ERR
+    psu_state: ON
     type: kicker
   EBT-INJ-MAG-HCOR-08:
-    READI: 0.0030517599999999997
+    READI: 0.001220704
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 183.52272033691406
     position: 12.140999794006348
     psu_state: OFF
     type: kicker
   EBT-INJ-MAG-HCOR-09:
-    READI: -0.000915528
+    READI: -0.000610352
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.3275909423828
     position: 15.633999824523926
     psu_state: ERR
     type: kicker
   EBT-INJ-MAG-HCOR-10:
-    READI: 0.003356936
+    READI: -0.000610352
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.96653747558594
     position: 16.73200035095215
     psu_state: ERR
     type: kicker
   EBT-INJ-MAG-HCOR-11:
-    READI: -0.005187992
+    READI: 0.007019048
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.25352478027344
     position: 18.95800018310547
     psu_state: ERR
@@ -945,8 +637,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-05:
     READI: -0.002
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.00045649989388931497
+    energy: 36.622242149356914
+    k1: 5.475223092386471e-05
     magnetic_length: 125.22396087646484
     position: 4.84499979019165
     psu_state: ON
@@ -954,8 +646,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-06:
     READI: -0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.001080591672897323
+    energy: 36.622242149356914
+    k1: 0.00012960529805342054
     magnetic_length: 125.0330810546875
     position: 5.098999977111816
     psu_state: ON
@@ -963,8 +655,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-07:
     READI: -0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.0011202260067769906
+    energy: 36.622242149356914
+    k1: 0.0001343590082516956
     magnetic_length: 125.29991149902344
     position: 7.380000114440918
     psu_state: ON
@@ -972,8 +664,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-08:
     READI: 0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.0007986400765981176
+    energy: 36.622242149356914
+    k1: 9.578824986442486e-05
     magnetic_length: 125.27558135986328
     position: 7.577000141143799
     psu_state: ON
@@ -981,8 +673,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-09:
     READI: 0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: -0.0012817436577558326
+    energy: 36.622242149356914
+    k1: -0.000153731305689333
     magnetic_length: 70.42359924316406
     position: 9.972000122070312
     psu_state: ON
@@ -990,8 +682,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-10:
     READI: 0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: -0.0016546732994368496
+    energy: 36.622242149356914
+    k1: -0.00019846018762993646
     magnetic_length: 70.42359924316406
     position: 12.675999641418457
     psu_state: ON
@@ -999,8 +691,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-11:
     READI: 0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: -0.0017641254773410858
+    energy: 36.622242149356914
+    k1: -0.00021158779401046649
     magnetic_length: 70.42359924316406
     position: 14.901000022888184
     psu_state: ON
@@ -1008,8 +700,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-12:
     READI: -0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 1.5409327458872162
+    energy: 36.622242149356914
+    k1: 0.18481823691599458
     magnetic_length: 70.42359924316406
     position: 17.04199981689453
     psu_state: ON
@@ -1017,8 +709,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-13:
     READI: 0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 0.000597170814352934
+    energy: 36.622242149356914
+    k1: 7.162418823337537e-05
     magnetic_length: 125.29991149902344
     position: 19.155000686645508
     psu_state: ON
@@ -1026,8 +718,8 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-14:
     READI: -0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: 1.543245950095576
+    energy: 36.622242149356914
+    k1: 0.18509568077235805
     magnetic_length: 70.42359924316406
     position: 19.634000778198242
     psu_state: ON
@@ -1035,62 +727,62 @@ EBT-INJ:
   EBT-INJ-MAG-QUAD-15:
     READI: 0.0
     SETI: 0.0
-    energy: 4.392442333398349
-    k1: -0.0013391765952860803
+    energy: 36.622242149356914
+    k1: -0.00016061976612576515
     magnetic_length: 70.42359924316406
     position: 23.493000030517578
     psu_state: ON
     type: quadrupole
   EBT-INJ-MAG-VCOR-05:
-    READI: -0.006713872
+    READI: 0.003356936
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.24359130859375
     position: 4.6479997634887695
     psu_state: ERR
     type: kicker
   EBT-INJ-MAG-VCOR-06:
-    READI: 0.0015258799999999999
+    READI: 0.000305176
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.72579956054688
     position: 7.238999843597412
     psu_state: ERR
     type: kicker
   EBT-INJ-MAG-VCOR-07:
-    READI: 2.002259736
+    READI: 2.001649384
     SETI: 2.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 183.07940673828125
     position: 9.831000328063965
     psu_state: ERR
     type: kicker
   EBT-INJ-MAG-VCOR-08:
-    READI: 0.002441408
+    READI: 0.0
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 183.52272033691406
     position: 12.140999794006348
     psu_state: ERR
     type: kicker
   EBT-INJ-MAG-VCOR-09:
-    READI: -0.00457764
+    READI: -0.005187992
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.3275909423828
     position: 15.633999824523926
     psu_state: ERR
     type: kicker
   EBT-INJ-MAG-VCOR-10:
-    READI: -0.011291512
+    READI: 0.000610352
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.96653747558594
     position: 16.73200035095215
     psu_state: ERR
@@ -1099,105 +791,105 @@ EBT-INJ:
     READI: 0.001220704
     SETI: 0.0
     angle: 0
-    energy: 4.392442333398349
+    energy: 36.622242149356914
     magnetic_length: 182.25352478027344
     position: 18.95800018310547
     psu_state: ERR
     type: kicker
 INJ:
   CLA-GUN-LRF-CTRL-01:
-    amplitude_MW: 7143222.622207025
+    amplitude_MW: 7165175.69880716
     catap_alias: CLA-GUN-LRF-CTRL-01
-    cavity_amplitude_MW: 4715216.9347447185
-    energy_gain: 4.385044375635556
-    field_amplitude: 68.10567369937527
-    klystron_amplitude_MW: 7143222.622207025
+    cavity_amplitude_MW: 4716881.083575988
+    energy_gain: 4.391018147163783
+    field_amplitude: 68.18517316637578
+    klystron_amplitude_MW: 7165175.69880716
     length: 0.17
-    phase: 1.1994304496298014
-    phase_abs: 151.6994304496298
-    phase_ff: 151.69900283052695
-    phase_sp: 151.6994304496298
+    phase: -0.39999276374314263
+    phase_abs: 148.10000723625686
+    phase_ff: 148.09957961715406
+    phase_sp: 148.10000723625686
     pulse_length: 2.5
     simframe_alias: CLA-LRG1-GUN-CAV
     type: cavity
   CLA-GUN-MAG-SOL-02:
     READI: 149.86
     SETI: 150.0
-    energy: 4.385044375635556
-    field_amplitude: -7.493777372031403e-05
+    energy: 4.391018147163783
+    field_amplitude: 0.344451499601851
     magnetic_length: 0.1375052034854889
     position: 0.12700000405311584
     psu_state: ON
     type: solenoid
   CLA-LRG1-MAG-SOL-01:
-    READI: -134.85
+    READI: -134.86
     SETI: -135.0
-    energy: 4.385044375635556
-    field_amplitude: -7.493777372031403e-05
+    energy: 4.391018147163783
+    field_amplitude: 0.344451499601851
     magnetic_length: 139.5
     position: 0.12700000405311584
     psu_state: ON
     type: solenoid
 L01:
   CLA-L01-MAG-SOL-01:
-    READI: 0.01
+    READI: 0.02
     SETI: 0.0
-    energy: 4.385044375635556
-    field_amplitude: -7.493777372031403e-05
+    energy: 4.391018147163783
+    field_amplitude: 0.344451499601851
     magnetic_length: 726.918212890625
     position: 1.6399999856948853
     psu_state: ON
     type: solenoid
   CLA-L01-MAG-SOL-02:
-    READI: -0.05
+    READI: -0.04
     SETI: 0.0
-    energy: 4.385044375635556
-    field_amplitude: -7.493777372031403e-05
+    energy: 4.391018147163783
+    field_amplitude: 0.344451499601851
     magnetic_length: 726.918212890625
     position: 2.700000047683716
     psu_state: ON
     type: solenoid
   L01:
-    amplitude_MW: 0.8759567711277606
+    amplitude_MW: 13428997.382505722
     catap_alias: CLA-L01-LRF-CTRL-01
-    cavity_amplitude_MW: 0.9250444109152539
-    energy_gain: 0.007397957762792545
-    field_amplitude: 0.0036389364302963825
-    klystron_amplitude_MW: 0.8759567711277606
+    cavity_amplitude_MW: 12400789.268959126
+    energy_gain: 32.23122400219313
+    field_amplitude: 15.854020660203213
+    klystron_amplitude_MW: 13428997.382505722
     length: 2.033
-    phase: 177.6908527437929
-    phase_abs: 177.6908527437929
-    phase_ff: 0.0
-    phase_sp: 177.6908527437929
+    phase: 12.911229314192653
+    phase_abs: -104.08877068580735
+    phase_ff: .nan
+    phase_sp: -104.08877068580735
     pulse_length: 0.75
     simframe_alias: CLA-L01-CAV
     type: cavity
 VCA:
   CLA-VCA-DIA-CAM-01:
     acquiring: true
-    avg_intensity: 96.81425401475694
+    avg_intensity: 102.59034035011574
     screen: VIRTUAL_CATHODE
-    sum_intensity: 535344099.0
+    sum_intensity: 567283546.0
     type: camera
-    x_mm: -0.062057268526303666
-    x_mm_abs: 6.417942731473697
-    x_mm_sig: 0.6590798037584962
-    x_pix: -10.342878087717281
-    x_pix_abs: 1069.6571219122827
-    x_pix_sig: 109.84663395974937
-    y_mm: -0.23332374446458903
-    y_mm_abs: 5.766676255535411
-    y_mm_sig: 0.6377770298924139
-    y_pix: -38.88729074409821
-    y_pix_abs: 961.1127092559018
-    y_pix_sig: 106.29617164873565
+    x_mm: -0.28272089825615776
+    x_mm_abs: 6.197279101743843
+    x_mm_sig: 0.4906043928466639
+    x_pix: -47.120149709359566
+    x_pix_abs: 1032.8798502906404
+    x_pix_sig: 81.76739880777731
+    y_mm: 0.0132822976864313
+    y_mm_abs: 6.013282297686431
+    y_mm_sig: 0.501205003926047
+    y_pix: 2.2137162810719246
+    y_pix_abs: 1002.2137162810719
+    y_pix_sig: 83.53416732100784
 generator:
   charge:
     PV: CLA-S01-DIA-WCM-01
     PV_suffixes: Q
     catap_type: charge
     type: generator
-    value: 81.26208403875833
+    value: 78.46099686145851
   dist_x:
     catap_type: pil
     type: generator
@@ -1213,22 +905,30 @@ generator:
   number_of_particles:
     type: generator
     value: 51
+  offset_x:
+    catap_type: pil
+    type: generator
+    value: -0.28272089825615776
+  offset_y:
+    catap_type: pil
+    type: generator
+    value: 0.0132822976864313
   sig_clock:
     catap_type: pil
     type: generator
     value: 0.00085
-  sig_x:
+  sigma_x:
     catap_type: pil
     type: generator
-    value: 0.6590798037584962
-  sig_y:
+    value: 0.4906043928466639
+  sigma_y:
     catap_type: pil
     type: generator
-    value: 0.6377770298924139
+    value: 0.501205003926047
   spot_size:
     catap_type: pil
     type: generator
-    value: 0.648428416825455
+    value: 0.4959046983863555
 simulation:
   astra_run_number:
     astra_run_number: 101
