@@ -68,7 +68,7 @@ class UnitConversion(object):
             self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
             # self.update_widgets_with_values("lattice:" + key + ":k1l", effect / value['magnetic_length'])
             self.k1 = self.effect / (magnetic_length)
-            if psu_state == "ON" or psu_state == CATAP.HardwareFactory.STATE.PHYSICAL:
+            if psu_state == "ON":
                 magdict.update({'k1': float(self.k1)})
             else:
                 magdict.update({'k1': 0})
@@ -82,7 +82,7 @@ class UnitConversion(object):
             # print(energy)
             self.field_amplitude = self.int_strength / (10**3 * magnetic_length)
             magdict.update({'field_amplitude': float(int(self.sign) * self.field_amplitude)})
-            if psu_state == "ON" or psu_state == CATAP.HardwareFactory.STATE.PHYSICAL:
+            if psu_state == "ON":
                 magdict.update({'field_amplitude': float(self.k1)})
             else:
                 magdict.update({'field_amplitude': 0})
@@ -96,7 +96,7 @@ class UnitConversion(object):
             # print(energy)
             self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
             magdict.update({'angle': float(self.effect)})
-            if psu_state == "ON" or psu_state == CATAP.HardwareFactory.STATE.PHYSICAL:
+            if psu_state == "ON":
                 magdict.update({'angle': float(self.effect)})
             else:
                 magdict.update({'angle': 0})
@@ -110,8 +110,7 @@ class UnitConversion(object):
             # print(energy)
             self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
             self.angle = numpy.radians(self.effect)
-            magdict.update({'angle': float(self.angle)})
-            if psu_state == "ON" or psu_state == CATAP.HardwareFactory.STATE.PHYSICAL:
+            if psu_state == "ON":
                 magdict.update({'angle': float(self.effect)})
             else:
                 magdict.update({'angle': 0})
