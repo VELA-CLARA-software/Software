@@ -3,6 +3,7 @@ import scipy.constants
 import scipy.stats
 import math
 import src.aliases as aliases
+import CATAP.HardwareFactory
 
 class UnitConversion(object):
 
@@ -66,7 +67,7 @@ class UnitConversion(object):
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			# self.update_widgets_with_values("lattice:" + key + ":k1l", effect / value['magnetic_length'])
 			self.k1 = self.effect / (magnetic_length)
-			if psu_state == "On":
+			if psu_state == "ON" or psu_state == CATAP.HardwareFactory.STATE.PHYSICAL:
 				magdict.update({'k1': float(self.k1)})
 			else:
 				magdict.update({'k1': 0})
@@ -76,11 +77,11 @@ class UnitConversion(object):
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
-			print(self.int_strength)
-			print(energy)
+			# print(self.int_strength)
+			# print(energy)
 			self.field_amplitude = self.int_strength / magnetic_length
 			magdict.update({'field_amplitude': float(int(self.sign) * self.field_amplitude)})
-			if psu_state == "On":
+			if psu_state == "ON" or psu_state == CATAP.HardwareFactory.STATE.PHYSICAL:
 				magdict.update({'field_amplitude': float(self.k1)})
 			else:
 				magdict.update({'field_amplitude': 0})
@@ -90,11 +91,11 @@ class UnitConversion(object):
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
-			print(self.int_strength)
-			print(energy)
+			# print(self.int_strength)
+			# print(energy)
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			magdict.update({'angle': float(self.effect)})
-			if psu_state == "On":
+			if psu_state == "ON" or psu_state == CATAP.HardwareFactory.STATE.PHYSICAL:
 				magdict.update({'angle': float(self.effect)})
 			else:
 				magdict.update({'angle': 0})
@@ -104,12 +105,12 @@ class UnitConversion(object):
 			self.coeffs = numpy.append(self.ficmod,
 									   field_integral_coefficients[-1])
 			self.int_strength = numpy.polyval(self.coeffs, abs(current))
-			print(self.int_strength)
-			print(energy)
+			# print(self.int_strength)
+			# print(energy)
 			self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
 			self.angle = numpy.radians(self.effect)
 			magdict.update({'angle': float(self.angle)})
-			if psu_state == "On":
+			if psu_state == "ON" or psu_state == CATAP.HardwareFactory.STATE.PHYSICAL:
 				magdict.update({'angle': float(self.effect)})
 			else:
 				magdict.update({'angle': 0})
@@ -163,29 +164,40 @@ class UnitConversion(object):
 
 	def getEnergyFromRF(self, forward_power, phase, pulse_length, cavity=None):
 		if (cavity == "LRRG_GUN") or ("GUN" in cavity):
-			bestcase = 0.407615 + 1.94185 * (((1 - math.exp(-1.54427 * pulse_length)) * (
-					0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * abs(numpy.cos(phase))) ** 0.5
-			worstcase = 0.377 + 1.81689 * (((1 - math.exp(-1.54427 * pulse_length)) * (
-			 		0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * abs(numpy.cos(phase))) ** 0.5
-			return numpy.mean([bestcase, worstcase])
+			# New stuff based on measurements in \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xls
+			momentum = aliases.power_to_momentum(forward_power) * numpy.cos(phase * math.pi / 180)
+			return momentum
+
+			# Old stuff from Louise. Didn't seem to work properly.
+
+			# bestcase = 0.407615 + 1.94185 * (((1 - math.exp(-1.54427 * pulse_length)) * (
+			# 		0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * abs(numpy.cos(phase))) ** 0.5
+			# worstcase = 0.377 + 1.81689 * (((1 - math.exp(-1.54427 * pulse_length)) * (
+			#  		0.0331869 + 6.05422 * 10 ** -7 * forward_power)) * abs(numpy.cos(phase))) ** 0.5
+			# return numpy.mean([bestcase, worstcase])
 		elif (cavity == "L01") or ("L01" in cavity):
 			return (numpy.sqrt(forward_power * 6.248 * 1e7) * 1e-6)
 
 	def getPowerFromEnergy(self, energy_gain, phase, pulse_length, cavity=None):
 		if (cavity == "LRRG_GUN") or ("GUN" in cavity):
-			w1 = ((energy_gain - 0.377) / 1.81689) ** 2
-			w2 = 1 / (1 - math.exp(-1.54427 * pulse_length))
-			w3 = 1 / numpy.cos(phase)
-			w4 = -0.0331869
-			w5 = 1 / (6.05422 * (10 ** -7))
-			worstcase = ((w1 * w2 * w3) - w4) * w5
-			b1 = ((energy_gain - 0.407615) / 1.94185) ** 2
-			b2 = 1 / (1 - math.exp(-1.54427 * pulse_length))
-			b3 = 1 / numpy.cos(phase)
-			b4 = -0.0331869
-			b5 = 1 / (6.05422 * (10 ** -7))
-			bestcase = ((b1 * b2 * b3) - b4) * b5
-			return numpy.mean([bestcase, worstcase])
+			# New stuff based on measurements in \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xls
+			power = aliases.momentum_to_power(energy_gain) * numpy.arccos(phase * math.pi / 180)
+			return power
+
+			# Old stuff from Louise. Didn't seem to work properly.
+			# w1 = ((energy_gain - 0.377) / 1.81689) ** 2
+			# w2 = 1 / (1 - math.exp(-1.54427 * pulse_length))
+			# w3 = 1 / numpy.cos(phase)
+			# w4 = -0.0331869
+			# w5 = 1 / (6.05422 * (10 ** -7))
+			# worstcase = ((w1 * w2 * w3) - w4) * w5
+			# b1 = ((energy_gain - 0.407615) / 1.94185) ** 2
+			# b2 = 1 / (1 - math.exp(-1.54427 * pulse_length))
+			# b3 = 1 / numpy.cos(phase)
+			# b4 = -0.0331869
+			# b5 = 1 / (6.05422 * (10 ** -7))
+			# bestcase = ((b1 * b2 * b3) - b4) * b5
+			# return numpy.mean([bestcase, worstcase])
 		elif (cavity == "L01") or ("L01" in cavity):
 			return (1e12 * (energy_gain ** 2)/(6.248 * 1e7))
 

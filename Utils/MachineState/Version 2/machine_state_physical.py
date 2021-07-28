@@ -1,7 +1,6 @@
 import os, sys
 sys.path.append(os.path.join(sys.path[0],'src'))
-# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\development\\CATAP\\djs56\\new_pc\\build\\PythonInterface\\Release\\CATAP')
-sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\CATAP\\bin\\CATAP')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\CATAP\\bin')
 sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\test\\SimFrame')
 import src.machine_state as machine_state
 from CATAP.HardwareFactory import *
@@ -14,7 +13,7 @@ gun_name = 'CLA-GUN-LRF-CTRL-01'
 l01_name = 'CLA-L01-LRF-CTRL-01'
 
 crest_phases = {}
-crest_phases.update({gun_name: 0})
+crest_phases.update({gun_name: 150.5})
 crest_phases.update({l01_name: 0})
 
 # Set up CATAP

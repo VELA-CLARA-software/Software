@@ -1,4 +1,5 @@
 from CATAP.HardwareFactory import TYPE, STATE
+import scipy.interpolate
 
 alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                "L01": "CLA-L01-CAV",
@@ -100,3 +101,9 @@ llrf_epics_tools = {'klystron_amplitude_MW': 'ad1:ch1:Power:Wnd:Avg',
                     'phase_sp': 'vm:dsp:sp_ph:phase',
                     'phase_ff': 'vm:dsp:ff_ph:phase'}
 
+# gun momentum measurements taken from \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xls
+power = [4.62*(10**6),5*(10**6),5.36*(10**6),5.81*(10**6),6.28*(10**6),6.74*(10**6),7.16*(10**6)]
+momentum = [3.64,3.78,3.89,4.05,4.19,4.29,4.39]
+klystron_fwd_power_vs_momentum = [power, momentum]
+power_to_momentum = scipy.interpolate.interp1d(power,momentum)
+momentum_to_power = scipy.interpolate.interp1d(momentum,power)

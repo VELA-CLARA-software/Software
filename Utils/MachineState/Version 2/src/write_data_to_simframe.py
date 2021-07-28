@@ -32,8 +32,6 @@ class WriteDataToSimFrame(object):
                                 typemod = 1e6
                             else:
                                 typemod = 1
-                            print(type)
-                            print(typemod)
                             framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']*typemod))
                             framework.modifyElement(self.keymod, 'phase', value['phase'])
                         elif inputdict[section][key]['type'] == 'solenoid':
@@ -80,7 +78,8 @@ class WriteDataToSimFrame(object):
             famp = float(framework['CLA-LRG1-MAG-SOL-01']['field_amplitude'])
             framework.modifyElement('CLA-LRG1-MAG-BSOL-01', 'field_amplitude', float(0.3462 * 0.9 * famp))
         if scan==True and type is not None:
-            print(inputdict[dictname][pv])
+            pass
+            # print(inputdict[dictname][pv])
         framework.generator.number_of_particles = int(inputdict['generator']['number_of_particles']['value'])
         framework.generator.charge = float(inputdict['generator']['charge']['value'] * 1e-12)
         framework.generator.sig_clock = float(inputdict['generator']['sig_clock']['value'])

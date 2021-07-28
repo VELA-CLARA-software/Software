@@ -7,8 +7,6 @@ for item in sys.path:
     sys.path.remove(item)
 
 sys.path.append("\\\\192.168.83.14\\claranet\\test\\CATAP\\bin\\")
-# sys.path.append("E:\\CATAP-build\\PythonInterface\\Release\\CATAP")
-# sys.path.append('\\\\192.168.83.14\\claranet\\test\\Controllers\\bin\\python3_x64')
 sys.path.append(os.path.abspath(__file__+'/../../../../../../SimFrame/'))
 import src.get_data_from_catap as get_data_from_catap
 import src.get_data_from_simframe as get_data_from_simframe

@@ -2,12 +2,12 @@ import os, sys
 import numpy
 import CATAP.HardwareFactory
 import CATAP.EPICSTools
+from CATAP.HardwareFactory import STATE
 import src.unit_conversion as unit_conversion
 import src.aliases as aliases
 
 catap_modules = ['BPM', 'Charge', 'Screen', 'Magnet']
 vc_controller_modules = ['Camera', 'LLRF', 'PILaser']
-
 
 class GetDataFromCATAP(object):
 
@@ -30,7 +30,7 @@ class GetDataFromCATAP(object):
         self.allDataDict = {}
         self.allDictStatus = {}
 
-        self.epics_tools_types = {'llrf': False,
+        self.epics_tools_types = {'llrf': True,
                                   'camera': False}
         self.epics_tools_monitors = {}
         self.monitors = {}
@@ -81,9 +81,9 @@ class GetDataFromCATAP(object):
             os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "1000000000"
         elif mode == 'PHYSICAL' or mode == CATAP.HardwareFactory.STATE.PHYSICAL:
             os.environ["EPICS_CA_ADDR_LIST"] = "192.168.83.255"
-            os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
-            os.environ["EPICS_CA_SERVER_PORT"] = "5064"
-            os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
+            # os.environ["EPICS_CA_AUTO_ADDR_LIST"] = "NO"
+            # os.environ["EPICS_CA_SERVER_PORT"] = "5064"
+            os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000000"
         # get factories / controllers
         if mode == 'VIRTUAL' or mode == CATAP.HardwareFactory.STATE.VIRTUAL:
             self.mode = CATAP.HardwareFactory.STATE.VIRTUAL
@@ -98,10 +98,14 @@ class GetDataFromCATAP(object):
         self.llrf_types = [CATAP.HardwareFactory.TYPE.LRRG_GUN, CATAP.HardwareFactory.TYPE.L01]
         # self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
         self.llrf_factory = self.hf.getLLRFFactory(self.llrf_types)
+        # self.llrf_factory.messagesOff()
+        # self.llrf_factory.debugMessagesOff()
         self.llrf_names = self.llrf_factory.getLLRFNames()
         self.gunname = self.llrf_names[0]
         self.linacnames = self.llrf_names[1:]
         self.gunLLRFObj = self.llrf_factory.getLLRF(self.llrf_names[0])
+        # self.gunLLRFObj.messagesOff()
+        # self.gunLLRFObj.debugMessagesOff()
         self.linacLLRFObj = {}
         if crest_phases is not None:
             self.crest_phases = crest_phases
@@ -114,6 +118,8 @@ class GetDataFromCATAP(object):
             self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
         for key in self.linacnames:
             self.linacLLRFObj[key] = self.llrf_factory.getLLRF(key)
+            # self.linacLLRFObj[key].messagesOff()
+            # self.linacLLRFObj[key].debugMessagesOff()
             self.linacStartTimes.update({key: 0.1})  # MAGIC NUMBER
             self.linacEndTimes.update({key: 1.0})  # MAGIC NUMBER
             if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
@@ -124,10 +130,18 @@ class GetDataFromCATAP(object):
         self.bpmFac = self.hf.getBPMFactory()
         self.scrFac = self.hf.getScreenFactory()
         self.magFac = self.hf.getMagnetFactory()
+        # self.chargeFac.messagesOff()
+        # self.chargeFac.debugMessagesOff()
+        # self.bpmFac.messagesOff()
+        # self.bpmFac.debugMessagesOff()
+        # self.magFac.messagesOff()
+        # self.magFac.debugMessagesOff()
         if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
             self.magFac.switchOnAll()
         if not self.epics_tools_types['camera']:
             self.camFac = self.hf.getCameraFactory()
+            # self.camFac.messagesOff()
+            # self.camFac.debugMessagesOff()
 
         # #self.pilFac = hf.getPILa()
         # #self.camFac = hf.getcam()
@@ -281,7 +295,7 @@ class GetDataFromCATAP(object):
             self.bpmdata[name]['q'] = self.bpmDict[name].q
             self.bpmdata[name]['resolution'] = self.bpmDict[name].resolution
             self.bpmdata[name]['type'] = "bpm"
-            self.bpmdata[name]['status'] = aliases.state_alias[self.bpmDict[name].status]
+            # self.bpmdata[name]['status'] = aliases.state_alias[self.bpmFac.getStatus(name)]
             self.alldata[self.getMachineAreaString(name)].update({name: self.bpmdata[name]})
         else:
             self.setAllDicts()
@@ -295,33 +309,33 @@ class GetDataFromCATAP(object):
                 self.cameradata[name]['screen'] = self.cameraDict[name].getScreen()
                 if self.cameradata[name]['screen'] in self.screen_alias.keys():
                     self.cameradata[name].update({'screen': self.screen_alias[self.cameradata[name]['screen']]})
-                if self.cameradata[name]['acquiring']:
-                    self.cameradata[name]['x_pix_abs'] = self.cameraDict[name].getXPix()
-                    self.cameradata[name]['y_pix_abs'] = self.cameraDict[name].getYPix()
-                    self.cameradata[name]['x_pix'] = self.cameradata[name]['x_pix_abs'] - \
-                                                     aliases.vc_mechanical_centre[
-                                                         'x_pix']
-                    self.cameradata[name]['y_pix'] = self.cameradata[name]['y_pix_abs'] - \
-                                                     aliases.vc_mechanical_centre[
-                                                         'y_pix']
-                    # self.cameradata[name]['xy_pix'] = self.cameraDict[name].getXYPix()
-                    self.cameradata[name]['x_mm_abs'] = self.cameraDict[name].getXmm()
-                    self.cameradata[name]['y_mm_abs'] = self.cameraDict[name].getYmm()
-                    self.cameradata[name]['x_mm'] = self.cameradata[name]['x_mm_abs'] - \
-                                                    aliases.vc_mechanical_centre[
-                                                        'x_mm']
-                    self.cameradata[name]['y_mm'] = self.cameradata[name]['y_mm_abs'] - \
-                                                    aliases.vc_mechanical_centre[
-                                                        'y_mm']
-                    # self.cameradata[name]['xy_mm'] = self.cameraDict[name].getXYmm()
-                    self.cameradata[name]['x_pix_sig'] = self.cameraDict[name].getSigXPix()
-                    self.cameradata[name]['y_pix_sig'] = self.cameraDict[name].getSigYPix()
-                    # self.cameradata[name]['xy_pix_sig'] = self.cameraDict[name].getSigXYPix()
-                    self.cameradata[name]['x_mm_sig'] = self.cameraDict[name].getSigXmm()
-                    self.cameradata[name]['y_mm_sig'] = self.cameraDict[name].getSigYmm()
-                    # self.cameradata[name]['xy_mm_sig'] = self.cameraDict[name].getSigXYmm()
-                    self.cameradata[name]['sum_intensity'] = self.cameraDict[name].getSumIntensity()
-                    self.cameradata[name]['avg_intensity'] = self.cameraDict[name].getAvgIntensity()
+                # if self.cameradata[name]['acquiring']:
+                self.cameradata[name]['x_pix_abs'] = self.cameraDict[name].getXPix()
+                self.cameradata[name]['y_pix_abs'] = self.cameraDict[name].getYPix()
+                self.cameradata[name]['x_pix'] = self.cameradata[name]['x_pix_abs'] - \
+                                                 aliases.vc_mechanical_centre[
+                                                     'x_pix']
+                self.cameradata[name]['y_pix'] = self.cameradata[name]['y_pix_abs'] - \
+                                                 aliases.vc_mechanical_centre[
+                                                     'y_pix']
+                # self.cameradata[name]['xy_pix'] = self.cameraDict[name].getXYPix()
+                self.cameradata[name]['x_mm_abs'] = self.cameraDict[name].getXmm()
+                self.cameradata[name]['y_mm_abs'] = self.cameraDict[name].getYmm()
+                self.cameradata[name]['x_mm'] = self.cameradata[name]['x_mm_abs'] - \
+                                                aliases.vc_mechanical_centre[
+                                                    'x_mm']
+                self.cameradata[name]['y_mm'] = self.cameradata[name]['y_mm_abs'] - \
+                                                aliases.vc_mechanical_centre[
+                                                    'y_mm']
+                # self.cameradata[name]['xy_mm'] = self.cameraDict[name].getXYmm()
+                self.cameradata[name]['x_pix_sig'] = self.cameraDict[name].getSigXPix()
+                self.cameradata[name]['y_pix_sig'] = self.cameraDict[name].getSigYPix()
+                # self.cameradata[name]['xy_pix_sig'] = self.cameraDict[name].getSigXYPix()
+                self.cameradata[name]['x_mm_sig'] = self.cameraDict[name].getSigXmm()
+                self.cameradata[name]['y_mm_sig'] = self.cameraDict[name].getSigYmm()
+                # self.cameradata[name]['xy_mm_sig'] = self.cameraDict[name].getSigXYmm()
+                self.cameradata[name]['sum_intensity'] = self.cameraDict[name].getSumIntensity()
+                self.cameradata[name]['avg_intensity'] = self.cameraDict[name].getAvgIntensity()
             else:
                 for key, value in aliases.camera_epics_tools.items():
                     self.cameradata[name][key] = float(
@@ -359,8 +373,9 @@ class GetDataFromCATAP(object):
             self.magnetdata[name]['SETI'] = self.magDict[name].getSETI()
             self.magnetdata[name]['type'] = self.type_alias[self.magFac.getMagnetType(name)]
             self.magnetdata[name]['psu_state'] = str(self.magDict[name].psu_state)
-            self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].getFieldIntegralCoefficients()
-            self.magnetdata[name]['magnetic_length'] = self.magDict[name].magnetic_length * 0.001
+            # self.magnetdata[name]['field_integral_coefficients'] = []
+            # self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].getFieldIntegralCoefficients()
+            self.magnetdata[name]['magnetic_length'] = self.magDict[name].magnetic_length * 1
             self.energy_at_magnet = 0
             if "GUN" in name or "LRG1" in name:
                 self.energy_at_magnet = energy[self.gun_position]
@@ -372,7 +387,7 @@ class GetDataFromCATAP(object):
                 self.energy_at_magnet = energy[self.linac_position['L01']]
             self.unitConversion.currentToK(self.magnetdata[name]['type'],
                                            self.magDict[name].READI,
-                                           self.magnetdata[name]['field_integral_coefficients'],
+                                           list(set(self.magDict[name].getFieldIntegralCoefficients())),
                                            self.magnetdata[name]['magnetic_length'],
                                            self.energy_at_magnet,
                                            self.magnetdata[name],
@@ -411,7 +426,7 @@ class GetDataFromCATAP(object):
                 for key, value in aliases.llrf_epics_tools.items():
                     self.gundata[key] = float(
                         numpy.mean(self.epics_tools_monitors[self.llrf_names[0]][key].getBuffer()))
-                self.gundata['amplitude_MW'] = self.gundata['cavity_amplitude_MW']
+                self.gundata['amplitude_MW'] = self.gundata['klystron_amplitude_MW']
                 self.gundata['phase_abs'] = self.gundata['phase_sp']
                 self.gundata.update({"phase": self.gundata['phase_abs'] - self.crest_phases[self.gunname]})
             self.pulse_length = 2.5
@@ -449,7 +464,7 @@ class GetDataFromCATAP(object):
                 for key, value in aliases.llrf_epics_tools.items():
                     self.linacdata[self.linacname][key] = float(numpy.mean(
                         self.epics_tools_monitors[linac_name][key].getBuffer()))
-                self.linacdata[self.linacname]['amplitude_MW'] = self.linacdata[self.linacname]['cavity_amplitude_MW']
+                self.linacdata[self.linacname]['amplitude_MW'] = self.linacdata[self.linacname]['klystron_amplitude_MW']
                 self.linacdata[self.linacname]['phase_abs'] = self.linacdata[self.linacname]['phase_sp']
                 self.linacdata[self.linacname]['phase'] = self.linacdata[self.linacname]['phase_abs'] - \
                                                           self.crest_phases[linac_name]
@@ -519,6 +534,7 @@ class GetDataFromCATAP(object):
             if self.use_online_model_lattice:
                 return self.alldata[aliases.lattice_to_online_model['VCA']]['CLA-VCA-DIA-CAM-01']
             else:
+                print(self.alldata['VCA'])
                 return self.alldata['VCA']['CLA-VCA-DIA-CAM-01']
 
     def getWCMObject(self):
