@@ -112,9 +112,9 @@ class GetDataFromCATAP(object):
             self.crest_phases = crest_phases
         else:
             self.crest_phases = {}
-            self.crest_phases.update({self.gunname: 0})
+            self.crest_phases.update({aliases.alias_names[self.gunname]: 0})
             for i in self.linacnames:
-                self.crest_phases.update({i: 0})
+                self.crest_phases.update({aliases.alias_names[self.linacNameConvert(i)]: 0})
         if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
             self.setGunStartEndTime(self.gunStartTime, self.gunEndTime)
         for key in self.linacnames:
@@ -427,12 +427,16 @@ class GetDataFromCATAP(object):
 
     def getGunLLRFData(self):
         if self.dictsSet:
+            if self.gunname in self.crest_phases.keys():
+                self.gun_crest = self.crest_phases[self.gunname]
+            else:
+                self.gun_crest = self.crest_phases[aliases.alias_names[self.gunname]]
             if not self.epics_tools_types['llrf']:
                 self.gunLLRFObj.updateTraceValues()
                 # for trace in self.guntraces:
                     # self.gundata.update({trace: self.llrf_factory.getCavFwdPwr(self.gunname)})
                 self.gundata.update({"phase_abs": self.gunLLRFObj.getPhi()})
-                self.gundata.update({"phase": self.gundata['phase_abs'] - self.crest_phases[self.gunname]})
+                self.gundata.update({"phase": self.gundata['phase_abs'] - self.gun_crest})
                 self.gundata.update({"amplitude_MW": max(self.llrf_factory.getCavFwdPwr(self.gunname))})
                 self.gundata.update({"amplitude": self.gunLLRFObj.getAmp()})
                 self.gunLLRFObj.stopTraceMonitoring()
@@ -442,7 +446,7 @@ class GetDataFromCATAP(object):
                         numpy.mean(self.epics_tools_monitors[self.llrf_names[0]][key].getBuffer()))
                 self.gundata['amplitude_MW'] = self.gundata['klystron_amplitude_MW']
                 self.gundata['phase_abs'] = self.gundata['phase_sp']
-                self.gundata.update({"phase": self.gundata['phase_abs'] - self.crest_phases[self.gunname]})
+                self.gundata.update({"phase": self.gundata['phase_abs'] - self.gun_crest})
             self.pulse_length = 2.5
             self.getenergy = self.unitConversion.getEnergyGain(self.gunname,
                                                                self.gundata['amplitude_MW'],
@@ -464,6 +468,10 @@ class GetDataFromCATAP(object):
     def getLinacLLRFData(self, linac_name):
         if self.dictsSet:
             self.linacname = self.linacNameConvert(linac_name)
+            if self.linacname in self.crest_phases.keys():
+                self.linac_crest = self.crest_phases[self.linacname]
+            else:
+                self.linac_crest = self.crest_phases[aliases.alias_names[self.linacname]]
             if not self.epics_tools_types['llrf']:
                 self.linacLLRFObj[self.linacname].updateTraceValues()
                 for trace in self.linactraces:
@@ -471,7 +479,7 @@ class GetDataFromCATAP(object):
                 # self.linacdata[self.linacname].update({trace: self.linacdata[self.linacname][trace]})
                 self.linacdata[self.linacname].update({"phase_abs": self.linacLLRFObj[self.linacname].getPhi()})
                 self.linacdata[self.linacname].update(
-                    {"phase": self.linacdata[self.linacname]['phase_abs'] - self.crest_phases[linac_name]})
+                    {"phase": self.linacdata[self.linacname]['phase_abs'] - self.linac_crest})
                 self.linacdata[self.linacname].update({"amplitude_MW": self.linacLLRFObj[self.linacname].getAmpMW()})
                 self.linacdata[self.linacname].update({"amplitude": self.linacLLRFObj[self.linacname].getAmp()})
             else:
@@ -481,7 +489,7 @@ class GetDataFromCATAP(object):
                 self.linacdata[self.linacname]['amplitude_MW'] = self.linacdata[self.linacname]['klystron_amplitude_MW']
                 self.linacdata[self.linacname]['phase_abs'] = self.linacdata[self.linacname]['phase_sp']
                 self.linacdata[self.linacname]['phase'] = self.linacdata[self.linacname]['phase_abs'] - \
-                                                          self.crest_phases[linac_name]
+                                                          self.linac_crest
             self.pulse_length = 0.75
             self.getenergy = self.unitConversion.getEnergyGain(linac_name,
                                                                self.linacdata[self.linacname]['amplitude_MW'],

@@ -160,7 +160,7 @@ class UnitConversion(object):
             # New stuff based on measurements in \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xls
             if forward_power > 10 ** 6:
                 momentum = aliases.gun_power_to_momentum(forward_power) * numpy.cos(phase * math.pi / 180)
-                return abs(momentum)
+                return momentum
             else:
                 return 0
 
@@ -174,7 +174,7 @@ class UnitConversion(object):
         elif (cavity == "L01") or ("L01" in cavity):
             if forward_power > 10 ** 6:
                 momentum = aliases.l01_power_to_momentum(forward_power) * numpy.cos(phase * math.pi / 180)
-                return abs(momentum)
+                return momentum
             else:
                 return 0
 

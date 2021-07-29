@@ -8,7 +8,9 @@ alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                #"CLA-GUN-MAG-SOL-02": "CLA-LRG1-MAG-SOL-01",
                #"CLA-LRG1-MAG-SOL-01": "CLA-GUN-MAG-SOL-02",
                "CLA-L01-CAV": "L01",
-               "CLA-LRG1-GUN-CAV": "LRRG_GUN"}
+               "CLA-LRG1-GUN-CAV": "Gun",
+               "Gun": "CLA-LRG1-GUN-CAV",
+               "Linac": "CLA-L01-CAV"}
                #"CLA-LRG1-MAG-BSOL-01": "CLA-LRG1-MAG-SOL-01"}
 
 lattice_to_online_model = {'GUN': 'Gun',

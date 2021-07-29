@@ -10,8 +10,8 @@ import time
 # Get machine state class
 machinestate = machine_state.MachineState()
 
-gun_name = 'CLA-GUN-LRF-CTRL-01'
-l01_name = 'CLA-L01-LRF-CTRL-01'
+gun_name = 'CLA-LRG1-GUN-CAV'
+l01_name = 'CLA-L01-CAV'
 
 crest_phases = {}
 crest_phases.update({gun_name: 8.2})
