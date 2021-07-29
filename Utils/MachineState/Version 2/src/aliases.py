@@ -108,7 +108,11 @@ gun_klystron_fwd_power_vs_momentum = [power, momentum]
 gun_power_to_momentum = scipy.interpolate.interp1d(power,momentum)
 gun_momentum_to_power = scipy.interpolate.interp1d(momentum,power)
 
-# gun momentum measurements taken from \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\28\Linac_power_momentum_scan_cathode22.xls
+# l01 momentum measurements taken from \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\28\Linac_power_momentum_scan_cathode22.xls
+# NOTE: THESE MEASUREMENTS WERE TAKEN USING THE RF METRICS APP (AVG. KLYSTRON POWER BETWEEN THE CURSORS)
+# CLA-GUN-LRF-CTRL-01:ad1:ch1:Power:Wnd:Hi IS THE PEAK IN THE RF TRACE
+# CLA-GUN-LRF-CTRL-01:ad1:ch1:Power:Wnd:Avg IS THE AVERAGE BETWEEN THE CURSOR POSITIONS
+# THE CURSOR POSITIONS WERE 74 AND 117
 power = [7.49*(10**6),8.01*(10**6),8.66*(10**6),9.11*(10**6),9.61*(10**6),1.01*(10**7),1.04*(10**7),1.08*(10**7),1.11*(10**7),1.15*(10**7),1.18*(10**7),1.21*(10**7),1.23*(10**7),1.26*(10**7),1.27*(10**7),1.29*(10**7),1.31*(10**7),1.33*(10**7),1.34*(10**7),1.36*(10**7),1.38*(10**7)]
 mom = [28.73,29.79,30.96,31.70,32.50,33.13,33.56,34.14,34.72,35.19,35.67,36.09,36.35,36.56,36.76,36.93,37.25,37.46,37.51,37.56,37.61]
 momentum = [i - 4.45 for i in mom] #4.45 was gun momentum gain

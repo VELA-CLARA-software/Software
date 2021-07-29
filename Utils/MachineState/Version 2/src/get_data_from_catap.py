@@ -318,7 +318,7 @@ class GetDataFromCATAP(object):
                 self.cameradata[name]['screen'] = self.cameraDict[name].getScreen()
                 if self.cameradata[name]['screen'] in self.screen_alias.keys():
                     self.cameradata[name].update({'screen': self.screen_alias[self.cameradata[name]['screen']]})
-                if self.cameradata[name]['acquiring']:
+                if self.cameradata[name]['acquiring'] or name == 'CLA-VCA-DIA-CAM-01':
                     self.cameradata[name]['x_pix_abs'] = self.cameraDict[name].getXPix()
                     self.cameradata[name]['y_pix_abs'] = self.cameraDict[name].getYPix()
                     self.cameradata[name]['x_pix'] = self.cameradata[name]['x_pix_abs'] - \
@@ -384,6 +384,11 @@ class GetDataFromCATAP(object):
             self.magnetdata[name]['psu_state'] = str(self.magDict[name].psu_state)
             # self.magnetdata[name]['field_integral_coefficients'] = []
             # self.magnetdata[name]['field_integral_coefficients'] = self.magDict[name].getFieldIntegralCoefficients()
+            self.fic = self.magDict[name].getFieldIntegralCoefficients()
+            self.seen = set()
+            self.seen_add = self.seen.add
+            self.ficmod =  [x for x in self.fic if not (x in self.seen or self.seen_add(x))]
+            self.magnetdata[name]['field_integral_coefficients'] = self.ficmod
             self.magnetdata[name]['magnetic_length'] = self.magDict[name].magnetic_length * 1
             self.energy_at_magnet = 0
             if "GUN" in name or "LRG1" in name:
@@ -396,7 +401,7 @@ class GetDataFromCATAP(object):
                 self.energy_at_magnet = energy[self.linac_position['L01']]
             self.unitConversion.currentToK(self.magnetdata[name]['type'],
                                            self.magDict[name].READI,
-                                           list(set(self.magDict[name].getFieldIntegralCoefficients())),
+                                           self.magnetdata[name]['field_integral_coefficients'],
                                            self.magnetdata[name]['magnetic_length'],
                                            self.energy_at_magnet,
                                            self.magnetdata[name],

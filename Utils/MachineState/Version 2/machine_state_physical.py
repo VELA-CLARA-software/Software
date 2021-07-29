@@ -14,7 +14,7 @@ gun_name = 'CLA-GUN-LRF-CTRL-01'
 l01_name = 'CLA-L01-LRF-CTRL-01'
 
 crest_phases = {}
-crest_phases.update({gun_name: 148.5})
+crest_phases.update({gun_name: 8.2})
 crest_phases.update({l01_name: -117})
 
 # Set up CATAP
