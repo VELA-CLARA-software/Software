@@ -6,7 +6,7 @@ import src.machine_state as machine_state
 import time
 from datetime import datetime
 
-from PyQt5.QtWidgets import QWidget, QPushButton, QApplication, QVBoxLayout, QHBoxLayout, QDoubleSpinBox, QLabel, QTextEdit
+from PyQt5.QtWidgets import QWidget, QPushButton, QApplication, QVBoxLayout, QHBoxLayout, QDoubleSpinBox, QLabel
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 
@@ -85,9 +85,7 @@ class Example(QWidget):
             self.machinestate = machine_state.MachineState()
             self.mode = STATE.PHYSICAL
             self.machinestate.useOnlineModelLattice(om=True)
-        self.machinestate.initialiseCATAP(self.mode, crest_phases=self.crest_phases,
-                                          gun_calibration_data=None,
-                                          l01_calibration_data=None)
+        self.machinestate.initialiseCATAP(self.mode, crest_phases=self.crest_phases)
         time.sleep(1)
 
         # Get the dictionary containing all CATAP hardware objects (used for controlling and monitoring the machine)

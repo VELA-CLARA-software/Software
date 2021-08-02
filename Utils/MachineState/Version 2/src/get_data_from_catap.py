@@ -72,7 +72,9 @@ class GetDataFromCATAP(object):
 
         self.dictsSet = False
 
-    def initCATAP(self, mode, crest_phases=None, gun_calibration_data=False, l01_calibration_data=False):
+        def initCATAP(self, mode, crest_phases=None,
+                      gun_calibration_data='\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\27\\Gun_power_momentum_scan_cathode22.xlsx',
+                      l01_calibration_data='\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\28\\Linac_power_momentum_scan_cathode22.xlsx'):
         # setup environment
         if mode == 'VIRTUAL' or mode == CATAP.HardwareFactory.STATE.VIRTUAL:
             os.environ['EPICS_CA_ADDR_LIST'] = "192.168.83.246"
@@ -98,8 +100,8 @@ class GetDataFromCATAP(object):
         # self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
         self.llrf_factory = self.hf.getLLRFFactory(self.llrf_types)
         time.sleep(1)
-        self.llrf_factory.messagesOff()
-        self.llrf_factory.debugMessagesOff()
+        # self.llrf_factory.messagesOff()
+        # self.llrf_factory.debugMessagesOff()
         self.llrf_names = self.llrf_factory.getLLRFNames()
         self.gunname = self.llrf_names[0]
         self.linacnames = self.llrf_names[1:]
@@ -136,19 +138,19 @@ class GetDataFromCATAP(object):
         time.sleep(1)
         self.magFac = self.hf.getMagnetFactory()
         time.sleep(1)
-        self.chargeFac.messagesOff()
-        self.chargeFac.debugMessagesOff()
-        self.bpmFac.messagesOff()
-        self.bpmFac.debugMessagesOff()
-        self.magFac.messagesOff()
-        self.magFac.debugMessagesOff()
+        # self.chargeFac.messagesOff()
+        # self.chargeFac.debugMessagesOff()
+        # self.bpmFac.messagesOff()
+        # self.bpmFac.debugMessagesOff()
+        # self.magFac.messagesOff()
+        # self.magFac.debugMessagesOff()
         if self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
             self.magFac.switchOnAll()
         if not self.epics_tools_types['camera']:
             self.camFac = self.hf.getCameraFactory()
             time.sleep(1)
-            self.camFac.messagesOff()
-            self.camFac.debugMessagesOff()
+            # self.camFac.messagesOff()
+            # self.camFac.debugMessagesOff()
 
         # #self.pilFac = hf.getPILa()
         # #self.camFac = hf.getcam()
