@@ -72,9 +72,9 @@ class GetDataFromCATAP(object):
 
         self.dictsSet = False
 
-        def initCATAP(self, mode, crest_phases=None,
-                      gun_calibration_data='\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\27\\Gun_power_momentum_scan_cathode22.xlsx',
-                      l01_calibration_data='\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\28\\Linac_power_momentum_scan_cathode22.xlsx'):
+    def initCATAP(self, mode, crest_phases=None,
+                  gun_calibration_data='\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\27\\Gun_power_momentum_scan_cathode22.xlsx',
+                  l01_calibration_data='\\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\28\\Linac_power_momentum_scan_cathode22.xlsx'):
         # setup environment
         if mode == 'VIRTUAL' or mode == CATAP.HardwareFactory.STATE.VIRTUAL:
             os.environ['EPICS_CA_ADDR_LIST'] = "192.168.83.246"
