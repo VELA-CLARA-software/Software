@@ -37,15 +37,17 @@ class UnitConversion(object):
     def getL01Position(self):
         return self.l01_position
 
-    def getEnergyGain(self, rf_type, forward_power, phase, pulse_length, cavity_length):
+    def getEnergyGain(self, rf_type, forward_power, phase, pulse_length, cavity_length, calibrate=None):
         if (rf_type == "LRRG_GUN") or ("GUN" in rf_type):
-            self.gun_energy_gain = self.getEnergyFromRF(forward_power, phase, pulse_length, cavity=rf_type)
-            self.energy_gain = self.getEnergyFromRF(forward_power, 0, pulse_length, cavity=rf_type)
+            self.gun_energy_gain = self.getEnergyFromRF(forward_power, phase, pulse_length, cavity=rf_type,
+                                                        calibrate=calibrate)
+            self.energy_gain = self.getEnergyFromRF(forward_power, 0, pulse_length, cavity=rf_type, calibrate=calibrate)
             self.field_amplitude = float(self.energy_gain / 0.0644)
             return [self.gun_energy_gain, self.field_amplitude]
         elif (rf_type == "L01") or ("L01" in rf_type):
-            self.l01_energy_gain = self.getEnergyFromRF(forward_power, phase, pulse_length, cavity=rf_type)
-            self.energy_gain = self.getEnergyFromRF(forward_power, 0, pulse_length, cavity=rf_type)
+            self.l01_energy_gain = self.getEnergyFromRF(forward_power, phase, pulse_length, cavity=rf_type,
+                                                        calibrate=calibrate)
+            self.energy_gain = self.getEnergyFromRF(forward_power, 0, pulse_length, cavity=rf_type, calibrate=calibrate)
             self.field_amplitude = float(self.energy_gain / cavity_length)
             return [self.l01_energy_gain, self.field_amplitude]
 
@@ -161,7 +163,7 @@ class UnitConversion(object):
         if (cavity == "LRRG_GUN") or ("GUN" in cavity):
             # New stuff based on measurements in \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xls
             if forward_power > 10 ** 6:
-                if calibrate==None:
+                if calibrate is None:
                     momentum = aliases.gun_power_to_momentum(forward_power) * numpy.cos(phase * math.pi / 180)
                 else:
                     self.calibration_data = pandas.read_excel(calibrate)
@@ -170,7 +172,8 @@ class UnitConversion(object):
                     self.fwd_power_calibration = self.fwd_power_calibration[~numpy.isnan(self.fwd_power_calibration)]
                     self.momentum_calibration = self.momentum_calibration[~numpy.isnan(self.momentum_calibration)]
                     self.interpolation = scipy.interpolate.interp1d(self.fwd_power_calibration,
-                                                                    self.momentum_calibration)
+                                                                    self.momentum_calibration,
+                                                                    fill_value='extrapolate')
                     momentum = self.interpolation(forward_power) * numpy.cos(phase * math.pi / 180)
                 return momentum
             else:
@@ -185,7 +188,7 @@ class UnitConversion(object):
             # return numpy.mean([bestcase, worstcase])
         elif (cavity == "L01") or ("L01" in cavity):
             if forward_power > 10 ** 6:
-                if calibrate==None:
+                if calibrate is None:
                     momentum = aliases.l01_power_to_momentum(forward_power) * numpy.cos(phase * math.pi / 180)
                 else:
                     self.calibration_data = pandas.read_excel(calibrate)
@@ -194,7 +197,8 @@ class UnitConversion(object):
                     self.fwd_power_calibration = self.fwd_power_calibration[~numpy.isnan(self.fwd_power_calibration)]
                     self.momentum_calibration = self.momentum_calibration[~numpy.isnan(self.momentum_calibration)]
                     self.interpolation = scipy.interpolate.interp1d(self.fwd_power_calibration,
-                                                                    self.momentum_calibration)
+                                                                    self.momentum_calibration,
+                                                                    fill_value='extrapolate')
                     momentum = self.interpolation(forward_power) * numpy.cos(phase * math.pi / 180)
                 return momentum
             else:
@@ -212,7 +216,7 @@ class UnitConversion(object):
         if (cavity == "LRRG_GUN") or ("GUN" in cavity):
             # New stuff based on measurements in \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xls
             if energy_gain > 0.5:
-                if calibrate==None:
+                if calibrate is None:
                     power = aliases.gun_momentum_to_power(energy_gain) * numpy.arccos(phase * math.pi / 180)
                 else:
                     self.calibration_data = pandas.read_excel(calibrate)
@@ -221,7 +225,8 @@ class UnitConversion(object):
                     self.fwd_power_calibration = self.fwd_power_calibration[~numpy.isnan(self.fwd_power_calibration)]
                     self.momentum_calibration = self.momentum_calibration[~numpy.isnan(self.momentum_calibration)]
                     self.interpolation = scipy.interpolate.interp1d(self.momentum_calibration,
-                                                                    self.fwd_power_calibration)
+                                                                    self.fwd_power_calibration,
+                                                                    fill_value='extrapolate')
                     power = self.interpolation(energy_gain) * numpy.arccos(phase * math.pi / 180)
                 return abs(power)
             else:
@@ -243,7 +248,7 @@ class UnitConversion(object):
             # return numpy.mean([bestcase, worstcase])
         elif (cavity == "L01") or ("L01" in cavity):
             if energy_gain > 0.5:
-                if calibrate == None:
+                if calibrate is None:
                     power = aliases.gun_momentum_to_power(energy_gain) * numpy.arccos(phase * math.pi / 180)
                 else:
                     self.calibration_data = pandas.read_excel(calibrate)
@@ -252,7 +257,8 @@ class UnitConversion(object):
                     self.fwd_power_calibration = self.fwd_power_calibration[~numpy.isnan(self.fwd_power_calibration)]
                     self.momentum_calibration = self.momentum_calibration[~numpy.isnan(self.momentum_calibration)]
                     self.interpolation = scipy.interpolate.interp1d(self.momentum_calibration,
-                                                                    self.fwd_power_calibration)
+                                                                    self.fwd_power_calibration,
+                                                                    fill_value='extrapolate')
                     power = self.interpolation(energy_gain) * numpy.arccos(phase * math.pi / 180)
                 return abs(power)
             else:

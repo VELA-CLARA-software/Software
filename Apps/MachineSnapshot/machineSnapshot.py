@@ -6,7 +6,7 @@ import src.machine_state as machine_state
 import time
 from datetime import datetime
 
-from PyQt5.QtWidgets import QWidget, QPushButton, QApplication, QVBoxLayout, QHBoxLayout, QDoubleSpinBox, QLabel
+from PyQt5.QtWidgets import QWidget, QPushButton, QApplication, QVBoxLayout, QHBoxLayout, QDoubleSpinBox, QLabel, QTextEdit
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 
@@ -85,20 +85,20 @@ class Example(QWidget):
             self.machinestate = machine_state.MachineState()
             self.mode = STATE.PHYSICAL
             self.machinestate.useOnlineModelLattice(om=True)
-        self.machinestate.initialiseCATAP(self.mode, crest_phases=self.crest_phases)
+        self.machinestate.initialiseCATAP(self.mode, crest_phases=self.crest_phases,
+                                          gun_calibration_data=None,
+                                          l01_calibration_data=None)
         time.sleep(1)
 
         # Get the dictionary containing all CATAP hardware objects (used for controlling and monitoring the machine)
         self.catapdict = self.machinestate.getCATAPDict(self.mode)
 
         # Returns the machine state dictionary from CATAP
-        self.catapdata = self.machinestate.getMachineStateFromCATAP(self.mode, crests=self.crest_phases,
-                                                                    gun_calibration_data=self.gun_calibration_data,
-                                                                    l01_calibration_data=self.l01_calibration_data)
+        self.catapdata = self.machinestate.getMachineStateFromCATAP(self.mode, crests=self.crest_phases)
         time.sleep(1)
         self.machinestate.exportParameterValuesToYAMLFile(self.filename+".yaml", self.catapdata)
         self.qbtn.setText("Save snapshot")
-        self.fileLocationLabel.setText('File saved to ' + self.filename)
+        self.fileLocationLabel.setText('File saved to ' + self.filename+".yaml")
 
     def getSnapshotDirectory(self):
         self.possibleDirectories = ['legacy', 'dev', 'stage', 'release']
