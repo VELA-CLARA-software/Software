@@ -66,7 +66,7 @@ class UnitConversion(object):
                                        field_integral_coefficients[-1])
             self.int_strength = numpy.polyval(self.coeffs, abs(current))
             self.effect = (scipy.constants.speed_of_light / 1e6) * self.int_strength / energy
-            self.k1 = self.effect / (magnetic_length)
+            self.k1 = self.effect# * 1000 / (magnetic_length)
             if psu_state == "ON":
                 magdict.update({'k1': float(self.k1)})
             else:
@@ -110,7 +110,7 @@ class UnitConversion(object):
 
     def kToCurrent(self, mag_type, k, field_integral_coefficients, magnetic_length, energy):
         if (mag_type == 'QUAD') or (mag_type == 'quadrupole'):
-            self.effect = magnetic_length * k #* magnetic_length
+            self.effect = magnetic_length * 1000 * k #* magnetic_length
             self.int_strength = self.effect * energy / (scipy.constants.speed_of_light / 1e6)
             self.sign = numpy.copysign(1, k)
             self.ficmod = [i * int(self.sign) for i in field_integral_coefficients[:-1]]
