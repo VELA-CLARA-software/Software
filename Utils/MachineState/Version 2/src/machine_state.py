@@ -34,9 +34,16 @@ class MachineState(object):
         self.simulation_defaults_set = False
 
     # Initialises CATAP hardware factories
-    def initialiseCATAP(self, mode, crest_phases=None):
+    # crest_phases is a dict containing the crests of the RF cavities
+    # calibration_data can point to spreadsheets containing the RF forward power to momentum gain, otherwise we use
+    # data given in aliases.py
+    # See the following files for examples:
+    # \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xlsx
+    # \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\28\Linac_power_momentum_scan_cathode22.xlsx
+    def initialiseCATAP(self, mode, crest_phases=None, gun_calibration_data=None, l01_calibration_data=None):
         if not self.CATAPInitialised:
-            self.getDataFromCATAP.initCATAP(mode, crest_phases=crest_phases)
+            self.getDataFromCATAP.initCATAP(mode, crest_phases=crest_phases, gun_calibration_data=gun_calibration_data,
+                                            l01_calibration_data=l01_calibration_data)
             self.CATAPInitialised = True
         else:
             print("CATAP already initialised")
@@ -47,12 +54,12 @@ class MachineState(object):
 
     # Reads the machine state from CATAP. See all functions below in GetDataFromCATAP class
     # Also sets defaults for the simulation
-    def getMachineStateFromCATAP(self, mode, start_lattice='Generator', final_lattice='CLA-S02'):
+    def getMachineStateFromCATAP(self, mode, start_lattice='Generator', final_lattice='CLA-S02', crests=None):
         if not self.CATAPInitialised:
             self.getDataFromCATAP.initCATAP(mode)
             self.CATAPInitialised = True
         self.allDicts = self.getDataFromCATAP.setAllDicts()
-        self.allData = self.getDataFromCATAP.getAllData()
+        self.allData = self.getDataFromCATAP.getAllData(crests=crests)
         self.vc_object = self.getDataFromCATAP.getVCObject()
         self.wcm_object = self.getDataFromCATAP.getWCMObject()
         self.getDataFromSimFrame.setSimulationDictDefaults(self.allData,

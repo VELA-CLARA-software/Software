@@ -72,7 +72,7 @@ class GetDataFromCATAP(object):
 
         self.dictsSet = False
 
-    def initCATAP(self, mode, crest_phases=None):
+    def initCATAP(self, mode, crest_phases=None, gun_calibration_data=False, l01_calibration_data=False):
         # setup environment
         if mode == 'VIRTUAL' or mode == CATAP.HardwareFactory.STATE.VIRTUAL:
             os.environ['EPICS_CA_ADDR_LIST'] = "192.168.83.246"
@@ -154,6 +154,16 @@ class GetDataFromCATAP(object):
         # #self.camFac = hf.getcam()
         self.hf.debugMessagesOff()
         self.hf.messagesOff()
+        if gun_calibration_data is not None:
+            self.gun_calibrate = True
+            self.gun_calibration_data = gun_calibration_data
+        else:
+            self.gun_calibration_data = None
+        if l01_calibration_data is not None:
+            self.l01_calibrate = True
+            self.l01_calibration_data = l01_calibration_data
+        else:
+            self.l01_calibration_data = None
         return True
 
     def useOnlineModelLattice(self, om=False):
@@ -425,16 +435,23 @@ class GetDataFromCATAP(object):
             self.linacEndTimes[name] = end_time
             self.linacLLRFObj[name].setMeanStartEndTime(start_time, end_time, trace)
 
-    def getGunLLRFData(self):
+    def getGunLLRFData(self, crest=None):
         if self.dictsSet:
             if self.gunname in self.crest_phases.keys():
-                self.gun_crest = self.crest_phases[self.gunname]
+                if crest is not None:
+                    self.gun_crest = crest
+                else:
+                    self.gun_crest = self.crest_phases[self.gunname]
             else:
-                self.gun_crest = self.crest_phases[aliases.alias_names[self.gunname]]
+                if crest is not None:
+                    self.gun_crest = crest
+                else:
+                    self.gun_crest = self.crest_phases[aliases.alias_names[self.gunname]]
             if not self.epics_tools_types['llrf']:
                 self.gunLLRFObj.updateTraceValues()
                 # for trace in self.guntraces:
                     # self.gundata.update({trace: self.llrf_factory.getCavFwdPwr(self.gunname)})
+                self.gundata.update({'crest': self.gun_crest})
                 self.gundata.update({"phase_abs": self.gunLLRFObj.getPhi()})
                 self.gundata.update({"phase": self.gundata['phase_abs'] - self.gun_crest})
                 self.gundata.update({"amplitude_MW": max(self.llrf_factory.getCavFwdPwr(self.gunname))})
@@ -445,6 +462,7 @@ class GetDataFromCATAP(object):
                     self.gundata[key] = float(
                         numpy.mean(self.epics_tools_monitors[self.llrf_names[0]][key].getBuffer()))
                 self.gundata['amplitude_MW'] = self.gundata['klystron_amplitude_MW']
+                self.gundata.update({'crest': self.gun_crest})
                 self.gundata['phase_abs'] = self.gundata['phase_sp']
                 self.gundata.update({"phase": self.gundata['phase_abs'] - self.gun_crest})
             self.pulse_length = 2.5
@@ -452,7 +470,8 @@ class GetDataFromCATAP(object):
                                                                self.gundata['amplitude_MW'],
                                                                self.gundata['phase'],
                                                                self.pulse_length,
-                                                               self.gun_length)
+                                                               self.gun_length,
+                                                               calibrate=self.gun_calibration_data)
             self.gundata.update({"energy_gain": float(self.getenergy[0])})
             self.gundata.update({"field_amplitude": self.getenergy[1]})
             self.gundata.update({"type": 'cavity'})
@@ -465,18 +484,25 @@ class GetDataFromCATAP(object):
             self.setAllDicts()
             self.getGunLLRFData()
 
-    def getLinacLLRFData(self, linac_name):
+    def getLinacLLRFData(self, linac_name, crest = None):
         if self.dictsSet:
             self.linacname = self.linacNameConvert(linac_name)
             if self.linacname in self.crest_phases.keys():
-                self.linac_crest = self.crest_phases[self.linacname]
+                if crest is not None:
+                    self.linac_crest = crest
+                else:
+                    self.linac_crest = self.crest_phases[self.linacname]
             else:
-                self.linac_crest = self.crest_phases[aliases.alias_names[self.linacname]]
+                if crest is not None:
+                    self.linac_crest = crest
+                else:
+                    self.linac_crest = self.crest_phases[aliases.alias_names[self.linacname]]
             if not self.epics_tools_types['llrf']:
                 self.linacLLRFObj[self.linacname].updateTraceValues()
                 for trace in self.linactraces:
                     self.linacdata[self.linacname].update({trace: self.llrf_factory.getCutMean(linac_name, trace)})
                 # self.linacdata[self.linacname].update({trace: self.linacdata[self.linacname][trace]})
+                self.linacdata[self.linacname].update({'crest': self.linac_crest})
                 self.linacdata[self.linacname].update({"phase_abs": self.linacLLRFObj[self.linacname].getPhi()})
                 self.linacdata[self.linacname].update(
                     {"phase": self.linacdata[self.linacname]['phase_abs'] - self.linac_crest})
@@ -487,6 +513,7 @@ class GetDataFromCATAP(object):
                     self.linacdata[self.linacname][key] = float(numpy.mean(
                         self.epics_tools_monitors[linac_name][key].getBuffer()))
                 self.linacdata[self.linacname]['amplitude_MW'] = self.linacdata[self.linacname]['klystron_amplitude_MW']
+                self.linacdata[self.linacname].update({'crest': self.linac_crest})
                 self.linacdata[self.linacname]['phase_abs'] = self.linacdata[self.linacname]['phase_sp']
                 self.linacdata[self.linacname]['phase'] = self.linacdata[self.linacname]['phase_abs'] - \
                                                           self.linac_crest
@@ -495,7 +522,8 @@ class GetDataFromCATAP(object):
                                                                self.linacdata[self.linacname]['amplitude_MW'],
                                                                self.linacdata[self.linacname]['phase'],
                                                                0.75,
-                                                               self.linac_length[self.linacname])
+                                                               self.linac_length[self.linacname],
+                                                               calibrate=self.l01_calibration_data)
             # self.linacdata[linac_name].update({"phase":self.linacdata[linac_name]["CAVITY_FORWARD_PHASE"]})
             self.linacdata[self.linacname].update({"energy_gain": float(self.getenergy[0])})
             self.linacdata[self.linacname].update({"field_amplitude": self.getenergy[1]})
@@ -522,13 +550,19 @@ class GetDataFromCATAP(object):
     def getEnergyDict(self):
         return self.energy
 
-    def getAllData(self):
+    def getAllData(self, crests=None):
         if self.dictsSet:
-            self.getGunLLRFData()
+            if crests is not None:
+                self.getGunLLRFData(crest=crests[aliases.alias_names[self.gunname]])
+            else:
+                self.getGunLLRFData()
             self.energy.update({self.gun_position: self.gundata['energy_gain']})
             for i in self.linacnames:
-                self.getLinacLLRFData(i)
                 self.linacname = self.linacNameConvert(i)
+                if crests is not None:
+                    self.getLinacLLRFData(i, crest=crests[aliases.alias_names[self.linacname]])
+                else:
+                    self.getLinacLLRFData(i)
                 self.energy.update({self.linac_position[self.linacname]: self.linacdata[self.linacname]['energy_gain']})
             for i in self.bpmnames:
                 self.getBPMData(i)

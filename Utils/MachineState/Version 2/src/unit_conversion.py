@@ -3,6 +3,8 @@ import scipy.constants
 import scipy.stats
 import math
 import src.aliases as aliases
+import pandas
+import scipy.interpolate
 import CATAP.HardwareFactory
 
 class UnitConversion(object):
@@ -155,11 +157,21 @@ class UnitConversion(object):
                                           self.sign)  # last root is always x value (#TODO: can prove this?)
             return self.current
 
-    def getEnergyFromRF(self, forward_power, phase, pulse_length, cavity=None):
+    def getEnergyFromRF(self, forward_power, phase, pulse_length, cavity=None, calibrate=None):
         if (cavity == "LRRG_GUN") or ("GUN" in cavity):
             # New stuff based on measurements in \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xls
             if forward_power > 10 ** 6:
-                momentum = aliases.gun_power_to_momentum(forward_power) * numpy.cos(phase * math.pi / 180)
+                if calibrate==None:
+                    momentum = aliases.gun_power_to_momentum(forward_power) * numpy.cos(phase * math.pi / 180)
+                else:
+                    self.calibration_data = pandas.read_excel(calibrate)
+                    self.fwd_power_calibration = self.calibration_data[self.calibration_data.columns[1]].values
+                    self.momentum_calibration = self.calibration_data[self.calibration_data.columns[7]].values
+                    self.fwd_power_calibration = self.fwd_power_calibration[~numpy.isnan(self.fwd_power_calibration)]
+                    self.momentum_calibration = self.momentum_calibration[~numpy.isnan(self.momentum_calibration)]
+                    self.interpolation = scipy.interpolate.interp1d(self.fwd_power_calibration,
+                                                                    self.momentum_calibration)
+                    momentum = self.interpolation(forward_power) * numpy.cos(phase * math.pi / 180)
                 return momentum
             else:
                 return 0
@@ -173,16 +185,44 @@ class UnitConversion(object):
             # return numpy.mean([bestcase, worstcase])
         elif (cavity == "L01") or ("L01" in cavity):
             if forward_power > 10 ** 6:
-                momentum = aliases.l01_power_to_momentum(forward_power) * numpy.cos(phase * math.pi / 180)
+                if calibrate==None:
+                    momentum = aliases.l01_power_to_momentum(forward_power) * numpy.cos(phase * math.pi / 180)
+                else:
+                    self.calibration_data = pandas.read_excel(calibrate)
+                    self.fwd_power_calibration = self.calibration_data[self.calibration_data.columns[1]].values
+                    self.momentum_calibration = self.calibration_data[self.calibration_data.columns[3]].values
+                    self.fwd_power_calibration = self.fwd_power_calibration[~numpy.isnan(self.fwd_power_calibration)]
+                    self.momentum_calibration = self.momentum_calibration[~numpy.isnan(self.momentum_calibration)]
+                    self.interpolation = scipy.interpolate.interp1d(self.fwd_power_calibration,
+                                                                    self.momentum_calibration)
+                    momentum = self.interpolation(forward_power) * numpy.cos(phase * math.pi / 180)
                 return momentum
             else:
                 return 0
 
-    def getPowerFromEnergy(self, energy_gain, phase, pulse_length, cavity=None):
+    """
+    RF forward power to momentum calibration data is saved in the work folders:
+    \\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\27\\Gun_power_momentum_scan_cathode22.xlsx
+    \\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\28\\Linac_power_momentum_scan_cathode22.xlsx
+    If new data is added, then you need to set the 'calibrate' variable for this function to point to the new 
+    spreadsheet location.
+    Ensure that the forward power and momentum gain are in the correct columns as given in the function below.
+    """
+    def getPowerFromEnergy(self, energy_gain, phase, pulse_length, cavity=None, calibrate=None):
         if (cavity == "LRRG_GUN") or ("GUN" in cavity):
             # New stuff based on measurements in \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xls
             if energy_gain > 0.5:
-                power = aliases.gun_momentum_to_power(energy_gain) * numpy.arccos(phase * math.pi / 180)
+                if calibrate==None:
+                    power = aliases.gun_momentum_to_power(energy_gain) * numpy.arccos(phase * math.pi / 180)
+                else:
+                    self.calibration_data = pandas.read_excel(calibrate)
+                    self.fwd_power_calibration = self.calibration_data[self.calibration_data.columns[1]].values
+                    self.momentum_calibration = self.calibration_data[self.calibration_data.columns[7]].values
+                    self.fwd_power_calibration = self.fwd_power_calibration[~numpy.isnan(self.fwd_power_calibration)]
+                    self.momentum_calibration = self.momentum_calibration[~numpy.isnan(self.momentum_calibration)]
+                    self.interpolation = scipy.interpolate.interp1d(self.momentum_calibration,
+                                                                    self.fwd_power_calibration)
+                    power = self.interpolation(energy_gain) * numpy.arccos(phase * math.pi / 180)
                 return abs(power)
             else:
                 return 0
@@ -203,7 +243,17 @@ class UnitConversion(object):
             # return numpy.mean([bestcase, worstcase])
         elif (cavity == "L01") or ("L01" in cavity):
             if energy_gain > 0.5:
-                power = aliases.l01_momentum_to_power(energy_gain) * numpy.arccos(phase * math.pi / 180)
+                if calibrate == None:
+                    power = aliases.gun_momentum_to_power(energy_gain) * numpy.arccos(phase * math.pi / 180)
+                else:
+                    self.calibration_data = pandas.read_excel(calibrate)
+                    self.fwd_power_calibration = self.calibration_data[self.calibration_data.columns[1]].values
+                    self.momentum_calibration = self.calibration_data[self.calibration_data.columns[3]].values
+                    self.fwd_power_calibration = self.fwd_power_calibration[~numpy.isnan(self.fwd_power_calibration)]
+                    self.momentum_calibration = self.momentum_calibration[~numpy.isnan(self.momentum_calibration)]
+                    self.interpolation = scipy.interpolate.interp1d(self.momentum_calibration,
+                                                                    self.fwd_power_calibration)
+                    power = self.interpolation(energy_gain) * numpy.arccos(phase * math.pi / 180)
                 return abs(power)
             else:
                 return 0
