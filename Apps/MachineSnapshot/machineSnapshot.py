@@ -30,7 +30,7 @@ class Example(QWidget):
         self.gunCrest.setMinimum(-180)
         self.gunCrest.setMaximum(180)
         self.gunCrest.setSingleStep(1)
-        self.gunCrest.setProperty("value", 100)
+        self.gunCrest.setProperty("value", 0)
         self.gunCrestLabel.setFont(QtGui.QFont('Times', 10))
         self.gunCrest.setFont(QtGui.QFont('Times', 10))
         self.gunCrestHBox.addWidget(self.gunCrestLabel)
@@ -42,7 +42,7 @@ class Example(QWidget):
         self.l01Crest.setMinimum(-180)
         self.l01Crest.setMaximum(180)
         self.l01Crest.setSingleStep(1)
-        self.l01Crest.setProperty("value", 100)
+        self.l01Crest.setProperty("value", 0)
         self.l01CrestLabel.setFont(QtGui.QFont('Times', 10))
         self.l01Crest.setFont(QtGui.QFont('Times', 10))
         self.l01CrestHBox.addWidget(self.l01CrestLabel)
@@ -66,12 +66,13 @@ class Example(QWidget):
         self.setLayout(self.mainVBox)
 
         self.setWindowTitle('Save Machine Snapshot')
-        self.resize(800,600)
+        self.resize(850,400)
         self.show()
 
     def saveSnapshot(self):#
         self.filename = self.getSnapshotDirectory()
         self.qbtn.setText("Saving....")
+        QApplication.processEvents()
         self.gun_name = 'CLA-LRG1-GUN-CAV'
         self.l01_name = 'CLA-L01-CAV'
 
@@ -85,7 +86,9 @@ class Example(QWidget):
             self.machinestate = machine_state.MachineState()
             self.mode = STATE.PHYSICAL
             self.machinestate.useOnlineModelLattice(om=True)
-        self.machinestate.initialiseCATAP(self.mode, crest_phases=self.crest_phases)
+        self.machinestate.initialiseCATAP(self.mode, crest_phases=self.crest_phases,
+                                          gun_calibration_data=self.gun_calibration_data,
+                                          l01_calibration_data=self.l01_calibration_data)
         time.sleep(1)
 
         # Get the dictionary containing all CATAP hardware objects (used for controlling and monitoring the machine)
@@ -96,6 +99,8 @@ class Example(QWidget):
         time.sleep(1)
         self.machinestate.exportParameterValuesToYAMLFile(self.filename+".yaml", self.catapdata)
         self.qbtn.setText("Save snapshot")
+        QApplication.processEvents()
+
         self.fileLocationLabel.setText('File saved to ' + self.filename+".yaml")
 
     def getSnapshotDirectory(self):

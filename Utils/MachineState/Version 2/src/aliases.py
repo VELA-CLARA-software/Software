@@ -101,7 +101,8 @@ camera_epics_tools = {'x_pix': 'XPix_RBV',
 llrf_epics_tools = {'klystron_amplitude_MW': 'ad1:ch1:Power:Wnd:Avg',
                     'cavity_amplitude_MW': 'ad1:ch3:Power:Wnd:Avg',
                     'phase_sp': 'vm:dsp:sp_ph:phase',
-                    'phase_ff': 'vm:dsp:ff_ph:phase'}
+                    'phase_ff': 'vm:dsp:ff_ph:phase',
+                    'amplitude_setpoint': 'vm:dsp:sp_amp:amplitude'}
 
 # gun momentum measurements taken from \\fed.cclrc.ac.uk\Org\NLab\ASTeC\Projects\VELA\Work\2021\07\27\Gun_power_momentum_scan_cathode22.xls
 power = [4.62*(10**6),5*(10**6),5.36*(10**6),5.81*(10**6),6.28*(10**6),6.74*(10**6),7.16*(10**6),7.62*(10**6),8.04*(10**6)]

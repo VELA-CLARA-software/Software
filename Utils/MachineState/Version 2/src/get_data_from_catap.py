@@ -311,12 +311,15 @@ class GetDataFromCATAP(object):
     def getBPMData(self, name):
         if self.dictsSet:
             self.bpmdata[name] = {}
-            self.bpmdata[name]['x'] = self.bpmDict[name].x
-            self.bpmdata[name]['y'] = self.bpmDict[name].y
-            self.bpmdata[name]['q'] = self.bpmDict[name].q
-            self.bpmdata[name]['resolution'] = self.bpmDict[name].resolution
+            if self.bpmDict[name].isXPVBufferFull():
+                self.bpmdata[name]['x'] = self.bpmDict[name].x
+                self.bpmdata[name]['y'] = self.bpmDict[name].y
+                self.bpmdata[name]['q'] = self.bpmDict[name].q
+                self.bpmdata[name]['resolution'] = self.bpmDict[name].resolution
+                self.bpmdata[name]['status'] = "GOOD"
+            else:
+                self.bpmdata[name]['status'] = "BAD"
             self.bpmdata[name]['type'] = "bpm"
-            # self.bpmdata[name]['status'] = aliases.state_alias[self.bpmFac.getStatus(name)]
             self.alldata[self.getMachineAreaString(name)].update({name: self.bpmdata[name]})
         else:
             self.setAllDicts()
@@ -457,13 +460,14 @@ class GetDataFromCATAP(object):
                 self.gundata.update({"phase_abs": self.gunLLRFObj.getPhi()})
                 self.gundata.update({"phase": self.gundata['phase_abs'] - self.gun_crest})
                 self.gundata.update({"amplitude_MW": max(self.llrf_factory.getCavFwdPwr(self.gunname))})
-                self.gundata.update({"amplitude": self.gunLLRFObj.getAmp()})
+                self.gundata.update({"amplitude_setpoint": self.gunLLRFObj.getAmp()})
                 self.gunLLRFObj.stopTraceMonitoring()
             else:
                 for key, value in aliases.llrf_epics_tools.items():
                     self.gundata[key] = float(
                         numpy.mean(self.epics_tools_monitors[self.llrf_names[0]][key].getBuffer()))
                 self.gundata['amplitude_MW'] = self.gundata['klystron_amplitude_MW']
+                self.gundata['amplitude_setpoint'] = self.gundata['amplitude_setpoint']
                 self.gundata.update({'crest': self.gun_crest})
                 self.gundata['phase_abs'] = self.gundata['phase_sp']
                 self.gundata.update({"phase": self.gundata['phase_abs'] - self.gun_crest})
@@ -515,6 +519,7 @@ class GetDataFromCATAP(object):
                     self.linacdata[self.linacname][key] = float(numpy.mean(
                         self.epics_tools_monitors[linac_name][key].getBuffer()))
                 self.linacdata[self.linacname]['amplitude_MW'] = self.linacdata[self.linacname]['klystron_amplitude_MW']
+                self.linacdata[self.linacname]['amplitude_setpoint'] = self.linacdata[self.linacname]['amplitude_setpoint']
                 self.linacdata[self.linacname].update({'crest': self.linac_crest})
                 self.linacdata[self.linacname]['phase_abs'] = self.linacdata[self.linacname]['phase_sp']
                 self.linacdata[self.linacname]['phase'] = self.linacdata[self.linacname]['phase_abs'] - \
