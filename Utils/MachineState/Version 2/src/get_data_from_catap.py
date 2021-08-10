@@ -557,17 +557,17 @@ class GetDataFromCATAP(object):
     def getEnergyDict(self):
         return self.energy
 
-    def getAllData(self, crests=None):
+    def getAllData(self, crest_phases=None):
         if self.dictsSet:
-            if crests is not None:
-                self.getGunLLRFData(crest=crests[aliases.alias_names[self.gunname]])
+            if crest_phases is not None:
+                self.getGunLLRFData(crest=crest_phases[aliases.alias_names[self.gunname]])
             else:
                 self.getGunLLRFData()
             self.energy.update({self.gun_position: self.gundata['energy_gain']})
             for i in self.linacnames:
                 self.linacname = self.linacNameConvert(i)
-                if crests is not None:
-                    self.getLinacLLRFData(i, crest=crests[aliases.alias_names[self.linacname]])
+                if crest_phases is not None:
+                    self.getLinacLLRFData(i, crest=crest_phases[aliases.alias_names[self.linacname]])
                 else:
                     self.getLinacLLRFData(i)
                 self.energy.update({self.linac_position[self.linacname]: self.linacdata[self.linacname]['energy_gain']})
