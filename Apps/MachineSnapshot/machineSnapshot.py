@@ -66,7 +66,7 @@ class Example(QWidget):
         self.setLayout(self.mainVBox)
 
         self.setWindowTitle('Save Machine Snapshot')
-        self.resize(850,400)
+        self.resize(850, 400)
         self.show()
 
     def saveSnapshot(self):#
@@ -95,7 +95,7 @@ class Example(QWidget):
         self.catapdict = self.machinestate.getCATAPDict(self.mode)
 
         # Returns the machine state dictionary from CATAP
-        self.catapdata = self.machinestate.getMachineStateFromCATAP(self.mode, crests=self.crest_phases)
+        self.catapdata = self.machinestate.getMachineStateFromCATAP(self.mode, crest_phases=self.crest_phases)
         time.sleep(1)
         self.machinestate.exportParameterValuesToYAMLFile(self.filename+".yaml", self.catapdata)
         self.qbtn.setText("Save snapshot")
