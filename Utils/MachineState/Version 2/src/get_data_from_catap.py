@@ -413,7 +413,7 @@ class GetDataFromCATAP(object):
                     if key < self.magDict[name].position:
                         self.energy_at_magnet += value
             if self.energy_at_magnet == 0:
-                self.energy_at_magnet = energy[self.linac_position['L01']]
+                self.energy_at_magnet = energy[self.gun_position] + energy[self.linac_position['L01']]
             self.unitConversion.currentToK(self.magnetdata[name]['type'],
                                            self.magDict[name].READI,
                                            self.magnetdata[name]['field_integral_coefficients'],
