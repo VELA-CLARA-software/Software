@@ -1,5 +1,6 @@
 import numpy as np, time, sys, os
 from matplotlib import pyplot as plt
+import matplotlib.patches as mpatches
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 import HRFOv2_EPICS_data
 from decimal import *
@@ -9,7 +10,9 @@ from scipy import stats
 #from HRFOv2_EPICS_reader import reader
 
 class figures():
-    #C2_data = CASCADE_2_data()
+
+
+
 
     def __init__(self):
         print('Initaited figures()')
@@ -23,8 +26,8 @@ class figures():
         :param ylabel: str
         :return:
         '''
-        self.time = time
-        self.yaxis = yaxis
+        self.time = np.array(time)
+        self.yaxis = np.array(yaxis)
         self.ylabel = ylabel
         self.savename = savename
         self.PV_idx = PV_idx
@@ -32,8 +35,13 @@ class figures():
         self.savename = savename
         self.PV_idx = PV_idx
 
-        plt.plot(time, yaxis, ls='-', lw=1.0, color='b')
-        plt.scatter(time, yaxis, marker='o', s=3.0, c='r')
+
+        #print(f'\n\n{self.savepath}\\{self.savename}_pv_{self.PV_idx}.png')
+
+        plt.step(self.time, self.yaxis, color='b', where='post')
+        plt.scatter(self.time, self.yaxis, marker='o', s=3.0, c='r')
+        #plt.plot(self.time, self.yaxis, ls='-', lw=1.0, color='b')
+
         # plt.ylabel(data[0]["meta"]["EGU"])
         plt.title(self.ylabel)
         plt.ylabel(self.ylabel)
@@ -290,6 +298,364 @@ class figures():
         #     print(f'Unable to produce histogram of {self.xaxis_name}')
         #     pass
 
+    def histogram_nbin(self, data, xaxis_name, xmax, nbin):
+        '''
+        Generic histogram plotter including mean & st. dev. calcs.
+        :param data:
+        :param xaxis_name:
+        :param xmax:
+        :return:
+        '''
+        # try:
+        self.data = data
+        self.xaxis_name = xaxis_name
+        self.xmax = xmax
+        self.nbin = int(nbin)
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+
+        self.data_reduced = [i for i in self.data if i <= self.xmax]
+        self.savename = f'\\{xaxis_name}.png'
+        min_data = min(self.data_reduced)
+        max_data = max(self.data_reduced)
+
+        mean_dev_L = np.mean(self.data_reduced)
+        std_dev_L = np.std(self.data_reduced)
+        #nbin = int(np.sqrt(len(self.data_reduced)) * 5.0)
+        #print('len(data) = {}\nnbin = {}\ndata = {}\nnumber of NaNs in data = {}\nmin_data = {}\nmax_data = {}\nmean_dev_L = {}\nstd_dev_L = {}'
+        #      .format(len(data), nbin, data, len(nans_in_data), min(data), max(data), mean_dev_L, std_dev_L))
+
+        #print(f'xmax = {self.xmax}')
+        self.n, self.bedges, self.patches = plt.hist(self.data_reduced, bins=self.nbin, range=(min_data, max_data), histtype='step', color='k')
+
+        self.midbin_vals = self.define_midbins_from_bedegs(self.bedges)
+        self.peak_x_val, self.peak_y_val = self.find_top_x_peaks_histogram(self.n, self.bedges)
+
+        plt.scatter(self.peak_x_val, self.peak_y_val, marker='x', s=50, c='r')
+
+        plt.plot([mean_dev_L, mean_dev_L], [0.0, max(self.n)], lw=0.5, ls='--', color='r')
+        plt.plot([mean_dev_L + std_dev_L, mean_dev_L + std_dev_L], [0.0, max(self.n)], lw=0.5, ls='--', color='g')
+        plt.plot([mean_dev_L - std_dev_L, mean_dev_L - std_dev_L], [0.0, max(self.n)], lw=0.5, ls='--', color='g')
+        plt.text(int(self.xmax*0.6), max(self.n) * 0.75, r'$\mu$'' = {}\n'r'$\sigma$'' = {}\nN = {}\n'
+                 .format(mean_dev_L, std_dev_L, len(self.data_reduced)))
+        #plt.xlim(0.0, self.xmax)
+        #plt.ylim(0.0, 200.0)
+        plt.xlabel(self.xaxis_name)
+        plt.ylabel('N')
+        plt.savefig(self.savepath + self.savename)
+        plt.close('all')
+
+
+        #self.midbin_vals = self.define_midbins_from_bedegs(self.bedges)
+
+        # except:
+        #     print(f'Unable to produce histogram of {self.xaxis_name}')
+        #     pass
+
+    def barchart_FaultLog(self):
+        '''
+        Takes the fault log in one-hot coded version and creates a histogram of occurances
+        :return:
+        '''
+        self.savepath =  HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.full_buffers = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.full_buffers]
+        self.fault_log_to_index_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.fault_log_to_index_dict]
+        self.savename = f'\\histogram_FaultLog_occurances.png'
+        self.full_buffers_one_hot = [self.fault_log_to_index_dict[j] for i in self.full_buffers for j in i]
+        self.full_buffers_one_hot_classes = list(set(self.full_buffers_one_hot))
+        print(self.full_buffers_one_hot_classes)
+        self.fault_population = [0]*len(self.fault_log_to_index_dict)
+
+        self.date_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_from]
+        self.time_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_from]
+        self.date_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_to]
+        self.time_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_to]
+        for i in self.full_buffers_one_hot:
+            #print(i)
+            self.fault_population[i] += 1
+
+        print(f'self.fault_population = {self.fault_population}')
+
+        plt.bar(range(len(self.fault_log_to_index_dict)), self.fault_population, 1., color='white', align='center', edgecolor='k')
+        new_labels = range(len(self.fault_log_to_index_dict))
+        plt.xticks(new_labels)
+
+        legend_0 = mpatches.Patch(label=f'0: Cavity Interlock ({self.fault_population[0]})')
+        legend_1 = mpatches.Patch(label=f'1: General Interlock ({self.fault_population[1]})')
+        legend_2 = mpatches.Patch(label=f'2: Hold RF (Con) Engaged ({self.fault_population[2]})')
+        legend_3 = mpatches.Patch(label=f'3: Hold RF Deactivated ({self.fault_population[3]})')
+        legend_4 = mpatches.Patch(label=f'4: Hold RF Engaged ({self.fault_population[4]})')
+        legend_5 = mpatches.Patch(label=f'5: Hold RF On had to STOP ({self.fault_population[5]})')
+        legend_6 = mpatches.Patch(label=f'6: Libera: General Interlock ({self.fault_population[6]})')
+        legend_7 = mpatches.Patch(label=f'7: LLRF:Channel 1 ({self.fault_population[7]})')
+        legend_8 = mpatches.Patch(label=f'8: LLRF:Channel 2 ({self.fault_population[8]})')
+        legend_9 = mpatches.Patch(label=f'9: LLRF:Channel 3 ({self.fault_population[9]})')
+        legend_10 = mpatches.Patch(label=f'10: LLRF:Channel 4 ({self.fault_population[10]})')
+        legend_11 = mpatches.Patch(label=f'11: LLRF:Channel 5 ({self.fault_population[11]})')
+        legend_12 = mpatches.Patch(label=f'12: LLRF:Channel 6 ({self.fault_population[12]})')
+        legend_13 = mpatches.Patch(label=f'13: Mod is OFF ({self.fault_population[13]})')
+        legend_14 = mpatches.Patch(label=f'14: Mod:HV Not On ({self.fault_population[14]})')
+        legend_15 = mpatches.Patch(label=f'15: Mod:HvPs\Ps1\IGBT int. ({self.fault_population[15]})')
+        legend_16 = mpatches.Patch(label=f'16: Mod:Pt\\Cool\\Klystron Body Flow int. ({self.fault_population[16]})')
+        legend_17 = mpatches.Patch(label=f'17: Mod:Pt\\Cool\\Tank Flow int. ({self.fault_population[17]})')
+        legend_18 = mpatches.Patch(label=f'18: Mod:Pt\\Diag\\CT read int. ({self.fault_population[18]})')
+        legend_19 = mpatches.Patch(label=f'19: Mod:Pt\\FilPs\\Volt int. ({self.fault_population[19]})')
+        legend_20 = mpatches.Patch(label=f'20: Mod:Pt\Diag\CT arc int. ({self.fault_population[20]})')
+        legend_21 = mpatches.Patch(label=f'21: Mod:RF Not On ({self.fault_population[21]})')
+        legend_22 = mpatches.Patch(label=f'22: Mod:Sys\\Cool\\Solenoid Flow int. ({self.fault_population[22]})')
+        legend_23 = mpatches.Patch(label=f'23: Mod:Sys\ExtCom\Communication int. ({self.fault_population[23]})')
+        legend_24 = mpatches.Patch(label=f'24: Mod:Sys\HwCtr\Hv interlock 1. ({self.fault_population[24]})')
+        legend_25 = mpatches.Patch(label=f'25: Mod:Sys\HwCtr\Hv interlock 2. ({self.fault_population[25]})')
+        legend_26 = mpatches.Patch(label=f'26: RF Enable Interlock ({self.fault_population[26]})')
+        legend_27 = mpatches.Patch(label=f'27: Switched Modulator OFF. ({self.fault_population[27]})')
+
+        _HANDLES = [legend_0,
+                    legend_1,
+                    legend_2,
+                    legend_3,
+                    legend_4,
+                    legend_5,
+                    legend_6,
+                    legend_7,
+                    legend_8,
+                    legend_9,
+                    legend_10,
+                    legend_11,
+                    legend_12,
+                    legend_13,
+                    legend_14,
+                    legend_15,
+                    legend_16,
+                    legend_17,
+                    legend_18,
+                    legend_19,
+                    legend_20,
+                    legend_21,
+                    legend_22,
+                    legend_23,
+                    legend_24,
+                    legend_25,
+                    legend_26,
+                    legend_27]
+
+        plt.legend(handles=_HANDLES, fontsize=6, loc=1)
+        plt.title(f'From {self.date_from} {self.time_from} to {self.date_to} {self.time_to}')
+        plt.xlabel('Hold RF On Fault Log')
+        plt.ylabel('N')
+        plt.savefig(self.savepath + self.savename)
+        plt.close('all')
+
+    def barchart_FaultLog_simplified(self):
+        '''
+        Takes the fault log in one-hot coded version and creates a histogram of occurances
+        :return:
+        '''
+        self.savepath =  HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        #self.full_buffers = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.full_buffers]
+        self.buffer_entries = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.buffer_entries]
+        self.fault_log_to_index_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.fault_log_to_index_dict]
+        self.savename = f'\\histogram_FaultLog_occurances_simplified.png'
+        self.full_buffers_one_hot = [self.fault_log_to_index_dict[i] for i in self.buffer_entries]
+        self.full_buffers_one_hot_classes = list(set(self.full_buffers_one_hot))
+        print(self.full_buffers_one_hot_classes)
+        self.fault_population = [0]*len(self.fault_log_to_index_dict)
+
+        self.date_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_from]
+        self.time_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_from]
+        self.date_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_to]
+        self.time_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_to]
+
+        for i in self.full_buffers_one_hot:
+            #print(i)
+            self.fault_population[i] += 1
+
+        self.population_total = np.sum(self.fault_population)
+        print(f'self.fault_population = {self.fault_population}\n'
+              f'self.population_total = {self.population_total}')
+
+
+        plt.bar(range(len(self.fault_log_to_index_dict)), self.fault_population, 1., color='white', align='center', edgecolor='k')
+        new_labels = range(len(self.fault_log_to_index_dict))
+        plt.xticks(new_labels)
+
+        legend_0 = mpatches.Patch(label=f'0: Cavity Interlock ({self.fault_population[0]})')
+        legend_1 = mpatches.Patch(label=f'1: General Interlock ({self.fault_population[1]})')
+        legend_2 = mpatches.Patch(label=f'2: Hold RF (Con) Engaged ({self.fault_population[2]})')
+        legend_3 = mpatches.Patch(label=f'3: Hold RF Deactivated ({self.fault_population[3]})')
+        legend_4 = mpatches.Patch(label=f'4: Hold RF Engaged ({self.fault_population[4]})')
+        legend_5 = mpatches.Patch(label=f'5: Hold RF On had to STOP ({self.fault_population[5]})')
+        legend_6 = mpatches.Patch(label=f'6: Libera: General Interlock ({self.fault_population[6]})')
+        legend_7 = mpatches.Patch(label=f'7: LLRF:Channel 1 ({self.fault_population[7]})')
+        legend_8 = mpatches.Patch(label=f'8: LLRF:Channel 2 ({self.fault_population[8]})')
+        legend_9 = mpatches.Patch(label=f'9: LLRF:Channel 3 ({self.fault_population[9]})')
+        legend_10 = mpatches.Patch(label=f'10: LLRF:Channel 4 ({self.fault_population[10]})')
+        legend_11 = mpatches.Patch(label=f'11: LLRF:Channel 5 ({self.fault_population[11]})')
+        legend_12 = mpatches.Patch(label=f'12: LLRF:Channel 6 ({self.fault_population[12]})')
+        legend_13 = mpatches.Patch(label=f'13: Mod is OFF ({self.fault_population[13]})')
+        legend_14 = mpatches.Patch(label=f'14: Mod:HV Not On ({self.fault_population[14]})')
+        legend_15 = mpatches.Patch(label=f'15: Mod:HvPs\Ps1\IGBT int. ({self.fault_population[15]})')
+        legend_16 = mpatches.Patch(label=f'16: Mod:Pt\\Cool\\Klystron Body Flow int. ({self.fault_population[16]})')
+        legend_17 = mpatches.Patch(label=f'17: Mod:Pt\\Cool\\Tank Flow int. ({self.fault_population[17]})')
+        legend_18 = mpatches.Patch(label=f'18: Mod:Pt\\Diag\\CT read int. ({self.fault_population[18]})')
+        legend_19 = mpatches.Patch(label=f'19: Mod:Pt\\FilPs\\Volt int. ({self.fault_population[19]})')
+        legend_20 = mpatches.Patch(label=f'20: Mod:Pt\Diag\CT arc int. ({self.fault_population[20]})')
+        legend_21 = mpatches.Patch(label=f'21: Mod:RF Not On ({self.fault_population[21]})')
+        legend_22 = mpatches.Patch(label=f'22: Mod:Sys\\Cool\\Solenoid Flow int. ({self.fault_population[22]})')
+        legend_23 = mpatches.Patch(label=f'23: Mod:Sys\ExtCom\Communication int. ({self.fault_population[23]})')
+        legend_24 = mpatches.Patch(label=f'24: Mod:Sys\HwCtr\Hv interlock 1. ({self.fault_population[24]})')
+        legend_25 = mpatches.Patch(label=f'25: Mod:Sys\HwCtr\Hv interlock 2. ({self.fault_population[25]})')
+        legend_26 = mpatches.Patch(label=f'26: RF Enable Interlock ({self.fault_population[26]})')
+        legend_27 = mpatches.Patch(label=f'27: Switched Modulator OFF. ({self.fault_population[27]})')
+
+        _HANDLES = [legend_0,
+                    legend_1,
+                    legend_2,
+                    legend_3,
+                    legend_4,
+                    legend_5,
+                    legend_6,
+                    legend_7,
+                    legend_8,
+                    legend_9,
+                    legend_10,
+                    legend_11,
+                    legend_12,
+                    legend_13,
+                    legend_14,
+                    legend_15,
+                    legend_16,
+                    legend_17,
+                    legend_18,
+                    legend_19,
+                    legend_20,
+                    legend_21,
+                    legend_22,
+                    legend_23,
+                    legend_24,
+                    legend_25,
+                    legend_26,
+                    legend_26]
+
+        plt.legend(handles=_HANDLES, fontsize=6, loc=1)
+
+        plt.title(f'From    {self.date_from} {self.time_from}\nto         {self.date_to} {self.time_to}')
+        plt.xlabel('Hold RF On Fault Log')
+        plt.ylabel('N')
+        plt.savefig(self.savepath + self.savename)
+        plt.close('all')
+
+        # for l_idx, l in enumerate(HANDLES):
+        #     print(f'{l_idx} {str(l)} {self.fault_population[l_idx]}')
+
+    def barchart_FaultLog_quick_check(self, EPICS_datetime_from, EPICS_datetime_now):
+        '''
+        Takes the fault log in one-hot coded version and creates a histogram of occurances
+        :return:
+        '''
+        self.EPICS_datetime_from = EPICS_datetime_from
+        self.EPICS_datetime_now = EPICS_datetime_now
+        self.savepath =  HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        #self.full_buffers = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.full_buffers]
+        self.buffer_entries_quick_check = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.buffer_entries_quick_check]
+        self.fault_log_to_index_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.fault_log_to_index_dict]
+        self.savename = f'\\histogram_FaultLog_occurances_quick_check.png'
+        self.full_buffers_one_hot = [self.fault_log_to_index_dict[i] for i in self.buffer_entries_quick_check]
+        self.full_buffers_one_hot_classes = list(set(self.full_buffers_one_hot))
+        self.buffer_entries_quick_check_classes = list(set(self.buffer_entries_quick_check))
+        print(self.full_buffers_one_hot_classes)
+        print('\n\n')
+        for idx, i in enumerate(self.buffer_entries_quick_check_classes):
+            print(i)#, self.full_buffers_one_hot_classes[idx])
+
+        #input()
+        print('\n\n')
+
+        self.fault_population = [0]*len(self.fault_log_to_index_dict)
+
+        self.date_from = str(self.EPICS_datetime_from)[:10]
+        self.time_from = str(self.EPICS_datetime_from)[11:]
+        self.date_to = str(self.EPICS_datetime_now)[:10]
+        self.time_to = str(self.EPICS_datetime_now)[11:]
+
+        for i in self.full_buffers_one_hot:
+            #print(i)
+            self.fault_population[i] += 1
+
+        self.population_total = np.sum(self.fault_population)
+        print(f'self.fault_population = {self.fault_population}\n'
+              f'self.population_total = {self.population_total}')
+
+
+        plt.bar(range(len(self.fault_log_to_index_dict)), self.fault_population, 1., color='white', align='center', edgecolor='k')
+        new_labels = range(len(self.fault_log_to_index_dict))
+        plt.xticks(new_labels)
+
+        legend_0 = mpatches.Patch(label=f'0: Cavity Interlock ({self.fault_population[0]})')
+        legend_1 = mpatches.Patch(label=f'1: General Interlock ({self.fault_population[1]})')
+        legend_2 = mpatches.Patch(label=f'2: Hold RF (Con) Engaged ({self.fault_population[2]})')
+        legend_3 = mpatches.Patch(label=f'3: Hold RF Deactivated ({self.fault_population[3]})')
+        legend_4 = mpatches.Patch(label=f'4: Hold RF Engaged ({self.fault_population[4]})')
+        legend_5 = mpatches.Patch(label=f'5: Hold RF On had to STOP ({self.fault_population[5]})')
+        legend_6 = mpatches.Patch(label=f'6: Libera: General Interlock ({self.fault_population[6]})')
+        legend_7 = mpatches.Patch(label=f'7: LLRF:Channel 1 ({self.fault_population[7]})')
+        legend_8 = mpatches.Patch(label=f'8: LLRF:Channel 2 ({self.fault_population[8]})')
+        legend_9 = mpatches.Patch(label=f'9: LLRF:Channel 3 ({self.fault_population[9]})')
+        legend_10 = mpatches.Patch(label=f'10: LLRF:Channel 4 ({self.fault_population[10]})')
+        legend_11 = mpatches.Patch(label=f'11: LLRF:Channel 5 ({self.fault_population[11]})')
+        legend_12 = mpatches.Patch(label=f'12: LLRF:Channel 6 ({self.fault_population[12]})')
+        legend_13 = mpatches.Patch(label=f'13: Mod is OFF ({self.fault_population[13]})')
+        legend_14 = mpatches.Patch(label=f'14: Mod:HV Not On ({self.fault_population[14]})')
+        legend_15 = mpatches.Patch(label=f'15: Mod:HvPs\Ps1\IGBT int. ({self.fault_population[15]})')
+        legend_16 = mpatches.Patch(label=f'16: Mod:Pt\\Cool\\Klystron Body Flow int. ({self.fault_population[16]})')
+        legend_17 = mpatches.Patch(label=f'17: Mod:Pt\\Cool\\Tank Flow int. ({self.fault_population[17]})')
+        legend_18 = mpatches.Patch(label=f'18: Mod:Pt\\Diag\\CT read int. ({self.fault_population[18]})')
+        legend_19 = mpatches.Patch(label=f'19: Mod:Pt\\FilPs\\Volt int. ({self.fault_population[19]})')
+        legend_20 = mpatches.Patch(label=f'20: Mod:Pt\Diag\CT arc int. ({self.fault_population[20]})')
+        legend_21 = mpatches.Patch(label=f'21: Mod:RF Not On ({self.fault_population[21]})')
+        legend_22 = mpatches.Patch(label=f'22: Mod:Sys\\Cool\\Solenoid Flow int. ({self.fault_population[22]})')
+        legend_23 = mpatches.Patch(label=f'23: Mod:Sys\ExtCom\Communication int. ({self.fault_population[23]})')
+        legend_24 = mpatches.Patch(label=f'24: Mod:Sys\HwCtr\Hv interlock 1. ({self.fault_population[24]})')
+        legend_25 = mpatches.Patch(label=f'25: Mod:Sys\HwCtr\Hv interlock 2. ({self.fault_population[25]})')
+        legend_26 = mpatches.Patch(label=f'26: RF Enable Interlock ({self.fault_population[26]})')
+        legend_27 = mpatches.Patch(label=f'27: Switched Modulator OFF. ({self.fault_population[27]})')
+
+        _HANDLES = [legend_0,
+                    legend_1,
+                    legend_2,
+                    legend_3,
+                    legend_4,
+                    legend_5,
+                    legend_6,
+                    legend_7,
+                    legend_8,
+                    legend_9,
+                    legend_10,
+                    legend_11,
+                    legend_12,
+                    legend_13,
+                    legend_14,
+                    legend_15,
+                    legend_16,
+                    legend_17,
+                    legend_18,
+                    legend_19,
+                    legend_20,
+                    legend_21,
+                    legend_22,
+                    legend_23,
+                    legend_24,
+                    legend_25,
+                    legend_26,
+                    legend_27]
+
+        plt.legend(handles=_HANDLES, fontsize=5, loc=0)
+
+        plt.title(f'From    {self.date_from} {self.time_from}\nto         {self.date_to} {self.time_to}')
+        plt.xlabel('Hold RF On Fault Log')
+        plt.ylabel('N')
+        plt.savefig(self.savepath + self.savename)
+        plt.close('all')
+
+
     def define_midbins_from_bedegs(self, bedges):
         '''
         From a list/array of histogram bin edges it s sometimes useful to know the mid-bin values
@@ -315,7 +681,7 @@ class figures():
 
     def find_top_x_peaks_histogram(self, bin_population, midbin_vals):
         '''
-		The returns from pyplot.his() are used in this function to give the x-axis value of the the top X number of peaks,
+        The returns from pyplot.his() are used in this function to give the x-axis value of the the top X number of peaks,
 		along with the number of members of that bin.
 		eg. self.n, self.bedges, self.patches = plt.hist(self.data_reduced, bins=nbin, range=(min_data, max_data), histtype='step', color='k')
 		:param n: Number of members of each bin.
@@ -854,4 +1220,186 @@ class figures():
             plt.close('all')
 
 
+    def overplot_HV_PV_data(self, time_list, yaxis_list, pv_name, savepath, savename, pv_idx):
+        '''
+        Overplots all data in a list of lists for one PV for every HV interlock window.
+        We are looking for correlations or just patterns in general.
+        :param time_list: list of lists of time data for this PV in this HV interlock window
+        :param yaxis_list: list of lists of y-axis data for this PV in this HV interlock window
+        :param pv_name: Name of this PV
+        :param savepath: amended savepath; save in 'HV_interlock_PV_overplots' folder within savepath
+        :param savename: savename, usualy PV name
+        :param pv_idx: index of PV as set by the order of the list in the cnfig .yaml
+        :return: saved overplots
+        '''
+        self.time_list = time_list
+        self.yaxis_list = yaxis_list
+        self.pv_name = pv_name
+        self.savepath = savepath
+        self.savename = savename
+        self.pv_idx = pv_idx
 
+        print(f'savepath = {savepath}')
+
+        for idx, time_data in enumerate(self.time_list):
+            plt.step(time_data, self.yaxis_list[idx], color='b', where='post')
+            plt.scatter(time_data, self.yaxis_list[idx], marker='o', s=3.0, c='r')
+
+        plt.title(self.pv_name)
+        plt.ylabel(self.pv_name)
+        plt.xlabel("Time Since Epics Epoch")
+        plt.savefig(f"{self.savepath}\\{self.savename}_pv_{self.pv_idx}.png")
+        plt.close('all')
+
+
+    def subplot_HV_PV_data(self, time_vector, yaxis_list_of_lists, HV_time, Bespoke_savepath, savename):
+        '''
+        Takes one HV interlock window and creates subplots of all PVs of interest for that period
+        :param time_vector: list of normalised time
+        :param yaxis_list_of_lists: list of lists of each subplot y-axis data
+        :param HV_time: EPICS formatted time as plot name, also acts as savename
+        :param Bespoke_savepath:
+        :return:
+        '''
+        self.time_vector = time_vector
+        self.yaxis_list_of_lists = yaxis_list_of_lists
+        self.HV_time = HV_time
+        self.savepath = Bespoke_savepath
+        self.savename = savename
+        self.plot_title = f'{self.savename[:10]} {self.savename[11:13]}:{self.savename[13:15]}:{self.savename[15:17]}.{self.savename[17:19]} '
+        self.HV_interlock_comparison_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_comparison_PVs]
+        self.interlock_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_PVs]
+        self.delta_time_before_seconds = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_window_seconds_before]
+        self.delta_time_after_seconds = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_window_seconds_after]
+        self.n_subplots = len(self.yaxis_list_of_lists)
+
+        print(f'self.time_vector[0] = {self.time_vector[0]}\n'
+              f'self.savename = {self.savename}\n'
+              f'self.HV_time = {self.HV_time}')
+        #input()
+
+        fig, axes = plt.subplots(self.n_subplots, 1, dpi=125)
+
+        #fig, axes = plt.subplots(12, 1, dpi=180)
+        fig.suptitle(str(self.plot_title))
+
+        for idx in range(self.n_subplots):
+            # print(f'min = {float(np.amin(self.yaxis_list_of_lists[idx]))}\n'
+            #       f'max = { float(np.amax(self.yaxis_list_of_lists[idx]))}')
+            axes[idx].step(self.time_vector[idx], self.yaxis_list_of_lists[idx], where='post', lw=1.2, color='mediumblue')
+            axes[idx].scatter(self.time_vector[idx], self.yaxis_list_of_lists[idx], marker='o', s=1.0, c='r')
+            if type(self.yaxis_list_of_lists[idx][0]) == str:
+                pass
+            else:
+                axes[idx].vlines(0.0, float(np.amin(self.yaxis_list_of_lists[idx])), float(np.amax(self.yaxis_list_of_lists[idx])), lw=0.6, ls='--', color='r')
+            axes[idx].set_xlim(-self.delta_time_before_seconds, self.delta_time_after_seconds)
+            if self.HV_interlock_comparison_PVs[idx] == "CLA-GUNS-HRF-MOD-01:Sys:StateRead" or self.HV_interlock_comparison_PVs[idx] == "CLA-GUNS-HRF-MOD-01:Sys:StateSet":
+                for xy_idx, xy in enumerate(zip(self.time_vector[idx], self.yaxis_list_of_lists[idx])):  # <--
+                    axes[idx].annotate('%s' % self.yaxis_list_of_lists[idx][xy_idx], xy=xy, textcoords='data', fontsize=7.)
+
+            if self.HV_interlock_comparison_PVs[idx] in self.interlock_PVs:
+                self.interlock_PVs_unique_labels = list(set(self.yaxis_list_of_lists[idx]))
+                axes[idx].text(0.8, 0.9,
+                               self.interlock_PVs_unique_labels,
+                               ha='center', va='center',
+                               transform=axes[idx].transAxes,
+                               fontsize=6.)
+
+            # print PV name on each subplot
+            axes[idx].text(0.25, 0.6,
+                           self.HV_interlock_comparison_PVs[idx],
+                           ha='center', va='center',
+                           transform=axes[idx].transAxes,
+                           fontsize=6.)
+
+            # remove x- and y-axis ticks from each subplot
+            # apart from the x-axis ticks on the last subplot
+            if str(idx) == str(self.n_subplots-1):
+                #axes[idx].set_yticks([])
+                pass
+            else:
+                axes[idx].set_xticks([])
+                #axes[idx].set_yticks([])
+
+        plt.xlabel('Time relative to HV interlock log timestamp (s)')
+        plt.savefig(f'{self.savepath}\\{savename}.png')
+        plt.close('all')
+        
+    def subplot_chosen_PV_data(self, time_vector, yaxis_list_of_lists, chosen_time, Bespoke_savepath, savename):
+        '''
+        Takes one chosen interlock window and creates subplots of all PVs of interest for that period
+        :param time_vector: list of normalised time
+        :param yaxis_list_of_lists: list of lists of each subplot y-axis data
+        :param chosen_time: EPICS formatted time as plot name, also acts as savename
+        :param Bespoke_savepath:
+        :return:
+        '''
+        self.time_vector = time_vector
+        self.yaxis_list_of_lists = yaxis_list_of_lists
+        self.chosen_time = chosen_time
+        self.savepath = Bespoke_savepath
+        self.savename = savename
+        self.plot_title = f'{self.savename[:10]} {self.savename[11:13]}:{self.savename[13:15]}:{self.savename[15:17]}.{self.savename[17:19]} '
+        self.chosen_interlock_comparison_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.chosen_interlock_comparison_PVs]
+        self.interlock_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_PVs]
+        self.delta_time_before_seconds = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.chosen_interlock_window_seconds_before]
+        self.delta_time_after_seconds = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.chosen_interlock_window_seconds_after]
+        self.n_subplots = len(self.yaxis_list_of_lists)
+
+        print(f'self.time_vector[0] = {self.time_vector[0]}\n'
+              f'self.savename = {self.savename}\n'
+              f'self.chosen_time = {self.chosen_time}')
+        #input()
+
+        fig, axes = plt.subplots(self.n_subplots, 1, dpi=125)
+
+        #fig, axes = plt.subplots(12, 1, dpi=180)
+        fig.suptitle(str(self.plot_title))
+
+        for idx in range(self.n_subplots):
+            # print(f'min = {float(np.amin(self.yaxis_list_of_lists[idx]))}\n'
+            #       f'max = { float(np.amax(self.yaxis_list_of_lists[idx]))}')
+            axes[idx].step(self.time_vector[idx], self.yaxis_list_of_lists[idx], where='post', lw=1.2, color='mediumblue')
+            axes[idx].scatter(self.time_vector[idx], self.yaxis_list_of_lists[idx], marker='o', s=1.0, c='r')
+            print(f'self.yaxis_list_of_lists[idx] = {self.yaxis_list_of_lists[idx]}')
+            if type(self.yaxis_list_of_lists[idx][0]) == str:
+                pass
+            else:
+                axes[idx].vlines(0.0, float(np.amin(self.yaxis_list_of_lists[idx])), float(np.amax(self.yaxis_list_of_lists[idx])), lw=0.6, ls='--', color='r')
+            axes[idx].set_xlim(-self.delta_time_before_seconds, self.delta_time_after_seconds)
+            if self.chosen_interlock_comparison_PVs[idx] == "CLA-GUNS-HRF-MOD-01:Sys:StateRead" or self.chosen_interlock_comparison_PVs[idx] == "CLA-GUNS-HRF-MOD-01:Sys:StateSet":
+                for xy_idx, xy in enumerate(zip(self.time_vector[idx], self.yaxis_list_of_lists[idx])):  # <--
+                    axes[idx].annotate('%s' % self.yaxis_list_of_lists[idx][xy_idx], xy=xy, textcoords='data', fontsize=7.)
+
+            if self.chosen_interlock_comparison_PVs[idx] == "CLA-GUNS-RFHOLD:FaultLog":
+                for xy_idx, xy in enumerate(zip(self.time_vector[idx], self.yaxis_list_of_lists[idx])):  # <--
+                    axes[idx].annotate('%s' % self.yaxis_list_of_lists[idx][xy_idx], xy=xy, textcoords='data', fontsize=7.)
+
+
+            if self.chosen_interlock_comparison_PVs[idx] in self.interlock_PVs:
+                self.interlock_PVs_unique_labels = list(set(self.yaxis_list_of_lists[idx]))
+                axes[idx].text(0.8, 0.9,
+                               self.interlock_PVs_unique_labels,
+                               ha='center', va='center',
+                               transform=axes[idx].transAxes,
+                               fontsize=6.)
+
+            # print PV name on each subplot
+            axes[idx].text(0.25, 0.6,
+                           self.chosen_interlock_comparison_PVs[idx],
+                           ha='center', va='center',
+                           transform=axes[idx].transAxes,
+                           fontsize=6.)
+
+            # remove x- and y-axis ticks from each subplot
+            # apart from the x-axis ticks on the last subplot
+            if str(idx) == str(self.n_subplots-1):
+                #axes[idx].set_yticks([])
+                pass
+            else:
+                axes[idx].set_xticks([])
+                #axes[idx].set_yticks([])
+
+        plt.xlabel('Time relative to chosen interlock log timestamp (s)')
+        plt.savefig(f'{self.savepath}\\{savename}.png')
+        plt.close('all')
