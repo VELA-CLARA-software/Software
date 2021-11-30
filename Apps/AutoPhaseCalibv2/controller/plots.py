@@ -83,6 +83,7 @@ class plotWidgets(pg.GraphicsView):
         actuator = str(actuator)
         try:
             if str(cavity) == self.cavity:
+                # print(self.cavity, ' - Received data = ', data)
                 if 'xData' in data and 'yData' in data and 'yStd' in data:
                     if actuator == 'approx' and self.cavity == 'Gun':
                         xdata, ydata, stddata = [np.array(a) for a in [data['xData'], data['yData'], data['yStd']]]

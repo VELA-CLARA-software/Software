@@ -1,0 +1,2 @@
+rem Compile the app to an EXE file
+pyinstaller --onefile --clean -F --workpath="\\claraserv3.dl.ac.uk\claranet\temp" --distpath="\\claraserv3.dl.ac.uk\claranet\temp"  --icon=".\resources\Virtual_Cathode_App\Virtual_Cathode_App.ico" -n "Virtual_Cathode_App" mainApp.py

@@ -49,7 +49,8 @@ class PVObject(qt.QObject):
             return self._value[1]
     @value.setter
     def value(self, val):
-        self.put(val)
+        if self.writeAccess:
+            self.put(val)
 
     @property
     def time(self):
@@ -96,11 +97,15 @@ class PVWaveform(PVObject):
             self.newValue.emit(*self._value)
 
 class PVBuffer(PVObject):
+
+    listFull = qt.pyqtSignal(str)
+
     def __init__(self, pv, maxlen=1024, parent=None):
         super(PVBuffer, self).__init__(pv=pv, parent = parent)
         self.maxlen = maxlen
         self._length = 0
         self.buffer = deque(maxlen=self.maxlen)
+        self._count = 0
         self.reset()
         # self.buffer.append(self.pv.get())
 
@@ -114,6 +119,8 @@ class PVBuffer(PVObject):
             time, val, name = self._value
             self.buffer.append(self._value)
             self.length += 1
+            if self.length % self.maxlen == 0:
+                self.listFull.emit(self.name)
             self.sum_x1 += val
             self.sum_x2 += val**2
             if self._value[1] < self.minValue:

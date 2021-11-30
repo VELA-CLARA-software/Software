@@ -1,0 +1,425 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>QuadScan.virtualclarabeamsizes &#8212; Emittance Measurement</title>
+    <link rel="stylesheet" href="../../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="header-wrapper" role="banner">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../../index.html">Emittance Measurement</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for QuadScan.virtualclarabeamsizes</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;SimFrame_fork&#39;</span><span class="p">,</span> <span class="s1">&#39;SimFrame&#39;</span><span class="p">)))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;VELA_CLARA_repository&#39;</span><span class="p">,</span> <span class="s1">&#39;Software&#39;</span><span class="p">,</span> <span class="s1">&#39;Utils&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;MachineState&#39;</span><span class="p">))))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;VELA_CLARA_repository&#39;</span><span class="p">,</span> <span class="s1">&#39;catapillar-build&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;PythonInterface&#39;</span><span class="p">,</span> <span class="s1">&#39;Release&#39;</span><span class="p">))))</span>
+<span class="kn">import</span> <span class="nn">machine_state</span>
+<span class="kn">from</span> <span class="nn">unit_conversion</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">CATAP.HardwareFactory</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">QuadScanclass</span> <span class="kn">import</span> <span class="n">GeneralQuadScan</span>
+
+
+<div class="viewcode-block" id="BeamSizeDetermination"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination">[docs]</a><span class="k">class</span> <span class="nc">BeamSizeDetermination</span><span class="p">(</span><span class="n">GeneralQuadScan</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Daughter class of py:class GeneralQuadScan containing all methods to</span>
+<span class="sd">    calculate the quad strengths from experimental data and use the interface</span>
+<span class="sd">    between CATAP and SimFrame to obtain the beam sizes.</span>
+
+<span class="sd">    :ivar BeamMomentum: Beam Momentum: 29.5 MeV</span>
+<span class="sd">    :ivar beam_sizes: Dictionary to save the beam sizes: OrderedDict()</span>
+<span class="sd">    :ivar current_path: Path of Current file: []</span>
+<span class="sd">    :ivar currents_optimised: Array of optimised currents : []</span>
+<span class="sd">    :ivar machinestate: Machine State object built from the interface between SIMFRAME and CATAP: &#39;machinestate&#39;</span>
+<span class="sd">    :ivar mode: Mode in which CATAP is to work (PHYSICAL or VIRTUAL): VIRTUAL</span>
+<span class="sd">    :ivar simframedata: SimFrameDictionary for the simulation</span>
+<span class="sd">    :ivar framework: SimFrame object</span>
+<span class="sd">    :ivar lattice_start: Beginning of lattice (SimFrame run)</span>
+<span class="sd">    :ivar lattice_end: End of lattice (Simframe run)</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">BeamMomentum</span> <span class="o">=</span> <span class="mf">29.5</span>  <span class="c1">#: Beam momentum 30.0 MeV nominal</span>
+
+    <span class="k">def</span> <span class="nf">_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Initialisation of the object</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BeamSizeDetermination</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1">#: Path of the file with the experimental currents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currents_optimised</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>  <span class="c1">#: Numpy Matrix with the values of the currents from the file</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span> <span class="o">=</span> <span class="n">machine_state</span><span class="o">.</span><span class="n">MachineState</span><span class="p">()</span>  <span class="c1">#: machine_state object initialised</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;machinestate attribute correct&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no machinestate attribute correct&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">CATAP</span><span class="o">.</span><span class="n">HardwareFactory</span><span class="o">.</span><span class="n">STATE</span><span class="o">.</span><span class="n">VIRTUAL</span>  <span class="c1">#: Mode in which CATAP is to be used (VIRTUAL or PHYSICAL)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simframedata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getSimFrameDataDict</span><span class="p">()</span>  <span class="c1">#: SimFrameDictionary for the simulation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">framework</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getFramework</span><span class="p">()</span>  <span class="c1">#: SimFrame Object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lattice_start</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1">#: Lattice start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lattice_end</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1">#: Lattice end</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lattice_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The unique name of the lattice_start property.</span>
+
+<span class="sd">            :getter: Returns lattice_start&#39;s name</span>
+<span class="sd">            :setter: Sets lattice_start&#39;s name</span>
+<span class="sd">            :type: string</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lattice_start</span>
+
+    <span class="nd">@lattice_start</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">lattice_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat_start</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lattice_start</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">lat_start</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lattice_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The unique name of the lattice_end property.</span>
+
+<span class="sd">            :getter: Returns lattice_end&#39;s name</span>
+<span class="sd">            :setter: Sets lattice_end&#39;s name</span>
+<span class="sd">            :type: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lattice_end</span>
+
+    <span class="nd">@lattice_end</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">lattice_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat_end</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lattice_end</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">lat_end</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BeamSizeDetermination.extract_beamsize_dict_one_quad"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.extract_beamsize_dict_one_quad">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">extract_beamsize_dict_one_quad</span><span class="p">(</span><span class="n">camera_dictionary</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Method to fill in the beam size dictionary for a set of optimised quads</span>
+
+<span class="sd">        :parameter camera_dictionary: Dictionary with all the information from the Observation point camera</span>
+
+<span class="sd">        :return beam_size: Dictionary with beam sizes and coupling terms</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Update dictionary of beam size</span>
+
+        <span class="k">return</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">camera_dictionary</span><span class="p">[</span><span class="s1">&#39;x_var&#39;</span><span class="p">]),</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">camera_dictionary</span><span class="p">[</span><span class="s1">&#39;y_var&#39;</span><span class="p">])),</span> \</div>
+               <span class="n">deepcopy</span><span class="p">(</span><span class="n">camera_dictionary</span><span class="p">[</span><span class="s1">&#39;x_y_mean&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="BeamSizeDetermination.currents_to_quad_strengths"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.currents_to_quad_strengths">[docs]</a>    <span class="k">def</span> <span class="nf">currents_to_quad_strengths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Calculate the quad strengths from array of currents</span>
+
+<span class="sd">        :return self.quad_strengths: array of optimised quad strengths</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i_c</span><span class="p">,</span> <span class="n">currents</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currents_optimised</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quad_settings</span><span class="p">[</span><span class="n">i_c</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">BeamSizeDetermination</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">I2K_CLARA_simple</span><span class="p">(</span><span class="n">currents</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">BeamMomentum</span><span class="p">))</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;qstrengths&#39;</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;quad_settings&#39;</span><span class="p">))</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BeamSizeDetermination</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">plot_quad_scan_strengths</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BeamSizeDetermination.fill_in_currents_from_file"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.fill_in_currents_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">fill_in_currents_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Fill in the currents array (self.currents_optimised) by reading the Current file</span>
+
+<span class="sd">        :return self.currents_optimised: array of optimised currents for sets of quads</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currents_optimised</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">BeamSizeDetermination</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">FileOpen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_path</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currents_optimised</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currents_optimised</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">15</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currents_optimised</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quad_settings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<div class="viewcode-block" id="BeamSizeDetermination.preparing_catap_data"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.preparing_catap_data">[docs]</a>    <span class="k">def</span> <span class="nf">preparing_catap_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Method with the sequence for getting the CATAP Dictionary and interact with SimFrame</span>
+
+<span class="sd">        :return  catapdict : Dictionary with all the PVs</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;machinestate&#39;</span><span class="p">,</span> <span class="n">machine_state</span><span class="o">.</span><span class="n">MachineState</span><span class="p">())</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">,</span> <span class="n">CATAP</span><span class="o">.</span><span class="n">HardwareFactory</span><span class="o">.</span><span class="n">STATE</span><span class="o">.</span><span class="n">VIRTUAL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">initialiseCATAP</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+        <span class="c1"># Get the dictionary containing all CATAP hardware objects</span>
+        <span class="n">catapdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getCATAPDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+        <span class="n">get_data_from_catap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getDataFromCATAP</span>
+        <span class="c1"># Switch on magnets in VM</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">switchOn</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;CLA-LRG1-MAG-BSOL-01&#39;</span><span class="p">:</span>
+                <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">SETI</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;CLA-LRG1-MAG-SOL-01&#39;</span><span class="p">:</span>
+                <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">SETI</span><span class="p">(</span><span class="o">-</span><span class="mf">150.0</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+
+        <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;L01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setAmpMW</span><span class="p">(</span><span class="mf">10.0e6</span><span class="p">)</span>
+        <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;LRRG_GUN&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setAmpMW</span><span class="p">(</span><span class="mf">8.630e6</span><span class="p">)</span>
+        <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;L01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setPhiDEG</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;LRRG_GUN&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setPhiDEG</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">energy_units</span> <span class="o">=</span> <span class="n">UnitConversion</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;LLRG Energy &#39;</span><span class="p">,</span>
+              <span class="n">energy_units</span><span class="o">.</span><span class="n">getEnergyFromRF</span><span class="p">(</span><span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;LRRG_GUN&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getAmpMW</span><span class="p">(),</span> <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;LRRG_GUN&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getPhiDEG</span><span class="p">(),</span> <span class="mf">2.5</span><span class="p">,</span>
+                                           <span class="s2">&quot;LRRG_GUN&quot;</span><span class="p">),</span> <span class="s1">&#39; MeV&#39;</span><span class="p">,</span>
+              <span class="s1">&#39; Linac Energy &#39;</span><span class="p">,</span>
+              <span class="n">energy_units</span><span class="o">.</span><span class="n">getEnergyFromRF</span><span class="p">(</span><span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;L01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getAmpMW</span><span class="p">(),</span> <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;L01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getPhiDEG</span><span class="p">(),</span> <span class="mf">0.7</span><span class="p">,</span> <span class="s2">&quot;L01&quot;</span><span class="p">),</span>
+              <span class="s1">&#39; MeV&#39;</span><span class="p">,</span>
+              <span class="s1">&#39; Total Energy = &#39;</span><span class="p">,</span>
+              <span class="n">energy_units</span><span class="o">.</span><span class="n">getEnergyFromRF</span><span class="p">(</span><span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;LRRG_GUN&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getAmpMW</span><span class="p">(),</span> <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;LRRG_GUN&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getPhiDEG</span><span class="p">(),</span> <span class="mf">2.5</span><span class="p">,</span>
+                                           <span class="s2">&quot;LRRG_GUN&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">energy_units</span><span class="o">.</span><span class="n">getEnergyFromRF</span><span class="p">(</span><span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;L01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getAmpMW</span><span class="p">(),</span>
+                                                                                      <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;L01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">getPhiDEG</span><span class="p">(),</span> <span class="mf">0.7</span><span class="p">,</span>
+                                                                                      <span class="s2">&quot;L01&quot;</span><span class="p">),</span> <span class="s1">&#39; MeV&#39;</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">exportParameterValuesToYAMLFile</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;catap-test.yaml&quot;</span><span class="p">)),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getMachineStateFromCATAP</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">catapdict</span>
+
+<div class="viewcode-block" id="BeamSizeDetermination.quad_set_sequence"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.quad_set_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">quad_set_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">catapdict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">                Method to extract the camera info from each set of quad sequence</span>
+
+<span class="sd">                :parameter rows: Number of quad scan (from 1 up to the number of scans: int(self.nsteps)</span>
+
+<span class="sd">                :parameter catapdict: CATAP dictionary  with all the PVs obtained from CATAP:</span>
+
+<span class="sd">                :parameter self.currents_optimised: Set of currents for the optimised quad strengths:</span>
+
+<span class="sd">                :return self.beam_sizes: beam sizes array obtained from quad scans:</span>
+
+<span class="sd">                &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+++++++++++++++++++++++ Before &#39;</span><span class="p">,</span> <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">,</span>
+              <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-02&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">,</span>
+              <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-03&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">,</span> <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-04&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">,</span>
+              <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-05&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i_currents</span><span class="p">,</span> <span class="n">currents</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currents_optimised</span><span class="p">[</span><span class="n">rows</span><span class="p">,</span> <span class="p">:]):</span>
+            <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-0&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i_currents</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">SETI</span><span class="p">(</span><span class="n">currents</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-0&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i_currents</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">psu_state</span> <span class="o">==</span> <span class="s1">&#39;OFF&#39;</span><span class="p">:</span>
+                <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-0&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i_currents</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">SetPSUState</span><span class="p">(</span><span class="s1">&#39;ON&#39;</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+            <span class="c1"># ri_tol = catapdict[&#39;Magnet&#39;][&#39;CLA-S02-MAG-QUAD-03&#39;].getREADITolerance()</span>
+            <span class="c1"># while (currents - ri_tol) &lt; catapdict[&#39;Magnet&#39;][&#39;CLA-S02-MAG-QUAD-03&#39;].getREADI() &lt; (currents + ri_tol):</span>
+            <span class="c1">#    time.sleep(5)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+++++++++++++++++++++++ After &#39;</span><span class="p">,</span> <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">,</span>
+              <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-02&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">,</span>
+              <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-03&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">,</span>
+              <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-04&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">,</span>
+              <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-05&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">READI</span><span class="p">)</span>
+        <span class="c1"># Get updated machine state from CATAP</span>
+        <span class="n">catapdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getMachineStateFromCATAP</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+        <span class="c1"># We have to fudge this for now as the conversion between current and solenoid strength doesn&#39;t work</span>
+        <span class="n">catapdata</span><span class="p">[</span><span class="s1">&#39;INJ&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-LRG1-MAG-SOL-01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;field_amplitude&#39;</span><span class="p">:</span> <span class="mf">0.255</span><span class="p">})</span>
+        <span class="n">catapdata</span><span class="p">[</span><span class="s1">&#39;INJ&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-LRG1-MAG-BSOL-01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;field_amplitude&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">})</span>
+        <span class="c1"># Write machine state dictionary to simframe and runs simulation</span>
+        <span class="n">catapdata</span><span class="p">[</span><span class="s1">&#39;generator&#39;</span><span class="p">][</span><span class="s1">&#39;number_of_particles&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">catapdata</span><span class="p">[</span><span class="s1">&#39;generator&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">charge</span>
+        <span class="n">simframe_file_update</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">writeMachineStateToSimFrame</span><span class="p">(</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s1">&#39;quad_scan_setup_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rows</span><span class="p">)),</span>
+            <span class="n">framework</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getFramework</span><span class="p">(),</span> <span class="n">lattice</span><span class="o">=</span><span class="s1">&#39;Lattices/CLA10-BA1_OM_emittance.def&#39;</span><span class="p">,</span>
+            <span class="n">datadict</span><span class="o">=</span><span class="n">catapdata</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;CATAP&#39;</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;INJ&#39;</span><span class="p">,</span> <span class="s1">&#39;CLA-S01&#39;</span><span class="p">,</span> <span class="s1">&#39;CLA-S02&#39;</span><span class="p">,</span> <span class="s1">&#39;L01&#39;</span><span class="p">])</span>
+        <span class="c1"># Exports machine state from simframe (hardware settings and simulated data @ screens / bpms)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">exportParameterValuesToYAMLFile</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;simframe-test&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.yaml&quot;</span><span class="p">)),</span>
+            <span class="n">simframe_file_update</span><span class="p">)</span>
+        <span class="p">[</span><span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-MAG-QUAD-0&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i_c</span><span class="p">)]</span><span class="o">.</span><span class="n">SETI</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i_c</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">simframe_file_update</span><span class="p">[</span><span class="s1">&#39;CLA-S02&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-S02-DIA-CAM-03&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="BeamSizeDetermination.fill_in_beam_size_dictionary"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.fill_in_beam_size_dictionary">[docs]</a>    <span class="k">def</span> <span class="nf">fill_in_beam_size_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_sig</span><span class="p">,</span> <span class="n">y_sig</span><span class="p">,</span> <span class="n">x_y_sig</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">         Fill in the beam size dictionary</span>
+
+<span class="sd">        :param x_sig: Array with x rms from the camera:</span>
+
+<span class="sd">        :param y_sig: Array with y rms from the camera:</span>
+
+<span class="sd">        :param x_y_sig: Array with x-y coupling terms from the camera:</span>
+
+<span class="sd">        :return self.beam_sizes: Dictionary with info from the camera:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;beam_sizes&#39;</span><span class="p">,</span> <span class="n">OrderedDict</span><span class="p">())</span>
+
+        <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">values</span><span class="p">})</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;x_var&#39;</span><span class="p">,</span> <span class="s1">&#39;y_var&#39;</span><span class="p">,</span> <span class="s1">&#39;x_y_mean&#39;</span><span class="p">],</span>
+                                                                      <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_sig</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_sig</span><span class="p">),</span>
+                                                                       <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_y_sig</span><span class="p">)])]</span>
+        <span class="k">for</span> <span class="n">x_s</span><span class="p">,</span> <span class="n">x_y_s</span><span class="p">,</span> <span class="n">y_s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="s1">&#39;x_var&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="s1">&#39;x_y_mean&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">beam_sizes</span><span class="p">[</span><span class="s1">&#39;y_var&#39;</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_s</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_y_s</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_s</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen_data</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen_data</span><span class="p">))</span>
+        <span class="c1"># self.machinestate.exportParameterValuesToYAMLFile(</span>
+        <span class="c1">#    os.path.abspath(os.path.join(os.getcwd(), &quot;test&quot;, &quot;catap-test_quad_&quot; + str(rows) + &quot;.yaml&quot;)),</span>
+        <span class="c1">#    self.machinestate.getMachineStateFromCATAP(self.mode))</span>
+
+<div class="viewcode-block" id="BeamSizeDetermination.quad_scan"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.quad_scan">[docs]</a>    <span class="k">def</span> <span class="nf">quad_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catapdict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Method to perform the quad scan from the optimised currents</span>
+
+<span class="sd">        :parameter catapdict: CATAP dictionary  with all the PVs obtained from CATAP:</span>
+
+<span class="sd">        :return self.beam_sizes: beam sizes array obtained from quad scans</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x_sigma</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">y_sigma</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">x_y_mean</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;beam_sizes&#39;</span><span class="p">,</span> <span class="n">OrderedDict</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">magnet</span> <span class="ow">in</span> <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;CLA-S02-MAG-QUAD&#39;</span><span class="p">):</span>
+                <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">switchOff</span><span class="p">()</span>
+                <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">switchOn</span><span class="p">()</span>
+                <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">SETI</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">catapdict</span><span class="p">[</span><span class="s1">&#39;Magnet&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">debugMessagesOff</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rows</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currents_optimised</span><span class="p">)):</span>
+            <span class="n">simframe_dictionary</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_set_sequence</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">catapdict</span><span class="p">))</span>
+            <span class="n">x_sig</span><span class="p">,</span> <span class="n">y_sig</span><span class="p">,</span> <span class="n">x_y_sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_beamsize_dict_one_quad</span><span class="p">(</span><span class="n">simframe_dictionary</span><span class="p">)</span>
+            <span class="n">x_sigma</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_sig</span><span class="p">)</span>
+            <span class="n">y_sigma</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_sig</span><span class="p">)</span>
+            <span class="n">x_y_mean</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_y_sig</span><span class="p">)</span>
+</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fill_in_beam_size_dictionary</span><span class="p">(</span><span class="n">x_sigma</span><span class="p">,</span> <span class="n">y_sigma</span><span class="p">,</span> <span class="n">x_y_mean</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BeamSizeDetermination.setting_up_simframe"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.setting_up_simframe">[docs]</a>    <span class="k">def</span> <span class="nf">setting_up_simframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catapdict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Method to set up the simframe object (machine state)</span>
+
+<span class="sd">        :parameter catapdict: CATAP dictionary</span>
+
+<span class="sd">        :return simframedata: SimFrame dict</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set up simframe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getMachineStateFromSimFrame</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;Lattices/CLA10-BA1_OM_emittance.def&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">initialiseSimFrameData</span><span class="p">()</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;simframedata&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getSimFrameDataDict</span><span class="p">())</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;framework&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getFramework</span><span class="p">())</span>
+
+        <span class="c1"># Set up lattice end point (default is to start at generator, at the moment we have to do it this way)</span>
+        <span class="n">machinestatefile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">parseParameterInputFile</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;catap-test.yaml&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">updateLatticeEnd</span><span class="p">(</span><span class="n">machinestatefile</span><span class="p">,</span> <span class="s1">&#39;CLA-S02&#39;</span><span class="p">)</span>
+        <span class="n">catapdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">machinestate</span><span class="o">.</span><span class="n">getMachineStateFromCATAP</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+        <span class="c1"># We have to fudge this for now as the conversion between current and solenoid strength doesn&#39;t work</span>
+        <span class="n">catapdata</span><span class="p">[</span><span class="s1">&#39;INJ&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-LRG1-MAG-SOL-01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;field_amplitude&#39;</span><span class="p">:</span> <span class="mf">0.255</span><span class="p">})</span>
+        <span class="n">catapdata</span><span class="p">[</span><span class="s1">&#39;INJ&#39;</span><span class="p">][</span><span class="s1">&#39;CLA-LRG1-MAG-BSOL-01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;field_amplitude&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">})</span>
+</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quad_scan</span><span class="p">(</span><span class="n">catapdict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BeamSizeDetermination.sequence_to_prepare_machine_state_and_simframe"><a class="viewcode-back" href="../../VirtualEmittanceMeasurement.html#QuadScan.virtualclarabeamsizes.BeamSizeDetermination.sequence_to_prepare_machine_state_and_simframe">[docs]</a>    <span class="k">def</span> <span class="nf">sequence_to_prepare_machine_state_and_simframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sequence to set up the catap and simframe dictionaries</span>
+
+<span class="sd">        :return self.beam_sizes: Set beam_sizes</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">catapdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preparing_catap_data</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setting_up_simframe</span><span class="p">(</span><span class="n">catapdict</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../VirtualEmittanceMeasurement.html">Virtual Beam size measurement (BeamSizeDetermination Class)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../EmittanceQuadScan.html">GeneralQuadScan (parent class)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../QuadScan.html">QuadScan Module</a></li>
+</ul>
+
+          <div role="search">
+            <h3 style="margin-top: 1.5em;">Search</h3>
+            <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+            </form>
+          </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <div role="navigation" aria-label="related navigaton">
+            <a href="../../py-modindex.html" title="Python Module Index"
+              >modules</a> |
+            <a href="../../genindex.html" title="General Index"
+              >index</a>
+          </div>
+          <div role="note" aria-label="source link">
+          </div>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, H.M. Castaneda Cortes, D.J. Scott, A. Wolski, A. Brynes, M. King.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.0.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

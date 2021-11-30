@@ -27,9 +27,18 @@
 //*/
 '''
 import sys,os
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\stage\\')
 #sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
-import VELA_CLARA_PILaser_Control as pil
+#sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release\\')
+# sys.path.append('\\\\192.168.83.14\\claranet\\packages\\vcc\\bin\\Stage\\')
+# sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\Stage\\')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\stage\\')
+try:
+    import VELA_CLARA_PILaser_Control as pil
+except:
+    print("Failed to load PIL module")
+
+
 import virtual_cathode_model_data as model_data
 from numpy import array
 from numpy import amin
@@ -42,14 +51,12 @@ import time
 #from scipy.stats import multivariate_normal
 
 
-
-
 class virtual_cathode_model():
 
     def __init__(self):
         # PIL control
         self.init = pil.init()
-        #self.init.setVerbose()
+        self.init.setVerbose()
         self.pil = self.init.physical_PILaser_Controller()
         #
         # own a reference to the data dictionary
@@ -96,6 +103,8 @@ class virtual_cathode_model():
         '''
             Some constants
         '''
+        self.values[self.data.avg_pix_beam_level] = self.vc_data.avg_pix_beam_level
+
         self.values[self.data.y_pix_scale_factor] = self.vc_image.y_pix_scale_factor
         self.values[self.data.x_pix_scale_factor] = self.vc_image.x_pix_scale_factor
         self.values[self.data.x_pix_to_mm] = self.vc_image.x_pix_to_mm
@@ -107,7 +116,7 @@ class virtual_cathode_model():
         self.values[self.data.ypix_full] = self.values[self.data.num_pix_y] * \
                                             self.values[self.data.y_pix_scale_factor]
         # get a fake image to start things off (plus used when debugging)
-        self.values[self.data.image]  = self.get_fake_image()
+        self.values[self.data.image] = self.get_fake_image()
 
     def reset_running_stats(self):
         '''
@@ -128,94 +137,173 @@ class virtual_cathode_model():
         '''
             Get latest values from controllers and put them in the data dict
         '''
-        self.values[self.data.is_acquiring] = self.pil.isAcquiring()
-        self.values[self.data.is_analysing] = self.pil.isAnalysing()
-        self.values[self.data.is_collecting_or_saving] = self.pil.isNotBusy()
+        # ref shortname
+        v = self.values
 
-        self.values[self.data.x_pix] = self.vc_data.x_pix
-        self.values[self.data.y_pix] = self.vc_data.y_pix
-        self.values[self.data.sig_x_pix] = self.vc_data.sig_x_pix
-        self.values[self.data.sig_y_pix] = self.vc_data.sig_y_pix
+        v[self.data.is_acquiring] = self.pil.isAcquiring()
+        v[self.data.is_analysing] = self.pil.isAnalysing()
+        v[self.data.is_collecting_or_saving] = self.pil.isNotBusy()
 
-        self.values[self.data.x_val] = self.vc_data.x
-        self.values[self.data.y_val] = self.vc_data.y
-        self.values[self.data.sx_val] = self.vc_data.sig_x
-        self.values[self.data.sy_val] = self.vc_data.sig_y
-        self.values[self.data.cov_val] = self.vc_data.sig_xy
-        self.values[self.data.avg_pix_val] = self.vc_data.avg_pix
 
-        self.values[self.data.x_mean] = self.vc_data.x_mean
-        self.values[self.data.y_mean] = self.vc_data.y_mean
-        self.values[self.data.sx_mean] = self.vc_data.sig_x_mean
-        self.values[self.data.sy_mean] = self.vc_data.sig_y_mean
-        self.values[self.data.cov_mean] = self.vc_data.sig_xy_mean
-        self.values[self.data.avg_pix_mean] = self.vc_data.avg_pix_mean
+        v[self.data.x_pix] = self.vc_data.x_pix
+        v[self.data.x_mean_pix] = self.vc_data.x_pix_mean
+        v[self.data.x_sd_pix] = self.vc_data.x_pix_sd
+        if v[self.data.x_mean_mm] != 0.0:
+            v[self.data.x_sd_mm_per] = (v[self.data.x_sd_mm] / v[self.data.x_mean_mm])*100
+        else:
+            v[self.data.x_sd_mm_per] = 0
 
-        self.values[self.data.x_sd] = self.vc_data.x_sd
-        self.values[self.data.y_sd] = self.vc_data.y_sd
-        self.values[self.data.sx_sd] = self.vc_data.sig_x_sd
-        self.values[self.data.sy_sd] = self.vc_data.sig_y_sd
-        self.values[self.data.cov_sd] = self.vc_data.sig_xy_sd
-        self.values[self.data.avg_pix_sd] = self.vc_data.avg_pix_sd
+        v[self.data.y_pix] = self.vc_data.y_pix
+        v[self.data.y_mean_pix] = self.vc_data.y_pix_mean
+        v[self.data.y_sd_pix] = self.vc_data.y_pix_sd
+        # For all percents check for a div by zero!!!!!!
+        if v[self.data.y_mean_pix] != 0.0:
+            v[self.data.y_sd_pix_per] = (v[self.data.y_sd_pix] / v[self.data.y_mean_pix])*100
+        else:
+            v[self.data.y_sd_pix_per] = 0
 
-        self.values[self.data.wcm_val] = self.pil_obj.Q
-        self.values[self.data.wcm_mean] = self.pil_obj.Q_mean
-        self.values[self.data.wcm_sd] = self.pil_obj.Q_sd
-#        self.values[self.data.wcm_buffer_full] = self.pil_obj.Q_full
+        v[self.data.sy_pix] = self.vc_data.sig_y_pix
+        v[self.data.sy_mean_pix] = self.vc_data.sig_y_pix_mean
+        v[self.data.sy_sd_pix] = self.vc_data.sig_y_pix_sd
+        if v[self.data.sy_mean_pix] != 0.0:
+            v[self.data.sy_sd_pix_per] = (v[self.data.sy_sd_pix] / v[self.data.sy_mean_pix])*100
+        else:
+            v[self.data.sy_sd_pix_per] = 0
 
-        # these are flakey  laser INTENSITY
-        self.values[self.data.int_val] = self.pil_obj.energy * 1000000
-        self.values[self.data.int_mean] = self.pil_obj.energy_mean * 1000000
-        self.values[self.data.int_sd] = self.pil_obj.energy_sd * 1000000
- #       self.values[self.data.laser_buffer_full] = self.pil_obj.energy_full
+        v[self.data.sx_pix] = self.vc_data.sig_x_pix
+        v[self.data.sx_mean_pix] = self.vc_data.sig_x_pix_mean
+        v[self.data.sx_sd_pix] = self.vc_data.sig_x_pix_sd
+        if v[self.data.sx_mean_pix] != 0.0:
+            v[self.data.sx_sd_pix_per] = (v[self.data.sx_sd_pix] / v[self.data.sx_mean_pix])*100
+        else:
+            v[self.data.sx_sd_pix_per] = 0
 
+        v[self.data.cov_mean_pix] = self.vc_data.sig_xy_pix_mean
+        v[self.data.cov_sd_pix] = self.vc_data.sig_xy_pix_sd
+        v[self.data.cov_pix] = self.vc_data.sig_xy_pix
+        if v[self.data.cov_mean_pix] != 0.0:
+            v[self.data.cov_sd_pix_per] = (v[self.data.cov_sd_pix] / v[self.data.cov_mean_pix])*100
+        else:
+            v[self.data.cov_sd_pix_per] = 0
+
+
+        v[self.data.x_mm] = self.vc_data.x_pix * v[self.data.x_pix_to_mm]
+        v[self.data.x_mean_mm] = self.vc_data.x_mean * v[self.data.x_pix_to_mm]
+        v[self.data.x_sd_mm] = self.vc_data.x_pix_sd * v[self.data.x_pix_to_mm]
+        v[self.data.x_sd_mm_per] = v[self.data.x_sd_pix_per]
+
+        v[self.data.y_mm] = self.vc_data.y_pix * v[self.data.y_pix_to_mm]
+        v[self.data.y_mean_mm] = self.vc_data.y_mean * v[self.data.y_pix_to_mm]
+        v[self.data.y_sd_mm] = self.vc_data.y_pix_sd * v[self.data.y_pix_to_mm]
+        v[self.data.y_sd_mm_per] = v[self.data.y_sd_pix_per]
+
+        v[self.data.sx_mm] = self.vc_data.sig_x_pix * v[self.data.x_pix_to_mm]
+        v[self.data.sx_mean_mm] = self.vc_data.sig_x_mean * v[self.data.x_pix_to_mm]
+        v[self.data.sx_sd_mm] = self.vc_data.sig_x_pix_sd * v[self.data.x_pix_to_mm]
+        v[self.data.sx_sd_mm_per] = v[self.data.sx_sd_pix_per]
+
+
+        v[self.data.sy_mm] = self.vc_data.sig_y_pix * v[self.data.y_pix_to_mm]
+        v[self.data.sy_mean_mm] = self.vc_data.sig_y_mean * v[self.data.y_pix_to_mm]
+        v[self.data.sy_sd_mm] = self.vc_data.sig_y_pix_sd * v[self.data.y_pix_to_mm]
+        v[self.data.sy_sd_mm_per] = v[self.data.sy_sd_pix_per]
+
+
+        v[self.data.cov_mm] = self.vc_data.sig_xy_pix * v[self.data.x_pix_to_mm] * v[self.data.y_pix_to_mm]
+        v[self.data.cov_sd_mm] = self.vc_data.sig_xy_pix_sd * v[self.data.x_pix_to_mm] * v[self.data.y_pix_to_mm]
+        v[self.data.cov_mean_mm] = self.vc_data.sig_xy_mean * v[self.data.x_pix_to_mm] * v[self.data.y_pix_to_mm]
+        v[self.data.cov_sd_mm_per] = v[self.data.cov_sd_pix_per]
+
+        # FRO ANALYSIs IN MM PERCENTS, JUST COPY THBE PIXEL VALUES
+
+        # laser energy meter
+        v[self.data.las_int] = self.pil_obj.energy
+        v[self.data.las_int_mean] = self.pil_obj.energy_mean
+        v[self.data.las_int_sd] = self.pil_obj.energy_sd
+        if v[self.data.las_int_mean] != 0.0:
+            v[self.data.las_int_sd_per] = (v[self.data.las_int_sd] / v[self.data.las_int_mean])*100
+        else:
+            v[self.data.las_int_sd_per] = 0.0
+
+        v[self.data.wcm_val] = self.pil_obj.Q
+        v[self.data.wcm_mean] = self.pil_obj.Q_mean
+        v[self.data.wcm_sd] = self.pil_obj.Q_sd
+        if v[self.data.wcm_mean] != 0.0:
+            v[self.data.wcm_sd_per] = (v[self.data.wcm_sd] / v[self.data.wcm_mean])*100
+        else:
+            v[self.data.wcm_sd_per] = 0.0
+
+        # image average pixel value
+        v[self.data.img_avg] = self.vc_data.avg_pix
+        v[self.data.img_avg_mean] = self.vc_data.avg_pix_mean
+        v[self.data.img_avg_sd] = self.vc_data.avg_pix_sd
+        if self.vc_data.avg_pix_mean != 0.0:
+            v[self.data.img_avg_sd_per] =(self.vc_data.avg_pix_sd/self.vc_data.avg_pix_mean)*100
+        else:
+            v[self.data.img_avg_sd_per] = 0.0
+
+        #v[self.data.laser_buffer_full] = self.pil_obj.energy_full
         #print('take image START')
-        self.values[self.data.image] = self.get_fast_image()
 
-        self.values[self.data.is_setting_pos] = self.pil.isSettingPos()
+        v[self.data.image] = self.get_fast_image()
+
+        v[self.data.is_setting_pos] = self.pil.isSettingPos()
         #print('take image FIN')
 
-        self.values[self.data.min_level_rbv] = amin(self.values[self.data.image])
-        self.values[self.data.max_level_rbv] = amax(self.values[self.data.image])
+        v[self.data.min_level_rbv] = amin(v[self.data.image])
+        v[self.data.max_level_rbv] = amax(v[self.data.image])
 
-        self.values[self.data.mask_x_rbv] = self.vc_mask.mask_x
-        self.values[self.data.mask_y_rbv] = self.vc_mask.mask_y
-        self.values[self.data.mask_x_rad_rbv] = self.vc_mask.mask_x_rad
-        self.values[self.data.mask_y_rad_rbv] = self.vc_mask.mask_y_rad
-        self.values[self.data.use_background] = self.vc_state.use_background
+        v[self.data.mask_x_rbv] = self.vc_mask.mask_x
+        v[self.data.mask_y_rbv] = self.vc_mask.mask_y
+        v[self.data.mask_x_rad_rbv] = self.vc_mask.mask_x_rad
+        v[self.data.mask_y_rad_rbv] = self.vc_mask.mask_y_rad
+        v[self.data.use_background] = self.vc_state.use_background
 
-        self.values[self.data.use_npoint] = self.vc_state.use_npoint
-        self.values[self.data.ana_step_size] = self.vc_data.step_size
+
+        v[self.data.use_npoint] = self.vc_state.use_npoint
+        v[self.data.ana_step_size] = self.vc_data.step_size
 
         # Laser Mirrors
-        self.values[self.data.H_step_read] = self.mirror.hStep
-        self.values[self.data.V_step_read] = self.mirror.vStep
+        v[self.data.H_step_read] = self.mirror.hStep
+        v[self.data.V_step_read] = self.mirror.vStep
         #
         # Laser Half wave plate
-        self.values[self.data.hwp_read] = self.pil_obj.HWP
+        v[self.data.hwp_read] = self.pil_obj.HWP
         #
         # Image saving file and path
-        self.values[self.data.last_save_dir]  = self.vc_daq.latestDirectory.replace('/', '\\')
-        self.values[self.data.last_save_file] = self.vc_daq.latestFilename
-        self.values[self.data.last_save_path] = self.values[self.data.last_save_dir] + '\\' + \
-                                                self.values[self.data.last_save_file]
+        v[self.data.last_save_dir]  = self.vc_daq.latestDirectory.replace('/', '\\')
+        v[self.data.last_save_file] = self.vc_daq.latestFilename
+        v[self.data.last_save_path] = v[self.data.last_save_dir] + '\\' + \
+                                                v[self.data.last_save_file]
         # update_shutter_state
         if self.shutter1.state == pil.SHUTTER_STATE.OPEN:
-            self.values[self.data.shutter1_open] = True
+            v[self.data.shutter1_open] = True
         else:
-            self.values[self.data.shutter1_open] = False
+            v[self.data.shutter1_open] = False
         if self.shutter2.state == pil.SHUTTER_STATE.OPEN:
-            self.values[self.data.shutter2_open] = True
+            v[self.data.shutter2_open] = True
         else:
-            self.values[self.data.shutter2_open] = False
+            v[self.data.shutter2_open] = False
+        #v[self.data.rs_buffer_size] = self.pil_obj.max_buffer_count
+        v[self.data.rs_buffer_count] = self.pil_obj.Q_n
+        v[self.data.rs_buffer_full] = self.pil_obj.Q_full
+        if v[self.data.rs_buffer_full]:
+            if self.data.values[self.data.rs_auto_reset]:
+                self.reset_running_stats()
 
-        self.values[self.data.x_buffer_full] = self.vc_data.x_full
-        self.values[self.data.y_buffer_full] = self.vc_data.y_full
-        self.values[self.data.sig_x_buffer_full] = self.vc_data.sig_x_full
-        self.values[self.data.sig_y_buffer_full] = self.vc_data.sig_y_full
-        self.values[self.data.cov_xy_buffer_full] = self.vc_data.sig_xy_full
-        self.values[self.data.pixel_avg_buffer_full] = self.vc_data.avg_pix_full
+        if self.pil.getHWPEnableState() == pil.STATE.ON:
+            print("hwp enable is TRUE")
+            v[self.data.hwp_enable_state] = True
+        else:
+            v[self.data.hwp_enable_state] = False
+        if self.previous_values[self.data.hwp_enable_state] != v[self.data.hwp_enable_state]:
+            print("hwp enable is {}".format(v[self.data.hwp_enable_state]))
 
+        #print("Q_n = ",v[self.data.rs_buffer_count], v[self.data.rs_buffer_full])
+
+    def set_rs_buffer_size(self, val):
+        #print("set_buffer_size = ", val)
+        self.pil.setAllRSBufferSize(val)
 
     def move_left(self, step):
         self.pil.moveLeft(step)
@@ -236,6 +324,7 @@ class virtual_cathode_model():
         self.pil.setHWP(self.pil_obj.HWP + delta_value)
 
     def get_fast_image(self):
+        # TODO sonme error handling
         if self.pil.isAcquiring_VC():
             # DEBUG
             #print('take image 1')
@@ -245,7 +334,7 @@ class virtual_cathode_model():
               #  never works :((((
               #  npData = array(self.vc_image.data2D)
             #print('return image')
-            return flipud(npData)
+            return npData
         else:
             print('failed to get image')
         return self.get_fake_image()
@@ -326,9 +415,27 @@ class virtual_cathode_model():
             self.pil.setMaskFeedBackOff_VC()
 
     def center_mask(self):
-        x = self.values[self.data.mask_x_rbv] - self.values[self.data.mask_x_rad_rbv]
-        y = self.values[self.data.mask_y_rbv] - self.values[self.mask_y_rad_rbv]
-        xRad = 2 * self.values[self.data.mask_x_rad_rbv]
-        yRad = 2 * self.values[self.data.mask_y_rad_rbv]
+        # x = self.values[self.data.mask_x_rbv] - self.values[self.data.mask_x_rad_rbv]
+        # y = self.values[self.data.mask_y_rbv] - self.values[self.data.mask_y_rad_rbv]
+        # xRad = 2 * self.values[self.data.mask_x_rad_rbv]
+        # yRad = 2 * self.values[self.data.mask_y_rad_rbv]
+        x = int(self.values[self.data.num_pix_x] / 2)
+        y = int(self.values[self.data.num_pix_y] / 2)
+        xRad = 100
+        yRad = 100
         self.setMask(x, y, xRad, yRad)
 
+    def toggle_HWP_enable(self):
+        print("toggle_HWP_enable")
+        print("self.pil.getHWPEnableState() =  ", self.pil.getHWPEnableState() )
+        if self.pil.getHWPEnableState() == pil.STATE.ON:
+            print("STATE IS ON SO disable")
+            a = self.pil.disableHWP()
+        else:
+            print("STATE IS NOT ON SO enable")
+            a = self.pil.enableHWP()
+
+        if a:
+            print("command sent")
+        else:
+            print("command NOT sent")

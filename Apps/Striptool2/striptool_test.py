@@ -1,9 +1,9 @@
 import sys, time, os
-if getattr(sys, 'frozen', False):
-    print( 'frozen!')
-else:
-    print( 'Not frozen!')
-    sys.path.append("../../Widgets/Striptool2")
+# if getattr(sys, 'frozen', False):
+#     print( 'frozen!')
+# else:
+#     print( 'Not frozen!')
+sys.path.append("../../Widgets/Striptool2")
 sys.path.append("../../../")
 import Software.Procedures.qt as qt
 from pyqtgraph.dockarea import DockArea, Dock
@@ -90,8 +90,8 @@ class striptool_Demo(qt.QMainWindow):
         ''' Add some signals to the striptool - note they call our signal generator at a frequency of 1/timer (100 Hz and 10 Hz in these cases).
             The 'pen' argument sets the color of the curves
                 - see <http://www.pyqtgraph.org/documentation/style.html>'''
-        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/10.0, function=self.createRandomSignal, args=[0,2,0.5])
-        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/10.0, function=self.createRandomSignal, args=[10,0.4,0.5, 2], logScale=False)
+        self.generalplot.addSignal(name='signal1', pen='g', timer=1.0/10.0, function=self.createRandomSignal, args=[0,1,0.5,0])
+        self.generalplot.addSignal(name='signal2', pen='r', timer=1.0/2.5, function=self.createRandomSignal, args=[0,1,0.5,10])
         # self.generalplot.addSignal(name='signal3', pen='b', timer=1.0/10.0, function=self.createRandomSignal, args=[1e4, 1e1, 2])
         # self.generalplot.addSignal(name='signal4', pen='c', timer=1.0/20.0, function=self.createRandomSignal, args=[1,0.5,7.8])
         # self.generalplot.addSignal(name='signal5', pen='m', timer=1.0/10.0, function=self.createRandomSignal, args=[3,2,0.87])
@@ -193,8 +193,8 @@ class striptool_Demo(qt.QMainWindow):
             t = time.clock()
         if not mean in self.lastT:
             self.lastT[mean] = t
-        signalValue = mean+sigma*np.sin(2*freq*np.pi*(t + offset))#+0.1*np.random.normal(mean, sigma)#+np.sin(1.384*2*np.pi*t-0.1)+0.5*np.random.normal(mean, sigma)
-        signalValue = t - self.lastT[mean] - 0.1
+        signalValue = mean+sigma*np.sin(freq*(t + offset))+0.1*np.random.normal(mean, sigma)#+np.sin(1.384*2*np.pi*t-0.1)+0.5*np.random.normal(mean, sigma)
+        # signalValue = t - self.lastT[mean] - 0.1
         self.lastT[mean] = t
         return signalValue
 

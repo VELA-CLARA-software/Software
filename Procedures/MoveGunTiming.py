@@ -1,5 +1,9 @@
 import sys, time, os
 sys.path.append("../Widgets/")
+<<<<<<< HEAD
+sys.path.append("../../")
+=======
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 from generic.pv import *
 import numpy as np
 np.set_printoptions(threshold=np.inf)
@@ -8,6 +12,8 @@ import argparse
 
 ###############################################################################
 # arguments
+<<<<<<< HEAD
+=======
 filename = 'test.txt'
 if os.path.exists(filename):
     print 'deleting file'
@@ -16,10 +22,19 @@ if os.path.exists(filename):
 #if os.path.exists(filename2):
 #    print 'deleting file'
 #    os.remove(filename2)
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
 parser = argparse.ArgumentParser(description='Move LINAC01 timing signals together')
 parser.add_argument('offset0', metavar='timing offset',
                    help='How much to offset the Gun timing (in microseconds)', type=float)
+<<<<<<< HEAD
+args = parser.parse_args()
+###############################################################################
+
+###############################################################################
+modulatorPVName = 'CLA-C18-TIM-EVR-01:Pul0-Delay-SP'
+amplifierPVName = 'CLA-C18-TIM-EVR-01:Pul3-Delay-SP'
+=======
 parser.add_argument('step', metavar='timing step size',
                    help='The value of the increments for stepping the Gun timing (in microseconds)', type=float)
 parser.add_argument('points_per_step', metavar='points per step',
@@ -55,6 +70,7 @@ if args.points_per_step <= 0:
 ###############################################################################
 modulatorPVName = 'CLA-C18-TIM-EVR-01:Pul2-Delay-SP'
 amplifierPVName = 'CLA-C18-TIM-EVR-01:Pul5-Delay-SP'
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 llrfPVName = 'CLA-C18-TIM-EVR-02:Pul0-Delay-SP'
 
 modulatorPV = PVObject(modulatorPVName)
@@ -64,6 +80,12 @@ amplifierPV.writeAccess = True
 llrfPV = PVObject(llrfPVName)
 llrfPV.writeAccess = True
 print ' Original Values = ', modulatorPV.value, amplifierPV.value, llrfPV.value
+<<<<<<< HEAD
+#397.1 396.46 398.68
+modPV0 = 397.1#modulatorPV.value
+ampPV0 = 396.46#amplifierPV.value
+llrfPV0 = 398.68#llrfPV.value
+=======
 modPV0 = modulatorPV.value
 ampPV0 = amplifierPV.value
 llrfPV0 = llrfPV.value
@@ -126,11 +148,17 @@ for key, value in tracedict.iteritems():
 #exit()
 #######################################################################
 # Scan offsets and record data
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
 
 offset = args.offset0
 modulatorPV.value = modulatorPV.value + args.offset0
 amplifierPV.value = amplifierPV.value + args.offset0
 llrfPV.value = llrfPV.value + args.offset0
+<<<<<<< HEAD
+time.sleep(0.1)
+print ' New Values = ', modulatorPV.value, amplifierPV.value, llrfPV.value
+# raw_input('Centre beam on C2V dipole')
+=======
 time.sleep(settling_time)
 print ' New Values = ', modulatorPV.value, amplifierPV.value, llrfPV.value
 raw_input('Centre beam on C2V dipole')
@@ -173,3 +201,4 @@ exit()
 # llrfPV.value = llrfPV.value + args.offset
 # time.sleep(0.1)
 # print ' New Values = ', modulatorPV.value, amplifierPV.value, llrfPV.value
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.

@@ -1,4 +1,4 @@
-import model as model
+import model.model as model
 import sys, time
 import numpy as np
 

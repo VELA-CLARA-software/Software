@@ -5,7 +5,7 @@ import pickle
 from data.config_reader import config_reader
 import numpy
 import data.bpm_calibrate_data_base as dat
-import yaml,json
+import ruamel.yaml,json
 
 
 class data_logger(object):
@@ -51,19 +51,20 @@ class data_logger(object):
             self.write_log(str)
 
     def message(self,text=[], add_to_log = False):
-        if isinstance(text, basestring):
-            str = text
-        else:
-            str = '\n'.join(text)
+        # if isinstance(text, string_types):
+        str = text
+        # else:
+        #     str = '\n'.join(text)
         print(str)
         if add_to_log:
             self.write_log(str)
 
     def write_log(self, str):
+        pass
         #write_str = datetime.now().isoformat('-').replace(":", "-").split('.', 1)[0] + ' ' + str + '\n'
-        write_str = datetime.now().isoformat(' ') + ' ' + str + '\n'
-        with open(self.log_path,'a') as f:
-            f.write(write_str)
+        # write_str = datetime.now().isoformat(' ') + ' ' + str + '\n'
+        # with open(self.log_path,'a') as f:
+        #     f.write(write_str)
 
     def write_list(self, data, file):
         with open(file,'w') as f:
@@ -78,7 +79,7 @@ class data_logger(object):
 
     def add_to_bpm_scan_yaml(self,d):
         with open(self.bpm_scan_log, 'w') as outfile:
-            yaml.dump(d, outfile, default_flow_style=False)
+            ruamel.yaml.dump(d, outfile, default_flow_style=False)
 
     def add_to_bpm_scan_json(self,d):
         with open(self.bpm_scan_log, 'a') as outfile:

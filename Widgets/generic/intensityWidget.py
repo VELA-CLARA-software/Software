@@ -45,15 +45,24 @@ class intensityWidget(QWidget):
 
 def spin(*args, **kwargs):
     spinValue = random.random()
+<<<<<<< HEAD
+    pw.setValue(spinValue)
+=======
     pw.setValue(0, spinValue)
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
     pw.update()
 
 if __name__ == '__main__':
     import sys
     global pw
     app = QApplication(sys.argv)
+<<<<<<< HEAD
+    pw = intensityWidget()
+    pw.setValue(0.76)
+=======
     pw = intensityGraph()
     pw.setValue(0, 0.76)
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
     pw.show()
     timer = QTimer()
     timer.timeout.connect(spin)

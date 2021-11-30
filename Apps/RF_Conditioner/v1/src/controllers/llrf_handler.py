@@ -103,7 +103,6 @@ class llrf_handler(llrf_handler_base):
             llrf_handler_base.logger.message('last_sp_above_100 = ' + str(llrf_handler_base.data.values[dat.last_sp_above_100]), True)
 
 
-
     def enable_llrf(self):
         # go through each possible LLRF paramter (except HOLD_RF_ON_COM mod / protection parmaters
         # and try and reset them
@@ -208,9 +207,6 @@ class llrf_handler(llrf_handler_base):
                 llrf_handler_base.logger.message('reset_daq_freg, llrf_DAQ_rep_rate_status != BAD', True)
                 self.should_show_reset_daq_freg = True
 
-
-
-
     def disableRFOutput(self):
         llrf_handler_base.llrf_control.disableRFOutput()
 
@@ -229,7 +225,7 @@ class llrf_handler(llrf_handler_base):
             if self.have_averages():
             # cancerous name, change !!!!!
                if llrf_handler_base.llrfObj[0].kly_fwd_power_max > llrf_handler_base.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE']:
-                    self.set_trace_masks()
+                    self.set_tracmasks()
                     for trace in llrf_handler_base.config.breakdown_config['BREAKDOWN_TRACES']:
                             if llrf_handler_base.llrfObj[0].trace_data[trace].check_mask:
                                 pass

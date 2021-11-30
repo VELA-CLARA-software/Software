@@ -35,7 +35,6 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4 import Qt
 
-
 class virtual_cathode_controller(QtGui.QApplication):
     '''
     This class owns the view and the model and passes message between the two.
@@ -69,8 +68,9 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.view.activateWindow()
         #
         # # a clipboad item fro copying paths to
-        # self.cb = QtGui.QApplication.clipboard()
-        # self.cb.clear(mode = self.cb.Clipboard)
+        self.cb = QtGui.QApplication.clipboard()
+        self.cb.clear(mode = self.cb.Clipboard)
+        self.model.set_rs_buffer_size(5)
 
     def handle_close_down(self):
         self.timer.stop()
@@ -82,12 +82,15 @@ class virtual_cathode_controller(QtGui.QApplication):
 
     def start_up_update(self):
         # we give the app a few ticks to init the hardware controllers before updating the mainView
+        print("start_count = {}".format(self.start_count))
         if self.start_count < 5:
             self.start_count += 1
         elif self.start_count == 5:
+            print("self.start_count == 5")
             self.start_count += 1
-            self.model.update_values()
+            print("self.view.start_up()")
             self.view.start_up()
+            self.model.update_values()
         else:
             print("Starting main timer")
             self.timer.stop()
@@ -105,7 +108,7 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.model.collect_and_save(self.view.numImages_spinBox.value())
 
     def handle_setPosition_pushButton(self):
-        print 'handle_setPosition_pushButton'
+        print('handle_setPosition_pushButton')
 
     def handle_setMask_pushButton(self):
         self.model.setMask( x = self.view.maskX_spinBox.value(),
@@ -115,7 +118,7 @@ class virtual_cathode_controller(QtGui.QApplication):
                           )
 
     def handle_setIntensity_pushButton(self):
-        print 'handle_setIntensity_pushButton'
+        print('handle_setIntensity_pushButton')
 
     def handle_load_pushButton(self):
         print 'handle_load_pushButton'
@@ -125,6 +128,9 @@ class virtual_cathode_controller(QtGui.QApplication):
 
     def handle_resetMeanSD_pushButton(self):
         self.model.reset_running_stats()
+
+    def handle_rs_buffer_size_spinbox(self):
+        self.model.set_rs_buffer_size(self.view.rs_buffer_size_spinbox.value())
 
     def handle_analyse_pushButton(self):
         #print 'handle_analyse_pushButton'
@@ -198,19 +204,32 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.model.move_up(self.view.mirror_v_step_set_spinBox.value())
 
     def handle_open_path_push_button(self):
-        f = '\\\\claraserv3'
-        if controller.self.data[data.last_save_dir] == 'UNKNOWN':
-            f.join('\\CameraImages\\')
-        else:
-            f = f + controller.self.data[data.last_save_path]
-        QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images', f)
+        f = str(self.view.last_directory.text())
+        try:
+            QtGui.QFileDialog.getOpenFileNames(self.view.centralwidget, 'Images', f)
+        except:
+            print("Error opening ", f)
+            pass
 
     def handle_copy_path_pushButton(self):
-        if controller.self.data.get(data.last_save_path) != 'UNKNOWN':#
-            # MAGIC_STRING
-            s = controller.self.data.get(data.image_save_dir_root)+ \
-                controller.self.data.get(data.last_save_dir)
-            self.cb.setText(s, mode = self.cb.Clipboard)
+        s = str(self.view.last_directory.text())
+        self.cb.setText(s, mode = self.cb.Clipboard)
+
+    def handle_copy_data_to_clipboard(self):
+        v = self.model.values
+        d = self.model.data
+        ld = [v[d.las_int], v[d.las_int_mean], v[d.las_int_sd], v[d.las_int_sd_per]]
+        wd = [v[d.wcm_val], v[d.wcm_mean], v[d.wcm_sd], v[d.wcm_sd_per]]
+        lds  = ["las E (uJ) : "] + ["{:.1E}".format(i) for i in ld]
+        wds  = ["wcm Q (pC) : "] + ["{:.1E}".format(i) for i in wd]
+        header = ["            ", "  val  ", "    mean ", "    rms  ", "   rms(%)"]
+        s = ''.join(header) + '\n' + ' '.join(lds) + '\n' + ' '.join(wds)
+        print(s)
+        self.cb.setText(s, mode=self.cb.Clipboard)
+
+    def handle_enable_HWP_Button(self):
+        print("handle_enable_HWP_Butt")
+        self.model.toggle_HWP_enable()
 
     def handle_center_mask_pushButton(self):
         self.model.center_mask()
@@ -240,6 +259,11 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.view.spinBox_minLevel.valueChanged.connect(self.handle_spinBox_minLevel)
         self.view.spinBox_maxLevel.valueChanged.connect(self.handle_spinBox_maxLevel)
 
+        self.view.copy_data_to_clipboard.clicked.connect(self.handle_copy_data_to_clipboard)
+        self.view.enable_HWP_Button.clicked.connect(self.handle_enable_HWP_Button)
+
+        self.view.rs_buffer_size_spinbox.valueChanged.connect(self.handle_rs_buffer_size_spinbox)
+
         self.view.opencloseShut1_pushButton.clicked.connect(
                 self.handle_opencloseShut1_pushButton)
         self.view.opencloseShut2_pushButton.clicked.connect(
@@ -260,6 +284,7 @@ class virtual_cathode_controller(QtGui.QApplication):
         self.view.autoLevel_pushButton.clicked.connect(self.handle_autoLevel_pushButton)
 
         self.view.center_mask_pushButton.clicked.connect(self.handle_center_mask_pushButton)
+
 
 
 

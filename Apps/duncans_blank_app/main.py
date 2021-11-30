@@ -39,7 +39,7 @@ Import the controller class, everything
 from src.controller.controller import controller
 
 # Add the release folder to the path to get latest HWC
-sys.path.append('\\\\apclara1\\ControlRoomApps\\Controllers\\bin\\Release')
+sys.path.append('\\\\claraserv3.dl.ac.uk\\claranet\\packages\\vcc\\bin\\Stage\\')
 
 
 class main_application(QApplication):

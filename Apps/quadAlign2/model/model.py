@@ -6,7 +6,9 @@ import Software.Procedures.Machine.machine as machine
 import numpy as np
 from scipy import stats
 from scipy import constants
+from scipy.optimize import curve_fit
 import Software.Utils.dict_to_h5 as h5dict
+SPEED_OF_LIGHT = constants.c / 1e6
 
 class dataArray(dict):
 

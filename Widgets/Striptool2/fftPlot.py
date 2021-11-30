@@ -83,7 +83,7 @@ class fftPlot(qt.QWidget):
 
     def plotUpdate(self):
         if self.isVisible() and not self.paused:
-            for curve in self.fftPlotCurves.values():
+            for curve in list(self.fftPlotCurves.values()):
                 curve.update()
 
     def pausePlotting(self, value=True):
@@ -140,27 +140,27 @@ class fftPlotCurve(qt.QObject):
         self.fftplot.removeItem(self.plotWidget.getItem(0,0))
 
     def _fourierTransform(self, x, y):
-        ## Perform fourier transform. If x values are not sampled uniformly,
-        ## then use np.interp to resample before taking fft.
+        # Perform fourier transform. If x values are not sampled uniformly,
+        # then use np.interp to resample before taking fft.
         # print 'length x = ', len(x)
-        # dx = np.diff(x)
+        dx = np.diff(x)
         # print ('mean dx = ', round_sig(np.mean(dx),6), ' sigma = ', round_sig(np.std(dx),6), ' = ', round_sig(100*np.std(dx) / np.mean(dx),3),'%   min = ', np.min(dx), ' / max = ', np.max(dx))
-        # uniform = not np.any(np.abs(dx-dx[0]) > (abs(dx[0]) / 100.))
+        uniform = not np.any(np.abs(dx-dx[0]) > (abs(dx[0]) / 100.))
         # starttime = time.clock()
-        # if not uniform:
-        #     # print('FFT not uniform!  ', max(np.abs(dx-dx[0])), ' > ', (abs(dx[0]) / 1000.))
-        #     # x2 = np.linspace(x[0], x[0] + len(x)*self.timer, len(x))
-        #     x2 = np.linspace(x[0], x[-1], len(x))
-        #     y = np.interp(x2, x, y)
-        #     x = x2
-        # f = np.fft.fft(y) / len(y)
-        # y = abs(f[1:int(len(f)/2)])
-        # dt = x[-1] - x[0]
-        # x = np.linspace(0, 0.5*len(x)/dt, len(y))
+        if not uniform:
+            # print('FFT not uniform!  ', max(np.abs(dx-dx[0])), ' > ', (abs(dx[0]) / 1000.))
+            # x2 = np.linspace(x[0], x[0] + len(x)*self.timer, len(x))
+            x2 = np.linspace(x[0], x[-1], len(x))
+            y = np.interp(x2, x, y)
+            x = x2
+        f = np.fft.fft(y) / len(y)
+        y = abs(f[1:int(len(f)/2)])
+        dt = x[-1] - x[0]
+        x = np.linspace(0, 0.5*len(x)/dt, len(y))
         # print 'FFT took ', time.clock() - starttime
-        nperseg = len(y) if len(y) < 2**12 else 2**12
-        fs = 1.0/self.timer
-        x,y = sp.welch(y, fs=fs, nperseg=nperseg)
+        # nperseg = len(y) if len(y) < self.decimateScale else self.decimateScale
+        # fs = 1.0/self.timer
+        # x,y = sp.welch(y, fs=fs, nperseg=nperseg)
         return x, y
 
     def update(self):
@@ -171,7 +171,7 @@ class fftPlotCurve(qt.QObject):
             data = list(self.data)
             if len(data) > self.decimateScale:
                 data = data[-self.decimateScale:]
-            x, y = zip(*data)
+            x, y = list(zip(*data))
             x, yf = self._fourierTransform(x, y)
             y = yf/max(yf)
             self.plot.setData({'x': x, 'y': y}, pen=self.color)

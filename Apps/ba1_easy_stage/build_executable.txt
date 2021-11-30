@@ -1,0 +1,28 @@
+# manually clear pyinstaller cache
+%AppData%Roaming\pyinstaller
+
+# run this from the commnand line, 
+# should compile in all libraries that have 
+# a path defined in the python source code
+pyinstaller -F -n -w "ba1_easy_stages" main.pyw --icon=.\resources\ba1_easy_stage\stage.ico --distpath "\\claraserv3\claranet\apps\legacy\binaries\BA1_easy_stage"
+
+# WITH ICON
+# pyinstaller -F -w --icon=.\resources\magnetApp\magpic.ico -n "magnetApp" magnetApp.pyw
+
+
+pyinstaller --onefile --clean -F -w --icon=".\resources\Valve_Status\valve.ico" -n "ba1_easy_stages" mainApp.py
+
+# to new dist folders
+# --distpath "\\apclara1\ControlRoomApps\Stage\magnetApp"
+
+# include relative paths in python file you run, e.g. 
+import sys
+import os
+sys.path.append(os.path.join(sys.path[0],'GUI'))
+sys.path.append(os.path.join(sys.path[0],'control'))
+
+# if you use images then put them in resource\YOURAPPNAME\ adn make sure you app can see them
+#  copy those folders to release 
+
+# you shoould be able to include pyd files, but i haven't managed that yet
+--add-binary "D:\VELA\GIT Projects\Software\Apps\MagnetApp;VELA_CLARA_Magnet_Control.pyd"

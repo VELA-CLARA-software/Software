@@ -3,7 +3,7 @@ import pyqtgraph as pg
 sys.path.append("../../../")
 import Software.Procedures.qt as qt
 import time
-import yaml
+import ruamel.yaml as yaml
 import string as string
 import colours as colours
 from collections import OrderedDict
@@ -11,7 +11,7 @@ from collections import OrderedDict
 _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 def dict_representer(dumper, data):
-    return dumper.represent_dict(data.iteritems())
+    return dumper.represent_dict(iter(data.items()))
 
 def dict_constructor(loader, node):
     return OrderedDict(loader.construct_pairs(node))
@@ -95,7 +95,7 @@ class createNormalSelectionBox(qt.QWidget):
         self.combo1.addItems(self.parent.headings)
         if not self.custom:
             self.combo2.addItems(self.parent.magnetnames['Off']['Names'])
-            self.combo3.addItems(self.parent.magnetnames['Off']['PVs'].keys())
+            self.combo3.addItems(list(self.parent.magnetnames['Off']['PVs'].keys()))
         self.combo4.addItems([str(i) + ' Hz'for i in self.parent.frequencies])
         self.combo1.setEditable(True)
         self.combo1.lineEdit().setReadOnly(True);
@@ -150,7 +150,7 @@ class createNormalSelectionBox(qt.QWidget):
             self.combo2.clear()
             self.combo2.addItems(self.parent.magnetnames['Off']['Names'])
             self.combo3.clear()
-            self.combo3.addItems(self.parent.magnetnames['Off']['PVs'].keys())
+            self.combo3.addItems(list(self.parent.magnetnames['Off']['PVs'].keys()))
 
 class customPVFunction(qt.QObject):
     def __init__(self, parent = None, pvid=None, GeneralController=None):
@@ -170,19 +170,46 @@ class signalTable(qt.QWidget):
     signalRateChanged = qt.pyqtSignal('PyQt_PyObject', 'PyQt_PyObject')
     colourPickerButtonPushed = qt.pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, VELABPMController=None, CLARABPMController=None, GeneralController=None):
+<<<<<<< HEAD
+    def __init__(self, parent = None, CLARAMagnetController=None, CLARABPMController=None, LRRGRFController=None,  L01RFController=None, GeneralController=None, settings=None):
         super(signalTable, self).__init__(parent)
         self.setMaximumHeight(100)
-        self.stream = open('striptool.yaml', 'r')
-        self.settings = yaml.load(self.stream)
-        self.stream.close()
+        if settings is None:
+            if os.path.isfile('./striptool.yaml' ):
+                self.settings_filename = './striptool.yaml'
+            else:
+                self.settings_filename = '\\\\claraserv3.dl.ac.uk\\claranet\\apps\\legacy\\config\\striptool_epics\\striptool.yaml'
+        else:
+            self.settings_filename = settings
+        print('Using settings files at:', self.settings_filename)
+        if os.path.isfile(self.settings_filename):
+            with open(self.settings_filename, 'r') as stream:
+                self.settings = yaml.load(stream, Loader=yaml.Loader)
+        else:
+            self.settings = {}
+        self.magnetnames = self.settings['magnets']
+        self.headings = self.settings['headings']
+        self.frequencies = self.settings['frequencies']
+        self.VELAMagnets = CLARAMagnetController
+        self.CLARAMagnets = CLARAMagnetController
+        self.VELAbpms = CLARABPMController
+=======
+    def __init__(self, parent = None, VELAMagnetController=None, CLARAMagnetController=None, VELABPMController=None, CLARABPMController=None, LRRGRFController=None,  L01RFController=None, GeneralController=None, settings=None):
+        super(signalTable, self).__init__(parent)
+        self.setMaximumHeight(100)
+        self.settings_filename = 'striptool.yaml' if settings is None else settings
+        with open(self.settings_filename, 'r') as stream:
+            self.settings = yaml.load(stream, Loader=yaml.Loader)
         self.magnetnames = self.settings['magnets']
         self.headings = self.settings['headings']
         self.frequencies = self.settings['frequencies']
         self.VELAMagnets = VELAMagnetController
         self.CLARAMagnets = CLARAMagnetController
         self.VELAbpms = VELABPMController
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         self.CLARAbpms = CLARABPMController
+        self.L01RF = L01RFController
+        self.LRRGRF = LRRGRFController
         self.general = GeneralController
         self.stripTool = parent
         self.rowNumber = 0
@@ -208,8 +235,12 @@ class signalTable(qt.QWidget):
         self.pvids = []
 
     def reloadSettings(self):
-        self.stream = open('striptool.yaml', 'r')
+        self.stream = open(self.settings_filename, 'r')
+<<<<<<< HEAD
+        self.settings = yaml.safe_load(self.stream)
+=======
         self.settings = yaml.load(self.stream)
+>>>>>>> parent of 903bfae1... Added handle_update_individual_trace button to NO-ARCv2 GUI that toggles the updating of individual traces between passive and 10Hz.
         self.stream.close()
         self.magnetnames = self.settings['magnets']
         self.headings = self.settings['headings']
@@ -233,18 +264,21 @@ class signalTable(qt.QWidget):
                 time.sleep(0.01)
                 testFunction()
             else:
-                print('Is this a valid PV? - ', functionArgument)
+                testFunction = None
+                print(('Is this a valid PV? - ', functionArgument))
         # elif functionForm[0] == '':
         #     functionName = functionForm[1]
         #     testFunction = lambda: getattr(self.magnets,functionName)(functionArgument)
         else:
             functionName = functionForm[1]
             function = eval(functionForm[0])
-            # print('functionName = ', functionName)
-            # print('functionForm = ', functionForm)
-            testFunction = lambda: getattr(function,functionName)(functionArgument)
-        self.stripTool.addSignal(name=name, pen=colourpickercolour, function=testFunction, timer=1.0/freq, logScale=logScale)
-        self.stripTool.records[name]['record'].start()
+            if function is not None:
+                testFunction = lambda: getattr(function,functionName)(functionArgument)
+            else:
+                testFunction = None
+        if testFunction is not None:
+            self.stripTool.addSignal(name=name, pen=colourpickercolour, function=testFunction, timer=1.0/freq, logScale=logScale)
+            self.stripTool.records[name]['record'].start()
 
     def updateColourBox(self):
         self.rowNumber = self.rowNumber + 1
@@ -263,7 +297,7 @@ class signalTable(qt.QWidget):
             functionArgument = self.magnetnames[combo1text]['Names'][combo2index][0]
         else:
             functionArgument = self.magnetnames[combo1text]['Names'][combo2index]
-        name = functionArgument+'.'+self.magnetnames[combo1index]['PVs'].keys()[combo3index]
+        name = functionArgument+'.'+list(self.magnetnames[combo1index]['PVs'].keys())[combo3index]
         freq = int(self.frequencies[combo4index])
         functionForm = self.magnetnames[combo1index]['PVs'][combo3text]
         colourpickercolour = self.normalSelectionBox.colorbox._color
@@ -314,9 +348,9 @@ class signalTable(qt.QWidget):
                 signalType = str(combo1.currentText())
                 signalName = str(combo2.currentText())
                 signalPVName = str(combo3.currentText())
-                if not(signalPVName in self.magnetnames["%s"%(signalType)]['PVs'].keys()):
+                if not(signalPVName in list(self.magnetnames["%s"%(signalType)]['PVs'].keys())):
                     combo3.clear()
-                    combo3.addItems(self.magnetnames["%s"%(signalType)]['PVs'].keys())
+                    combo3.addItems(list(self.magnetnames["%s"%(signalType)]['PVs'].keys()))
 
     def changeThirdComboFromSecond(self, idnumber, ind):
         if not self.customPVInput:
@@ -325,11 +359,11 @@ class signalTable(qt.QWidget):
             if combo3 != None:
                 signalType = combo1.currentText()
                 combo3.clear()
-                combo3.addItems(self.magnetnames["%s"%(signalType)]['PVs'].keys())
+                combo3.addItems(list(self.magnetnames["%s"%(signalType)]['PVs'].keys()))
 
     def colorPicker(self):
         row = self.tableWidget.indexAt(qt.QApplication.focusWidget().pos()).row()
-        signalIndex = self.rowWidgets.keys()[self.rowWidgets.values().index(self.tableWidget.cellWidget(row,5))]
+        signalIndex = list(self.rowWidgets.keys())[list(self.rowWidgets.values()).index(self.tableWidget.cellWidget(row,5))]
         color = qt.QColorDialog.getColor(colours.Qtableau20[2*signalIndex % 20])
         self.tableWidget.cellWidget(row, 5).setStyleSheet("border: none; background-color: %s" % color.name())
         self.penColors[signalIndex] = color

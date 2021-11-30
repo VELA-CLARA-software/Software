@@ -26,7 +26,7 @@
 from monitor import monitor
 from VELA_CLARA_enums import CONTROLLER_TYPE
 from VELA_CLARA_Vac_Valve_Control import VALVE_STATE
-import src.data.rf_condition_data_base as dat
+#import src.data.rf_condition_data_base as dat
 # At the moment its a very small simple class,
 # we may increase what it can do (i.e. reset the protection)
 # at a later date
@@ -43,6 +43,7 @@ class vac_valve_monitor(monitor):
         self.old_value = None
         # create a local copy of relevant config data
         self.keep_valve_open = self.config_data[self.config.KEEP_VALVE_OPEN]
+        self.valve_name = self.config_data[self.config.VAC_VALVE]
         if self.hardware.have_controller[CONTROLLER_TYPE.VAC_VALVES]:
             self.set_success = True
             self.start()

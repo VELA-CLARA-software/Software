@@ -6,14 +6,13 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import pyqtSignal
-from PyQt4.QtGui import QMainWindow
-import pyqtgraph
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QMainWindow
 import sys, os, time, math, datetime, copy, re
 import glob
-from PyQt4.QtCore import QObject, pyqtSignal, QThread, QTimer, QRectF, Qt
-from PyQt4.QtGui import * #QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QComboBox, QTabWidget, QLineEdit, QFileDialog, QLabel, QAction, QPixmap, qApp, QStyle, QGroupBox, QSpinBox
+from PyQt5.QtCore import QObject, pyqtSignal, QThread, QTimer, QRectF, Qt
+from PyQt5.QtGui import * #QApplication, QMainWindow, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QComboBox, QTabWidget, QLineEdit, QFileDialog, QLabel, QAction, QPixmap, qApp, QStyle, QGroupBox, QSpinBox
 from pyqtgraph import LegendItem, mkPen, mkBrush, LabelItem, TableWidget, GraphicsLayoutWidget, setConfigOption, \
 setConfigOptions, InfiniteLine, ImageItem, GraphicsView, GraphicsLayout, GraphicsWindow, ViewBox, PlotDataItem, colorStr, mkColor
 from pyqtgraph.graphicsItems.LegendItem import ItemSample
@@ -148,16 +147,16 @@ class Ui_MainWindow(object):
         self.midVBox.addLayout(self.scanRangeHBox)
         self.midVBox.addLayout(self.messageHBox)
         self.midVBox.addLayout(self.bunchChargeHBox)
-        self.bpmxPlotWidget = QWidget()
-        self.bpmxPlotLayout = QVBoxLayout()
+        self.bpmxPlotWidget = QtGui.QWidget()
+        self.bpmxPlotLayout = QtGui.QVBoxLayout()
         self.bpmxPlotWidget.setLayout(self.bpmxPlotLayout)
         self.bpmxPlotView = GraphicsView(self.bpmxPlotWidget,useOpenGL=True)
         self.bpmxPlotWidgetGraphicsLayout = GraphicsLayout()
         self.bpmxPlotView.setCentralItem(self.bpmxPlotWidgetGraphicsLayout)
         self.bpmxPlot = self.bpmxPlotWidgetGraphicsLayout.addPlot(title='bpmx')
         self.bpmxPlot.showGrid(x=True, y=True)
-        self.bpmyPlotWidget = QWidget()
-        self.bpmyPlotLayout = QVBoxLayout()
+        self.bpmyPlotWidget = QtGui.QWidget()
+        self.bpmyPlotLayout = QtGui.QVBoxLayout()
         self.bpmyPlotWidget.setLayout(self.bpmyPlotLayout)
         self.bpmyPlotView = GraphicsView(self.bpmyPlotWidget, useOpenGL=True)
         self.bpmyPlotWidgetGraphicsLayout = GraphicsLayout()

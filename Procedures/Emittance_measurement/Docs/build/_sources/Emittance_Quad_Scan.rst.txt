@@ -1,0 +1,14 @@
+General Quad Scan Class
+===============
+This page contains the description of the General Quad Scan Class.
+
+
+
+===========================
+virtual_clara_beam_sizes
+===========================
+.. autoclass:: GeneralQuadScan
+   :members: 
+   :undoc-members:
+   :show-inheritance:
+ ..inheritance-diagram:: 

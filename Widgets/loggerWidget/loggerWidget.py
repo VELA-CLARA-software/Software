@@ -10,9 +10,10 @@ import logging
 import os
 # import rpyc
 import zmq, time
+import socket
 # import threading
 # from threading import Thread, Event, Timer
-
+from logging.handlers import RotatingFileHandler
 widgetLogger = logging.getLogger(__name__)
 
 colournames = {
@@ -240,7 +241,7 @@ class QPlainTextEditLogger(logging.Handler):
             standarditem.setForeground(QColor(color))
             self.model.setItem(newRowNumber,i, standarditem)
             # self.model.setData(self.model.index(newRowNumber,i), Qt.blue, Qt.BackgroundRole)
-        self.parent_filter.reset()
+        self.parent_filter.invalidateFilter()
 
 class zmqPublishLogger(QObject):
     def __init__(self, logger=None, *args, **kwargs):
@@ -308,8 +309,11 @@ class zmqReceiverLoggerThread(QThread):
             widgetLogger.log(level, message, extra={'networkname': name, 'publisher': publisher})
 
 class loggerWidget(QWidget):
-    def __init__(self, logger=None, networkLogger=False, parent=None):
+    def __init__(self, logger=None, networkLogger=False, parent=None, autosave=False, logdirectory=None, appname=None):
         super(loggerWidget,self).__init__(parent)
+        self.logdirectory = logdirectory
+        self.appname = appname
+        self.autosave = autosave
         self.tablewidget = QTableView()
 
         layout = QGridLayout()
@@ -342,6 +346,11 @@ class loggerWidget(QWidget):
         layout.addWidget(self.tablewidget,1,0,10,5)
         layout.addWidget(saveButton,0,3,1,1)
         self.logTextBox = QPlainTextEditLogger(self.tablewidget, self.model, self.filter_proxy_model)
+        if self.autosave:
+            formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s ' + socket.gethostname() + ' %(message)s',
+                                  datefmt='%Y-%m-%d %H:%M:%S')
+            self.fileLogger = RotatingFileHandler(self.logdirectory+'/'+self.appname+'_log.txt', maxBytes=1048576, backupCount=1)
+            self.fileLogger.setFormatter(formatter)
         self.setLayout(layout)
         if(logger != None):
             if(isinstance(logger, list)):
@@ -349,7 +358,7 @@ class loggerWidget(QWidget):
                     self.addLogger(log)
             else:
                 self.addLogger(logger)
-        self.logTextBox.setFormatter(logging.Formatter(' %(asctime)s - %(name)s - %(levelno)s - %(message)s'))
+        self.logTextBox.setFormatter(logging.Formatter('%(asctime)s %(levelname)-8s ' + socket.gethostname() + ' %(message)s'))
         self.addLogger(widgetLogger)
         if networkLogger:
             self.networkLogThread = networkLogThread()
@@ -438,6 +447,9 @@ class loggerWidget(QWidget):
     def addLogger(self, logger, level=logging.DEBUG):
         logger.addHandler(self.logTextBox)
         logger.setLevel(level)
+        if self.autosave:
+            logger.addHandler(self.fileLogger)
+            logger.setLevel(level)
 
     def setLoggerLevel(self, logger, level=logging.DEBUG):
         logger.setLevel(level)
@@ -451,9 +463,11 @@ class loggerWidget(QWidget):
                 widg = self.model.item(r, i)
                 row[i] = widg.text()
             saveData[r] = row
-        # print saveData
-        saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Log', filter="TXT files (*.txt);;", selectedFilter="TXT files (*.txt)"))
-        filename, file_extension = os.path.splitext(saveFileName)
+        if not self.logdirectory is None and not self.appname is None:
+            filename = self.logdirectory+'/'+time.strftime("%H%M%S")+' '+self.appname+'_log.txt'
+        else:
+            saveFileName = str(QFileDialog.getSaveFileName(self, 'Save Log', filter="TXT files (*.txt);;", selectedFilter="TXT files (*.txt)"))
+            filename, file_extension = os.path.splitext(saveFileName)
         if file_extension == '.txt':
         #     print "csv!"
             fmt='%s \t %s \t %s \t %s'

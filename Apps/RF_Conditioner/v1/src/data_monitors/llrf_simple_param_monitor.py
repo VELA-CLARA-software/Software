@@ -56,7 +56,6 @@ class llrf_simple_param_monitor(monitor):
                                    'trace_mean_keys[trace2] = ' + self.trace_mean_keys[trace2]
                                    ,True)
 
-
         self.timer.timeout.connect(self.update_value)
         self.timer.start( monitor.config.llrf_config['LLRF_CHECK_TIME'])
         #self.timer.start( 1000 )
@@ -68,10 +67,6 @@ class llrf_simple_param_monitor(monitor):
         if monitor.config.breakdown_config.has_key('PHASE_MASK_BY_POWER_PHASE_TRACE_2'):
             self.phase_trace_2 = monitor.config.breakdown_config['PHASE_MASK_BY_POWER_PHASE_TRACE_2']
 
-
-
-
-
         ## WARNING
         # min kyl fwd power to enable incrementing the pulse RF counter
         monitor.llrf_control.setActivePulsePowerLimit(monitor.config.llrf_config['KLY_PWR_FOR_ACTIVE_PULSE'])
@@ -82,7 +77,6 @@ class llrf_simple_param_monitor(monitor):
         #
         # send keep alive pulse
         monitor.llrf_control.keepAlive()
-
         # get the mean power for each trace
         for trace, key  in self.trace_mean_keys.iteritems():
             self.get_mean_power(key, trace)
@@ -135,9 +129,7 @@ class llrf_simple_param_monitor(monitor):
             monitor.data.values[dat.llrf_ff_ph_locked_status] = state.GOOD
         else:
             monitor.data.values[dat.llrf_ff_ph_locked_status] = state.BAD
-
         ##
-
         monitor.data.values[dat.llrf_DAQ_rep_rate] = monitor.llrfObj[0].trace_rep_rate
 
         if monitor.data.values[dat.llrf_DAQ_rep_rate] < monitor.data.values[
@@ -152,7 +144,7 @@ class llrf_simple_param_monitor(monitor):
         else:
             monitor.data.values[dat.llrf_DAQ_rep_rate_status] = state.GOOD
 
-        # keep a memory of th eprevvious state, adn compare
+        # keep a memory of th eprevvious state, adn updatecompare
         # we use a NEW_GOOD to enable to switch on teh RF at the previous set amp
         # ofc this could be tidied up loads and loads ...
         if  monitor.data.values[dat.llrf_DAQ_rep_rate_status_previous] == state.BAD:
@@ -169,16 +161,11 @@ class llrf_simple_param_monitor(monitor):
                 self.alarm('rf_off')
             llrf_simple_param_monitor.old_rf_output = monitor.llrfObj[0].rf_output
 
-
         monitor.data.values[dat.duplicate_pulse_count] = monitor.llrfObj[0].duplicate_pulse_count
-
         # is rf_ouput enabled
-
-
         # amplitude set point
         monitor.data.values[dat.amp_sp] = int(monitor.llrfObj[0].amp_sp)
         monitor.data.values[dat.phi_sp] = int(monitor.llrfObj[0].phi_sp)
-
 
         # LLRF trigger state
 

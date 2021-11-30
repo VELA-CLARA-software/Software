@@ -1,0 +1,241 @@
+CLA-L01-APER:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-L01-CAV:
+  field_amplitude: 12295130.191809537
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-L01-CLEANER:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-L01-MAG-SOL-01:
+  field_amplitude: 0.00016743862994521205
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-L01-MAG-SOL-02:
+  field_amplitude: 0.00016743862994521205
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-L01-WAKE:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-LRG1-APER:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-LRG1-GUN-CAV:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-LRG1-MAG-BSOL-01:
+  field_amplitude: -235.8887485781032
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-LRG1-MAG-SOL-01:
+  field_amplitude: 182.0644436910024
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S01-APER:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S01-DIA-BPM-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S01-DIA-SCR-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S01-DIA-WCM-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S01-MAG-HVCOR-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S01-MAG-HVCOR-02:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-APER-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-APER-02:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-COL-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-DIA-BPM-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-DIA-BPM-02:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-DIA-SCR-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-DIA-SCR-02:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-DIA-SCR-03:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-MAG-HVCOR-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-MAG-HVCOR-02:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-MAG-HVCOR-03:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-MAG-HVCOR-04:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+CLA-S02-MAG-QUAD-01:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+  k1l: 0.0
+CLA-S02-MAG-QUAD-02:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+  k1l: 0.0
+CLA-S02-MAG-QUAD-03:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+  k1l: 0.0
+CLA-S02-MAG-QUAD-04:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+  k1l: 0.0
+CLA-S02-MAG-QUAD-05:
+  global_parameters:
+    beam:
+      beam: {}
+      sddsindex: 0
+    master_lattice_location: C:/Users/qfi29231/Documents/SimFrame_fork/SimFrame/MasterLattice//
+    master_subdir: C:\Users\qfi29231\Documents\spawn_emittances\Emittance_GUI\injector
+  k1l: 0.0
