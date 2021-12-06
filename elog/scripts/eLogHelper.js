@@ -357,7 +357,7 @@ function initVELA(jQuery)
 	}
 }
 
-var mcTimer, mcServer = 'apsv2.dl.ac.uk';
+var mcTimer, mcServer = 'apclara1.dl.ac.uk';
 function elogRequestMachineStatus (area) {
 	document.getElementById ('mcWorking').innerHTML = 'Working...';
 	mcTimer = setTimeout ('mcRequestTimeout()', 10*1000);

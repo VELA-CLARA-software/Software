@@ -6,6 +6,7 @@ import os
 import re
 import ssl
 import sys
+from platform import node
 from time import sleep
 from epics import PV
 from datetime import datetime
@@ -109,7 +110,7 @@ class MyHandler(http.server.BaseHTTPRequestHandler):
         path, ext = os.path.splitext(self.path[1:].lower())  # strip leading /, case insensitive
         if path in self.output:
             output = self.get_status_table(path)
-            if ext != '.json':
+            if ext == '.html':
                 output = self.wrap_content(output, path)
             else:
                 output = '''elogInsertMachineStatus({{"status": "ok", "area": "{0}",
@@ -177,8 +178,9 @@ def machine_status_server():
     port = 27643
     server = StoppableServer(('', port), MyHandler)
 
-    certfile = '/etc/pki/tls/certs/apsv2-dl-ac-uk.crt'
-    keyfile = '/etc/pki/tls/private/apsv2-dl-ac-uk.key'
+    filename = node().replace('.', '-')
+    certfile = '/etc/pki/tls/certs/{0}.crt'.format(filename)
+    keyfile = '/etc/pki/tls/private/{0}.key'.format(filename)
     try:
         server.socket = ssl.wrap_socket(server.socket, keyfile=keyfile, certfile=certfile, server_side=True)
         protocol = 'https'
