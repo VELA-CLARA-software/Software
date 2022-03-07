@@ -1,7 +1,7 @@
 import sys, os
 import HRFOv2_EPICS_data
 
-from HRFOv2_EPICS_data import data_functions
+#from HRFOv2_EPICS_data import data_functions
 
 
 class utilities():
@@ -9,7 +9,9 @@ class utilities():
 	def __init__(self):
 		print('Initaited utilities()')
 
-	def create_folder_named_date_time_from_to(self):
+
+
+	def create_bespoke_folder_name(self, foldername):
 		'''
 		set up a folder in the same directory as savepath with a name based on date_time_from - date_time_to
 		if the folder already exists - pass
@@ -17,40 +19,21 @@ class utilities():
 		:return:
 		'''
 
-		#self.savepath =
 		self.directory = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
-		#directory = os.path.dirname(os.path.realpath(__file__))  # directory of script
-		self.folder_name = self.create_folder_name()
-		path = r'{}\Analysis_Results'.format(self.directory)  # path to be created
+		self.folder_name = foldername
+		path = f'{self.directory}\\{self.folder_name}'
 
-		print('directory = {}\npath = {}'.format(self.directory, path))
+		print(path)
 
 		try:
 			os.makedirs(path)
-			print('\nNew "Analysis_Results" folder created.')
+			print(f'\nNew "{self.folder_name}" folder created.')
 		except OSError:
 			try:
 				folder_test = path
-				print('\n"Analysis_Results" folder already exists.')
+				print(f'\n"{self.folder_name}" folder already exists.')
 			except:
-				print('\n...Problem with setting up "Analysis_Results" folder.... call Tony!')
+				print(f'\n...Problem with setting up "{self.folder_name}" folder....')
 				sys.exit()
 
-	def create_folder_name(self):
-		'''
-
-		:return:
-		'''
-		df = data_functions
-
-		self.date_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_from]
-		self.time_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_from]
-		self.date_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_to]
-		self.time_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_to]
-
-		self.folder_name = df.concatenate_date_time_to_folder_format(self.date_from,
-		                                                             self.time_from,
-		                                                             self.date_to,
-		                                                             self.time_to)
-
-
+		return path

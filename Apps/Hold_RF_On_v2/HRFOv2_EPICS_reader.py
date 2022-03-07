@@ -1,4 +1,4 @@
-import yaml, sys, csv, requests, re
+import yaml, sys, csv, requests, re, pandas as pd
 import numpy as np
 from decimal import *
 import pickle as pkl
@@ -6,6 +6,7 @@ import HRFOv2_EPICS_data
 from matplotlib import pyplot as plt
 
 from HRFOv2_EPICS_figures import figures
+from HRFOv2_EPICS_utils import utilities
 #from HRFOv2_EPICS_data import  data_functions
 
 getcontext().prec = 100
@@ -14,9 +15,10 @@ class reader():
     '''
     Class that handles reading in & writing any data files like .yml, .txt, .csv, .pkl etc...
     '''
-
+    _DATA = HRFOv2_EPICS_data
     def __init__(self):
         print('Initiated reader().')
+
 
     def read_yaml(self):
 
@@ -50,7 +52,7 @@ class reader():
         '''
         self.string_1 = string_1
 
-        self.string_2 = re.sub('[!@#$:]', '', self.string_1)
+        self.string_2 = re.sub('[!@#$:.]', '', self.string_1)
 
         return self.string_2
 
@@ -131,7 +133,7 @@ class reader():
             # Construct url from "pv_name", "EPICS_date_time_from" & "EPICS_date_time_to"
             url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + \
                   pv_name + "&from=" + self.EPICS_date_time_from + "&to=" + self.EPICS_date_time_to
-
+            print(url)
             #Retrieve data from EPICS archiver
             r = requests.get(url)
             data = r.json() #######################################################################################<---
@@ -198,6 +200,411 @@ class reader():
         # Save the values dictionary as a .pkl so that we can re-run the script without having to re-read the data.
         self.save_dict_2_pkl(HRFOv2_EPICS_data.values, r'\post_PV_read_values_dict.pkl')
 
+    def read_gun_fault_log(self):
+        '''
+
+        :return:
+        '''
+
+        figs = figures()
+        # df = data_functions()
+
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.date_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_from]
+        self.time_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_from]
+        self.date_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_to]
+        self.time_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_to]
+        self.gun_FaultLog_pv = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.fault_log_PVs][0]
+        self.fault_log_to_index_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.fault_log_to_index_dict]
+        # pv_name = "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
+
+        # Call in the from and to times saved in the data dictionary originally read in from the config file
+        self.EPICS_date_time_from = self.concatenate_date_time_to_EPICS_format(self.date_from, self.time_from)
+        self.EPICS_date_time_to = self.concatenate_date_time_to_EPICS_format(self.date_to, self.time_to)
+
+        # save the formatted string in the data dictionary
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.EPICS_date_time_from] = self.EPICS_date_time_from
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.EPICS_date_time_to] = self.EPICS_date_time_to
+
+        pv_name = self.gun_FaultLog_pv
+
+        print(f'\n\nAttempting to read {pv_name}')
+
+        # Construct url from "pv_name", "EPICS_date_time_from" & "EPICS_date_time_to"
+        url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + \
+              pv_name + "&from=" + self.EPICS_date_time_from + "&to=" + self.EPICS_date_time_to
+
+        print(f'url: {url}')
+        #input()
+        # Retrieve data from EPICS archiver
+        r = requests.get(url)
+        data = r.json()  #######################################################################################<---
+
+        # Initiate empty time and yaxis data lists for each individual PV
+        # time_0 = time[0]
+        # relative_time = [i - time_0 for i in time]
+        # print(relative_time)
+
+        yaxis = []
+        time = []
+        for event in data[0]["data"]:
+            time.append(event["secs"] + event["nanos"] * 1E-9)
+            yaxis.append(event["val"])
+
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.raw_buffer_times] = raw_buffer_times = time
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.raw_buffers] = raw_buffers = yaxis
+
+        time_array = np.array(time)
+        print(f'time_array.shape = {time_array.shape}')
+        # Create a savename for the PV plot by removing the ":" character from the PV name string
+        self.savename = self.remove_char_from_str(data[0]["meta"]['name'])
+
+        #print(url)
+        #print(data[0]["meta"])
+        print(f'savename = {self.savename}')
+        print(f'len(time) = {len(time)}\n'
+              f'len(yaxis) = {len(yaxis)}')
+        print(f'type(time) = {type(time)}')
+
+        # print(f'self.yaxis = {self.yaxis}')
+        print(f'self.yaxis[-1] = {yaxis[-1]}')
+
+        yaxis_classes = list(set(yaxis[-2]))
+        print(f'yaxis_classes = {yaxis_classes}')
+
+        all_full_buffers = []
+        for idx, ls in enumerate(yaxis):
+            #print(time[idx])
+            # identify empty buffers
+            if len(ls) == 0:
+                # if the first in list ignore
+                if idx != 0:
+                    # append the list before the empty list to full_buffers
+                    all_full_buffers.append(yaxis[idx - 1])
+                else:
+                    pass
+            else:
+                pass
+
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.all_full_buffers] = all_full_buffers
+
+        # print each full buffer list out
+        for buff in all_full_buffers:
+            print(f'{len(buff)}: {buff}')
+
+    def read_gun_fault_log_quick_check(self, EPICS_date_time_from, EPICS_date_time_to):
+        '''
+
+        :return:
+        '''
+
+        figs = figures()
+        # df = data_functions()
+
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.EPICS_date_time_from = EPICS_date_time_from
+        self.EPICS_date_time_to = EPICS_date_time_to
+        self.gun_FaultLog_pv = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.fault_log_PVs][0]
+        self.fault_log_to_index_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.fault_log_to_index_dict]
+        # pv_name = "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
+
+        # save the formatted string in the data dictionary
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.EPICS_date_time_from] = self.EPICS_date_time_from
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.EPICS_date_time_to] = self.EPICS_date_time_to
+
+        pv_name = self.gun_FaultLog_pv
+
+        print(f'\n\nAttempting to read {pv_name}')
+
+        # Construct url from "pv_name", "EPICS_date_time_from" & "EPICS_date_time_to"
+        url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + \
+              pv_name + "&from=" + self.EPICS_date_time_from + "&to=" + self.EPICS_date_time_to
+
+        # Retrieve data from EPICS archiver
+
+        print(f'url: {url}')
+        r = requests.get(url)
+        data = r.json()  #######################################################################################<---
+
+        # Initiate empty time and yaxis data lists for each individual PV
+        # time_0 = time[0]
+        # relative_time = [i - time_0 for i in time]
+        # print(relative_time)
+
+        yaxis = []
+        time = []
+        for event in data[0]["data"]:
+            time.append(event["secs"] + event["nanos"] * 1E-9)
+            yaxis.append(event["val"])
+
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.raw_buffer_times_quick_check] = raw_buffer_times = time
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.raw_buffers_quick_check] = raw_buffers = yaxis
+
+
+
+
+    def read_EPICS_PVs_for_HV_interlock_periods(self):
+        '''
+        Reads in every PV in the "all_mod_PVs" list for each HV interlock period created by create_to_and_from_times_from_HV_interlock_timestams()
+        saves the time data and the yaxis data
+        overplots each individual PVs yaxis data as a function of time
+        :param verbose: if True then function prints out attributes for diagnostics.
+        :return:
+        '''
+
+        figs = figures()
+        utils = utilities()
+        #self.savepath = f'{HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]}\\HV_interlock_PV_overplots'
+        self.savepath = utils.create_bespoke_folder_name('HV_interlock_PV_overplots')
+        print(f'self.savepath from read_EPICS_PVs_for_HV_interlock_periods() = {self.savepath}')
+        self.all_mod_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.all_mod_PVs]
+        self.pv_idx_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.pv_idx_dict]
+        self.idx_pv_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.idx_pv_dict]
+        self.HV_interlock_EICS_date_time_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_EICS_date_time_from]
+        self.HV_interlock_EICS_date_time_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_EICS_date_time_to]
+
+        for pv_idx, pv_name in enumerate(self.all_mod_PVs):
+
+            # Create a savename for the PV plot by removing the ":" character from the PV name string
+            #self.savename = self.remove_char_from_str(data[0]["meta"]['name'])
+            #print(f'pv_name = {pv_name}')
+            self.savename = self.remove_char_from_str(pv_name)
+            print(f'self.savename = {self.savename}')
+            #input('Press key to continue ...')
+
+            HV_PV_overplot_time_data = []
+            HV_PV_overplot_yaxis_data = []
+
+            for HV_idx, HV_from in enumerate(self.HV_interlock_EICS_date_time_from):
+
+                print(f'Reading {pv_name} for period starting {HV_from}')
+
+                # add to the PV_idx_dict & idx_PV_dict dictionaries
+                self.pv_idx_dict[pv_name] = str(pv_idx)
+                self.idx_pv_dict[str(pv_idx)] = pv_name
+
+                # Construct url from "pv_name", "EPICS_date_time_from" & "EPICS_date_time_to"
+                url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + \
+                      pv_name + "&from=" + HV_from + "&to=" + self.HV_interlock_EICS_date_time_to[HV_idx]
+
+
+
+                #Retrieve data from EPICS archiver
+                r = requests.get(url)
+                data = r.json() #######################################################################################<---
+
+                # if pv_name == "CLA-GUNS-HRF-MOD-01SysRemainingTime":
+                #     print(f'url = {url}')
+                #     print(type(data))
+                #     input('Press any key to continue....')
+
+                yaxis = []
+                time = []
+                for event in data[0]["data"]:
+                    time.append(event["secs"] + event["nanos"] * 1E-9)
+                    yaxis.append(event["val"])
+
+                # normalise time for overplotting
+                time_0 = time[0]
+                relative_time = [i - time_0 for i in time]
+
+
+                # Append time & yaxis data
+                HV_PV_overplot_time_data.append(relative_time)
+                HV_PV_overplot_yaxis_data.append(yaxis)
+
+            figs.overplot_HV_PV_data(HV_PV_overplot_time_data, HV_PV_overplot_yaxis_data, pv_name, self.savepath, self.savename, pv_idx)
+
+    def read_EPICS_PVs_for_single_HV_interlock_period(self):
+        '''
+        Reads in every PV in the "all_mod_PVs" list for each HV interlock period created by create_to_and_from_times_from_HV_interlock_timestams()
+        saves the time data and the yaxis data
+        overplots each individual PVs yaxis data as a function of time
+        :param verbose: if True then function prints out attributes for diagnostics.
+        :return:
+        '''
+
+        figs = figures()
+        utils = utilities()
+        #self.savepath = f'{HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]}\\HV_interlock_PV_overplots'
+        self.savepath = utils.create_bespoke_folder_name('HV_interlock_PV_subplots')
+        print(f'self.savepath from read_EPICS_PVs_for_HV_interlock_periods() = {self.savepath}')
+        self.interlock_pv_fault_to_index_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_pv_fault_to_index_dict]
+        self.HV_interlock_comparison_PVs_raw = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_comparison_PVs]
+        self.INCLUDE_INTERLOCK_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.INCLUDE_INTERLOCK_PVs]
+        self.interlock_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_PVs]
+        self.HV_interlock_times_FaultLog = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_times_FaultLog]
+        self.HV_interlock_EICS_date_time_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_EICS_date_time_from]
+        self.HV_interlock_EICS_date_time_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_EICS_date_time_to]
+
+        if self.INCLUDE_INTERLOCK_PVs:
+            print(f'self.interlock_PVs = {self.interlock_PVs}')
+            print(f'len(self.HV_interlock_comparison_PVs) before = {len(self.HV_interlock_comparison_PVs_raw)}')
+            self.HV_interlock_comparison_PVs = self.HV_interlock_comparison_PVs_raw + self.interlock_PVs
+            print(f'len(self.HV_interlock_comparison_PVs) after = {len(self.HV_interlock_comparison_PVs)}')
+            HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.HV_interlock_comparison_PVs] = self.HV_interlock_comparison_PVs
+        else:
+            self.HV_interlock_comparison_PVs = self.HV_interlock_comparison_PVs_raw
+
+        for HV_idx, HV_from in enumerate(self.HV_interlock_EICS_date_time_from):
+
+            # Create a savename for the PV plot by removing the ":" character from the PV name string
+            #self.savename = self.remove_char_from_str(data[0]["meta"]['name'])
+            #print(f'pv_name = {pv_name}')
+            self.savename = self.remove_char_from_str(str(self.HV_interlock_EICS_date_time_from[HV_idx]))
+            print(f'self.savename = {self.savename}')
+            # print(f'self.HV_interlock_times_FaultLog = {self.HV_interlock_times_FaultLog}')
+            # input('Press key to continue ...')
+
+            HV_PV_subplot_time_data = []
+            HV_PV_subplot_yaxis_data = []
+
+
+            for pv_idx, pv_name in enumerate(self.HV_interlock_comparison_PVs):
+
+                #print(f'Reading {pv_name} for period starting {HV_from}')
+
+
+                # Construct url from "pv_name", "EPICS_date_time_from" & "EPICS_date_time_to"
+                url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + \
+                      pv_name + "&from=" + HV_from + "&to=" + self.HV_interlock_EICS_date_time_to[HV_idx]
+
+                print(f'url = {url}')
+
+                #Retrieve data from EPICS archiver
+                # r = requests.get(url)
+                # data = r.json()
+                data = requests.get(url).json()
+
+                yaxis = []
+                time = []
+                for event in data[0]["data"]:
+                    time.append(event["secs"] + event["nanos"] * 1E-9)
+                    yaxis.append(event["val"])
+
+                if pv_name in self.interlock_PVs:
+                    print(f'yaxis[:7] = {yaxis[:7]}')
+                    yaxis = [self.interlock_pv_fault_to_index_dict[i[0]] for i in yaxis]
+                    print(f'yaxis[:7] = {yaxis[:7]}')
+
+                # normalise time for overplotting
+                time_0 = self.HV_interlock_times_FaultLog[HV_idx]
+                relative_time = [i - time_0 for i in time]
+
+                # Append time & yaxis data
+
+                HV_PV_subplot_time_data.append(relative_time)
+                HV_PV_subplot_yaxis_data.append(yaxis)
+
+            figs.subplot_HV_PV_data(HV_PV_subplot_time_data, HV_PV_subplot_yaxis_data,
+                                    self.HV_interlock_times_FaultLog[HV_idx],
+                                    self.savepath,
+                                    self.savename)
+
+    def read_EPICS_PVs_for_single_chosen_interlock_period(self):
+        '''
+        Reads in every PV in the "all_mod_PVs" list for each chosen interlock period created by create_to_and_from_times_from_HV_interlock_timestams()
+        saves the time data and the yaxis data
+        overplots each individual PVs yaxis data as a function of time
+        :param verbose: if True then function prints out attributes for diagnostics.
+        :return:
+        '''
+
+        figs = figures()
+        utils = utilities()
+        self.interlock_choce = reader._DATA.values[reader._DATA.interlock_choice]
+        print(f'self.interlock_choce = {self.interlock_choce}')
+        #self.savepath = f'{HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]}\\HV_interlock_PV_overplots'
+        self.savepath = utils.create_bespoke_folder_name(f'{self.interlock_choce}_interlock_PV_subplots')
+
+        print(f'self.savepath from read_EPICS_PVs_for_HV_interlock_periods() = {self.savepath}')
+        self.interlock_pv_fault_to_index_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_pv_fault_to_index_dict]
+        self.chosen_interlock_comparison_PVs_raw = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.chosen_interlock_comparison_PVs]
+        self.INCLUDE_INTERLOCK_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.INCLUDE_INTERLOCK_PVs]
+        self.interlock_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_PVs]
+        self.chosen_interlock_times_FaultLog = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.chosen_interlock_times_FaultLog]
+        self.chosen_interlock_EICS_date_time_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.chosen_interlock_EICS_date_time_from]
+        self.chosen_interlock_EICS_date_time_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.chosen_interlock_EICS_date_time_to]
+
+        if self.INCLUDE_INTERLOCK_PVs:
+            print(f'self.interlock_PVs = {self.interlock_PVs}')
+            print(f'len(self.chosen_interlock_comparison_PVs_raw) before = {len(self.chosen_interlock_comparison_PVs_raw)}')
+            self.chosen_interlock_comparison_PVs = self.chosen_interlock_comparison_PVs_raw + self.interlock_PVs
+            print(f'len(self.chosen_interlock_comparison_PVs) after = {len(self.chosen_interlock_comparison_PVs)}')
+            HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.chosen_interlock_comparison_PVs] = self.chosen_interlock_comparison_PVs
+        else:
+            self.chosen_interlock_comparison_PVs = self.chosen_interlock_comparison_PVs_raw
+
+        for INTLK_idx, INTLK_from in enumerate(self.chosen_interlock_EICS_date_time_from):
+
+            # Create a savename for the PV plot by removing the ":" character from the PV name string
+            #self.savename = self.remove_char_from_str(data[0]["meta"]['name'])
+            #print(f'pv_name = {pv_name}')
+            self.savename = self.remove_char_from_str(str(self.chosen_interlock_EICS_date_time_from[INTLK_idx]))
+            print(f'self.savename = {self.savename}')
+            # print(f'self.chosen_interlock_times_FaultLog = {self.chosen_interlock_times_FaultLog}')
+            # input('Press key to continue ...')
+
+            chosen_interlock_PV_subplot_time_data = []
+            chosen_interlock_PV_subplot_yaxis_data = []
+
+
+            for pv_idx, pv_name in enumerate(self.chosen_interlock_comparison_PVs):
+
+
+
+                #print(f'Reading {pv_name} for period starting {chosen_from}')
+                # Construct url from "pv_name", "EPICS_date_time_from" & "EPICS_date_time_to"
+                url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + \
+                      pv_name + "&from=" + INTLK_from + "&to=" + self.chosen_interlock_EICS_date_time_to[INTLK_idx]
+
+                print(f'url = {url}')
+
+                #Retrieve data from EPICS archiver
+                # r = requests.get(url)
+                # data = r.json()
+                data = requests.get(url).json()
+
+                yaxis = []
+                time = []
+                for event in data[0]["data"]:
+                    if pv_name == "CLA-GUNS-RFHOLD:FaultLog":
+                        self.buffers_1D_times = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.buffers_1D_times]
+                        self.buffers_1D_one_hot = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.buffers_1D_one_hot]
+                        time = (self.buffers_1D_times)
+                        yaxis = (self.buffers_1D_one_hot)
+                        # print(f'self.buffers_1D_times = {self.buffers_1D_times}\n'
+                        #       f'self.buffers_1D_one_hot = {self.buffers_1D_one_hot}')
+                        #input()
+                    else:
+                        time.append(event["secs"] + event["nanos"] * 1E-9)
+                        yaxis.append(event["val"])
+
+                if pv_name in self.interlock_PVs:
+                    print(f'yaxis[:7] = {yaxis[:7]}')
+                    yaxis = [self.interlock_pv_fault_to_index_dict[i[0]] for i in yaxis]
+                    print(f'yaxis[:7] = {yaxis[:7]}')
+
+                # normalise time for overplotting
+                time_0 = self.chosen_interlock_times_FaultLog[INTLK_idx]
+                relative_time = [i - time_0 for i in time]
+
+                # Append time & yaxis data
+                chosen_interlock_PV_subplot_time_data.append(relative_time)
+                chosen_interlock_PV_subplot_yaxis_data.append(yaxis)
+
+            print(f'chosen_interlock_PV_subplot_yaxis_data[0] = {chosen_interlock_PV_subplot_yaxis_data[0]}')
+
+            figs.subplot_chosen_PV_data(chosen_interlock_PV_subplot_time_data, chosen_interlock_PV_subplot_yaxis_data,
+                                    self.chosen_interlock_times_FaultLog[INTLK_idx],
+                                    self.savepath,
+                                    self.savename)
+
+
+
+
+
+
     def zero_EPICS_time(self):
         '''
         Returns a time line from 0 seconds (start date+time read in from config.yaml) to the end date+time
@@ -213,6 +620,151 @@ class reader():
             self.PV_TIME_zeroed.append(pv_time_zeroed)
 
         HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_zeroed] = self.PV_TIME_zeroed
+
+
+    def read_interlock_PVs(self):
+        '''
+        Specific reader for the interlock PVs
+        interlock_PVs:
+         - "CLA-GUNS-HRF-MOD-01:Sys:INTLK1"
+         - "CLA-GUNS-HRF-MOD-01:Sys:INTLK2"
+         - "CLA-GUNS-HRF-MOD-01:Sys:INTLK3"
+         - "CLA-GUNS-HRF-MOD-01:Sys:INTLK4"
+         - "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
+        :return:
+        '''
+
+        figs = figures()
+        # df = data_functions()
+
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.interlock_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_PVs]
+        self.interlock_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.interlock_PVs]
+        self.pv_idx_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.pv_idx_dict]
+        self.idx_pv_dict = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.idx_pv_dict]
+        self.date_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_from]
+        self.time_from = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_from]
+        self.date_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.date_to]
+        self.time_to = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.time_to]
+        self.PLOT_ALL_PVs = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PLOT_ALL_PVs]
+        # pv_name = "CLA-GUNS-HRF-MOD-01:Sys:INTLK5"
+
+        # Call in the from and to times saved in the data dictionary originally read in from the config file
+        self.EPICS_date_time_from = self.concatenate_date_time_to_EPICS_format(self.date_from, self.time_from)
+        self.EPICS_date_time_to = self.concatenate_date_time_to_EPICS_format(self.date_to, self.time_to)
+
+        # save the formatted string in the data dictionary
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.EPICS_date_time_from] = self.EPICS_date_time_from
+        HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.EPICS_date_time_to] = self.EPICS_date_time_to
+
+        # Initiate empty time and yaxis data lists for all PVs
+        # These will end up being a list of lists
+        self.PV_TIME_DATA = []
+        self.PV_YAXIS_DATA = []
+
+        for pv_idx, pv_name in enumerate(self.interlock_PVs):
+
+            print(f'\n\nAttempting to read {pv_name}')
+
+            # add to the PV_idx_dict & idx_PV_dict dictionaries
+            self.pv_idx_dict[pv_name] = str(pv_idx)
+            self.idx_pv_dict[str(pv_idx)] = pv_name
+
+            # Construct url from "pv_name", "EPICS_date_time_from" & "EPICS_date_time_to"
+            url = "http://claraserv2.dl.ac.uk:17668/retrieval/data/getData.json?pv=" + \
+                  pv_name + "&from=" + self.EPICS_date_time_from + "&to=" + self.EPICS_date_time_to
+
+            # Retrieve data from EPICS archiver
+            r = requests.get(url)
+            data = r.json()  #######################################################################################<---
+
+            # Initiate empty time and yaxis data lists for each individual PV
+            # time_0 = time[0]
+            # relative_time = [i - time_0 for i in time]
+            # print(relative_time)
+
+            yaxis = []
+            time = []
+            for event in data[0]["data"]:
+                time.append(event["secs"] + event["nanos"] * 1E-9)
+                yaxis.append(event["val"])
+
+            # Append time & yaxis data
+            self.PV_TIME_DATA.append(time)
+            self.PV_YAXIS_DATA.append(yaxis)
+
+            # Create a savename for the PV plot by removing the ":" character from the PV name string
+            self.savename = self.remove_char_from_str(data[0]["meta"]['name'])
+
+            # If function arguement verbose=True print out any diagnostic data required
+
+            print(pv_idx)
+            print(url)
+            print(data[0]["meta"])
+            print(f'savename = {self.savename}')
+            print(f'len(time) = {len(time)}\n'
+                  f'len(yaxis) = {len(yaxis)}')
+            print(f'time[:15] = {time[:15]}\n'
+                  f'yaxis[:1000] = {yaxis[:1000]}')
+
+            delta_times = [time[i+1] - time[i] for i in range(len(time)-1)]
+
+            print(f'delta_times[:1000] = {delta_times[:1000]}')
+
+            plt.hist(delta_times, bins=300, range=(0.0, 3.0), histtype='step', color='k', lw=1.2)
+            plt.savefig(self.savepath + '\\' + f'Interlock_PV_{pv_idx}_delta_times.png')
+            plt.close('all')
+
+            # scan yaxis values for anything meaningful
+            dash = 0
+            no_error = 0
+            misc = []
+            for i in yaxis:
+                for j in i:
+                    if j == '-':
+                        dash += 1
+                    elif j == 'No Error':
+                        no_error += 1
+                    else:
+                        #print(j)
+                        misc.append(j)
+
+            print(f'len(misc) = {len(misc)}')
+
+
+            misc_classes = list(set(misc))
+            print(f'misc_classes = {misc_classes}')
+
+
+
+
+            # if "PLOT_ALL_PVs:  True" in config yaml then plot each and every PV individually and save in the savepath folder
+            if self.PLOT_ALL_PVs:
+                figs.individual_PV_plot(time, yaxis, pv_name, self.savename, pv_idx)
+
+            else:
+                print('Not plotting individual PVs')
+
+
+
+        # Save data to the values dictionary for use later on
+        # HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.pv_idx_dict] = self.pv_idx_dict
+        # HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.idx_pv_dict] = self.idx_pv_dict
+        # HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_TIME_DATA] = self.PV_TIME_DATA
+        # HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.PV_YAXIS_DATA] = self.PV_YAXIS_DATA
+        #
+        # # for index in range(len(self.PV_TIME_DATA)):
+        # #     print(f'len(self.PV_TIME_DATA[self.pv_idx_{index}]) = {len(self.PV_TIME_DATA[index])}\n'
+        # #           f'len(self.PV_YAXIS_DATA[self.pv_idx_{index}]) = {len(self.PV_YAXIS_DATA[index])}\n')
+        # #
+        # # input()
+        #
+        # # Zero time at the time of the first modulator state change
+        # # self.zero_EPICS_time()
+        #
+        # # Save the values dictionary as a .pkl so that we can re-run the script without having to re-read the data.
+        # self.save_dict_2_pkl(HRFOv2_EPICS_data.values, r'\post_PV_read_values_dict.pkl')
+
 
     def PCorllett_read_EPICS_PVs(self):
         self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
@@ -398,3 +950,24 @@ class reader():
                     f.write(f", ,{name}\n")
 
         f.close()
+
+    def print_dictionaries_to_text_file(self, list_of_dicts_objects, list_of_dicts_names):
+        '''
+        Prints dictionaries to text file for ease of reference when interpreting plots
+        :param list_of_dicts: [dict_1, dict_2,, dict_13, ... ,dict_n]
+        :return:
+        '''
+        self.list_of_dicts_objects = list_of_dicts_objects
+        self.list_of_dicts_names = list_of_dicts_names
+        self.savepath = HRFOv2_EPICS_data.values[HRFOv2_EPICS_data.savepath]
+        self.txt_file_name = f'{self.savepath}\\Dictionary_keys.txt'
+        self.text_file_obj = open(self.txt_file_name, 'w')
+
+        for d_idx, d in enumerate(self.list_of_dicts_objects):
+            self.text_file_obj.write(f'{self.list_of_dicts_names[d_idx]}\n\n')
+            for key, val in d.items():
+                self.text_file_obj.write(f'{val}:   {key}\n')
+
+            self.text_file_obj.write('\n\n\n')
+
+        self.text_file_obj.close()
