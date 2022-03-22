@@ -16,7 +16,7 @@ app_name = 'CLARA Machine Status Server'
 author = 'Ben Shepherd'
 author_email = 'ben.shepherd@stfc.ac.uk'
 version_history = {
-    '3.5': ('2022-03-22', 'report Python version')
+    '3.5': ('2022-03-22', 'report Python version'),
     '3.4': ('2021-11-30', 'tidy up code'),
     '3.3': ('2018-06-04', 'option for reset buttons in PVs'),
     '3.2': ('2018-02-01', 'HTML pages in separate files'),
