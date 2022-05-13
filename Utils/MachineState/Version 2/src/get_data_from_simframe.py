@@ -46,7 +46,8 @@ class GetDataFromSimFrame(object):
 		self.type_alias = aliases.type_alias
 		self.screen_alias = aliases.screen_to_camera
 		self.my_name = "GetDataFromSimFrame"
-		self.Framework=Fw.Framework(master_lattice=os.path.join('C:\\','Python36','Lib','site-packages','MasterLattice'))
+		self.Framework=Fw.Framework(master_lattice=os.path.join('C:\\','Python36','Lib','site-packages','MasterLattice'),
+									simcodes=os.path.join('C:\\', 'Python36','Lib','site-packages','SimCodes'))
 
 	def setSimulationDictDefaults(self, datadict, vc_object=None, wcm_object=None,
 								  start_lattice='Generator', final_lattice='CLA-S02'):
@@ -152,7 +153,8 @@ class GetDataFromSimFrame(object):
 		datadict['simulation']['lsc_bins'].update({'EBT-INJ': 200})
 
 	def loadFramework(self, dtory, clea=False, verb=True):
-		self.Framework = Fw.Framework(directory=dtory, clean=clea, verbose=verb)
+		self.Framework = Fw.Framework(directory=dtory, clean=clea, verbose=verb,master_lattice=os.path.join('C:\\','Python36','Lib','site-packages','MasterLattice'),
+									simcodes=os.path.join('C:\\', 'Python36','Lib','site-packages','SimCodes'))
 
 	def getFramework(self):
 		return self.Framework
@@ -284,7 +286,7 @@ class GetDataFromSimFrame(object):
 					self.rf_values[key].update({'PV': key})
 					self.rf_values[key].update({'psu_state': 'ON'})
 					self.rf_values[key].update({'position': cavity['position_start'][2]})
-					if "BSOL" in key or key == 'CLA-LRG1-MAG-SOL-01':
+					if "BSOL" in key or key == 'CLA-LRG1-MAG-BSOL-01':
 						self.rf_values[key].update({'bsol': True})
 					else:
 						self.rf_values[key].update({'bsol': False})

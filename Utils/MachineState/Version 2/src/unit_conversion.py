@@ -1,4 +1,5 @@
 import numpy
+import os
 import sys
 import scipy.constants
 import scipy.stats
@@ -8,7 +9,7 @@ import pandas
 import scipy.interpolate
 import CATAP.HardwareFactory
 sys.path.append(os.path.join('\\\\claraserv3.dl.ac.uk', 'claranet', 'packages', 'CATAP', 'Nightly',
-                             'CATAP_Nightly_20_09_2021', 'python36'))
+                             'CATAP_Nightly_03_03_2022', 'python36'))
 class UnitConversion(object):
 
     def __init__(self):

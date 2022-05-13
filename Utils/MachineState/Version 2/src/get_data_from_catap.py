@@ -1,10 +1,12 @@
 import os, sys, time
 import numpy
 import time
-sys.path.append(
-    (os.path.join('C:\\', 'Users','qfi29231','Documents','repositories','catapillar-build',
-                                  'PythonInterface', 'Release','CATAP')))
-
+#sys.path.append(
+ #   (os.path.join('C:\\', 'Users','qfi29231','Documents','repositories','catapillar-build',
+ #                                 'PythonInterface', 'Release','CATAP')))
+sys.path.append(os.path.join('\\\\claraserv3.dl.ac.uk','claranet','packages','CATAP',
+                             'Nightly','CATAP_Nightly_03_03_2022','python36'))
+import CATAP
 from CATAP.HardwareFactory import *
 from CATAP.EPICSTools import *
 import unit_conversion
@@ -33,8 +35,8 @@ class GetDataFromCATAP(object):
         self.screenDict = {}
         self.allDataDict = {}
         self.allDictStatus = {}
-
-        self.epics_tools_types = {'llrf': True,
+        self.epics_tools=''#HMCC
+        self.epics_tools_types = {'llrf': False,
                                   'camera': False}
         self.epics_tools_monitors = {}
         self.monitors = {}
@@ -98,7 +100,9 @@ class GetDataFromCATAP(object):
         else:
             self.mode = CATAP.HardwareFactory.STATE.OFFLINE
         self.hf = CATAP.HardwareFactory.HardwareFactory(self.mode)
-        self.epics_tools = CATAP.HardwareFactory.EPICSTools(self.mode)
+        #self.epics_tools = CATAP.HardwareFactory.EPICSTools(self.mode)#HMCC
+        self.epics_tools = EPICSTools(self.mode)
+
 
         self.llrf_types = [CATAP.HardwareFactory.TYPE.LRRG_GUN, CATAP.HardwareFactory.TYPE.L01]
         # self.gun_llrf_type = CATAP.HardwareFactory.TYPE.LRRG_GUN
@@ -252,9 +256,12 @@ class GetDataFromCATAP(object):
                 if i == "CLA-VCA-DIA-CAM-01" and self.mode == CATAP.HardwareFactory.STATE.VIRTUAL:
                     self.cameraDict[i].setX(0)
                     self.cameraDict[i].setY(0)
-                    self.cameraDict[i].setSigX(0.35)
-                    self.cameraDict[i].setSigY(0.35)
-                    self.cameraDict[i].setSigXY(0.35)
+                  #  self.cameraDict[i].setSigX(0.35)# comment HMCC
+                  #  self.cameraDict[i].setSigY(0.35) #comment HMCC
+                  #  self.cameraDict[i].setSigXY(0.35)# comment HMCC
+                    self.cameraDict[i].setSigX(0.25)
+                    self.cameraDict[i].setSigY(0.25)
+                    self.cameraDict[i].setSigXY(0.25)
             self.allDataDict.update({"Camera": self.cameraDict})
         else:
             self.camnames = list(aliases.screen_to_camera.values())
@@ -265,6 +272,7 @@ class GetDataFromCATAP(object):
                 for key, value in aliases.camera_epics_tools.items():
                     self.epics_tools.monitor(name + ':ANA:' + value)
                     self.epics_tools_monitors[name][key] = self.epics_tools.getMonitor(name + ':ANA:' + value)
+
                 self.cameraDict[name] = self.epics_tools_monitors[name]
 
     def setScreenDict(self):
@@ -276,7 +284,7 @@ class GetDataFromCATAP(object):
     def setGunLLRFDict(self):
         self.allDataDict.update({"LRRG_GUN": self.gunLLRFObj})
         self.gunLLRFObj.startTraceMonitoring()
-        if self.epics_tools_types['llrf']:
+        if self.epics_tools_types['llrf']==True:
             self.epics_tools_monitors[self.llrf_names[0]] = {}
             for key, value in aliases.llrf_epics_tools.items():
                 self.epics_tools.monitor(self.llrf_names[0] + ':' + value)
@@ -295,7 +303,7 @@ class GetDataFromCATAP(object):
             self.linacLLRFObj[self.keyupdate] = self.llrf_factory.getLLRF(key)
             self.linacdata.update({self.keyupdate: {}})
             self.allDataDict.update({self.keyupdate: self.linacLLRFObj[self.keyupdate]})
-            if self.epics_tools_types['llrf']:
+            if self.epics_tools_types['llrf']==True:
                 self.epics_tools_monitors[key] = {}
                 for key1, value in aliases.llrf_epics_tools.items():
                     self.epics_tools.monitor(key + ':' + value)
@@ -463,13 +471,17 @@ class GetDataFromCATAP(object):
                 self.gundata.update({'crest': self.gun_crest})
                 self.gundata.update({"phase_abs": self.gunLLRFObj.getPhi()})
                 self.gundata.update({"phase": self.gundata['phase_abs'] - self.gun_crest})
-                self.gundata.update({"amplitude_MW": max(self.llrf_factory.getCavFwdPwr(self.gunname))})
+                if len(self.llrf_factory.getCavFwdPwr(self.gunname)) !=0 : #HMCC
+                    self.gundata.update({"amplitude_MW": numpy.amax(self.llrf_factory.getCavFwdPwr(self.gunname))})
+                else:
+                    self.gundata.update({"amplitude_MW": 0.0})
                 self.gundata.update({"amplitude_setpoint": self.gunLLRFObj.getAmp()})
                 self.gunLLRFObj.stopTraceMonitoring()
             else:
                 for key, value in aliases.llrf_epics_tools.items():
-                    self.gundata[key] = float(
-                        numpy.mean(self.epics_tools_monitors[self.llrf_names[0]][key].getBuffer()))
+                    self.gundata[key] = float(numpy.mean(self.epics_tools.getBuffer(self.llrf_names[0]+':'+value).values()))
+                    #self.gundata[key] = float(
+                    #    numpy.mean([t for t in self.epics_tools_monitors[self.llrf_names[0]][key].getBuffer().values()])) # HMCC
                 self.gundata['amplitude_MW'] = self.gundata['klystron_amplitude_MW']
                 self.gundata['amplitude_setpoint'] = self.gundata['amplitude_setpoint']
                 self.gundata.update({'crest': self.gun_crest})

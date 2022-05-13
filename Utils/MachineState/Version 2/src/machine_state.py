@@ -7,10 +7,12 @@ for item in sys.path:
   else:
     sys.path.remove(item)
 sys.path.append(os.path.join('\\\\claraserv3.dl.ac.uk', 'claranet', 'packages', 'CATAP', 'Nightly',
-                             'CATAP_Nightly_20_09_2021', 'python36'))
+                             'CATAP_Nightly_03_03_2022', 'python36'))
 #sys.path.append(os.path.join(os.getcwd()+'/../catapillar-build/PythonInterface/Release/CATAP/'))
 #sys.path.append(os.path.abspath(__file__+'/../../../../../../../simframe/'))
-sys.path.append(os.path.join(os.getcwd()+'/../simframe/'))
+#sys.path.append(os.path.join(os.getcwd()+'/../simframe/'))
+sys.path.append(os.path.abspath(os.path.join('C:\\', 'Python36', 'Lib', 'site-packages', 'SimulationFramework')))
+
 import get_data_from_catap
 import get_data_from_simframe
 import write_data_to_catap
