@@ -13,7 +13,7 @@ See Gulliford and Bazarov (2012): http://journals.aps.org/prab/abstract/10.1103/
 import sys, os
 from collections import namedtuple
 from fractions import Fraction
-from functools import wraps  # for class method decorators
+from functools import wraps, reduce  # for class method decorators
 
 from calcMomentum import calcmomentum # Fortran code to do the momentum calculation
 import numpy as np
@@ -122,7 +122,7 @@ class RFSolTracker(object):
             self.gamma_start = np.sqrt(1 + abs(1 / epsilon_e))  # 1 eV
 
             self.z_start = 0
-            self.z_end = max(cav_fieldmap[-1, 1], self.solenoid.getZMap()[-1])
+            self.z_end = 0.981  # location of screen # max(cav_fieldmap[-1, 1], self.solenoid.getZMap()[-1])
 
         elif name == 'Linac1':
             linac1_folder = astra_folder + r'\Injector\fieldmaps' + '\\'
@@ -216,6 +216,7 @@ class RFSolTracker(object):
         #        self.gamma_tilde_dash = [self.E(z) / -epsilon_e for z in self.z_array]
         self.gamma_tilde_dash = np.array([norm_E(self.z_array) * self.rf_peak_field * 1e6 / -epsilon_e for norm_E in self.norm_E])
         self.theta_L_array = np.zeros_like(self.z_array)
+        self.delta_theta_L = np.zeros(len(self.z_array) - 1)
         self.gamma_dash_array = np.zeros_like(self.z_array)
         self.u_array = np.zeros((len(self.z_array), 4))
         self.M_array = np.zeros((len(self.z_array), 4, 4))
@@ -272,13 +273,14 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         p_f = self.p_array[1:]
         gamma_i = self.gamma_array[:-1]
         gamma_f = self.gamma_array[1:]
-        delta_theta_L = np.zeros_like(self.z_array[:-1])
+        # delta_theta_L = np.zeros_like(self.z_array[:-1])
         gamma_dash = self.gamma_dash_array[:-1]
         mask = gamma_dash == 0
-        delta_theta_L[mask] = b_mid[mask] * self.dz / p_f[mask]
-        delta_theta_L[~mask] = (b_mid[~mask] / gamma_dash[~mask]) * np.log(
+        self.delta_theta_L[mask] = b_mid[mask] * self.dz / p_f[mask]
+        self.delta_theta_L[~mask] = (b_mid[~mask] / gamma_dash[~mask]) * np.log(
             (p_f[~mask] + gamma_f[~mask]) / (p_i[~mask] + gamma_i[~mask]))
-        self.theta_L_array = np.cumsum(np.insert(delta_theta_L, 0, 0))
+        # np.savetxt('delta_theta_L.csv', self.delta_theta_L)
+        self.theta_L_array = np.cumsum(np.insert(self.delta_theta_L, 0, 0))
 
         self.calc_level = CALC_LA
         if not self.quiet:
@@ -299,9 +301,9 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         # calculation
         omega = 2 * np.pi * self.freq
         b_mid = self.b(self.z_array[:-1] + self.dz / 2)
-        delta_theta_L = np.ediff1d(self.theta_L_array)
-        C = np.cos(delta_theta_L)
-        S = np.sin(delta_theta_L)
+        # delta_theta_L = np.ediff1d(self.theta_L_array)
+        C = np.cos(self.delta_theta_L)
+        S = np.sin(self.delta_theta_L)
         gamma_i = self.gamma_array[:-1]
         gamma_f = self.gamma_array[1:]
         beta_i = self.beta_array[:-1]
@@ -326,10 +328,12 @@ Bucking coil current: {self.solenoid.bc_current:.3f} A'''
         M2 = np.zeros((len(self.z_array) - 1, 4, 4))
         M2[mask] = np.identity(4)
         # Where b=0, we use a simplified matrix otherwise we get divide-by-zero errors
+        M2[mask, 0, 1] = self.dz
+        M2[mask, 2, 3] = self.dz
         M2[mask, 1, 1] = p_i[mask] / p_f[mask]
         M2[mask, 3, 3] = p_i[mask] / p_f[mask]
-        M2_nonzero = np.array([[C[~mask], p_i[~mask] * S[~mask] / b_mid[~mask]],
-                              [-b_mid[~mask] * S[~mask] / p_f[~mask], p_i[~mask] * C[~mask] / p_f[~mask]]])
+        M2_nonzero = np.array([[C[~mask],                              p_i[~mask] * S[~mask] / b_mid[~mask]],
+                               [-b_mid[~mask] * S[~mask] / p_f[~mask], p_i[~mask] * C[~mask] / p_f[~mask] ]])
         off_diag = np.array([[S[~mask], np.zeros_like(S[~mask])], [np.zeros_like(S[~mask]), S[~mask]]])
         # A bit of funky transposing is required here so the axes are correct
         M2_nonzero = np.vstack((np.hstack((M2_nonzero, off_diag)), np.hstack((-off_diag, M2_nonzero)))).transpose((2, 0, 1))
