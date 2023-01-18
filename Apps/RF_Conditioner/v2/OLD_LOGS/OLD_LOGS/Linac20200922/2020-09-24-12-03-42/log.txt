@@ -1,0 +1,4285 @@
+****************************************************************************************************
+******************* __         __    _  _  ___       _   ___  ___   __         __ ******************
+******************* \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  ___  / / ******************
+*******************  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ _ \/ /  ******************
+*******************   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\___|    \_\___/_/   ******************
+*******************                                                               ******************
+********************************************************************************
+*********************** Log Started 2020-09-24-12-03-42 ************************
+********************************************************************************
+********************************************************************************
+******************************** Configuration *********************************
+********************************************************************************
+config file =
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml
+dumping parsed config data to text log
+CONFIG_FILE:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_L1.yml,
+KFPOW_MASK_TYPE: PERCENT, KRPOW_MASK_FLOOR: 1000.0, BREAKDOWN_TRACES:
+['CAVITY_REVERSE_POWER'], CFPHA_MEAN_END: 0.83, MAX_POW: 0.0, MAX_AMP: 100000,
+VAC_SPIKE_DECAY_LEVEL: 1.2, CFPOW_MASK_WINDOW_START: 300, PID_on_off_GMON: CLA-
+GUN-H2O-PID-02:ON:RB, KRPOW_NUM_AVERAGE_TRACES: 2, CFPHA_MASK_SET_TYPE: TIME,
+CPPOW_MASK_START: 1.26, KRPOW_MASK_SET_TYPE: TIME, AMP_PWR_ACCEPTANCE_WINDOW:
+750000, CPPOW_DROP_AMP: True, CRPOW_DROP_AMP_VALUE: 2, CFPOW_MASK_FLOOR: 5000.0,
+CRPHA_MASK_SET_TYPE: TIME, TEXT_LOG_FILENAME: log.txt, KFPHA_MASK_LO_MIN: 50,
+KRPOW_CHECK_STREAK: 2, VAC_VALVE_CHECK_TIME: 1000, CPPOW_MASK_SET_TYPE: TIME,
+CFPHA_CHECK_STREAK: 2, CPPOW_AUTO_SET: False, KFPOW_MASK_END: 86,
+CFPHA_MEAN_START: 0.75, KRPHA_MASK_TYPE: ABSOLUTE, VAC_ROLLING_SUM_NUM_SAMPLES:
+25, CFPOW_MASK_END: 86, CFPHA_NUM_AVERAGE_TRACES: 2, KRPOW_AUTO_SET: False,
+KRPHA_PHASE_MASK_BY_POWER_TRACE: False, VAC_NUM_SAMPLES_TO_AVERAGE: 7,
+KFPHA_AUTO_SET: False, CRPOW_MASK_WINDOW_END: 1.65, CFPHA_MASK_LO_MIN: 50,
+SOL_CHECK_TIME: 1000, MINIMUM_COOLDOWN_TIME: 3000, RF_STRUCTURE: L01,
+WATER_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'], KRPHA_CHECK_STREAK: 2,
+KRPOW_MASK_END: 5.0, LLRF_CHECK_TIME: 50,
+KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME: linac_amp_power_log.txt,
+CPPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0, PULSE_COUNT_BREAKDOWN_LOG_FILENAME:
+linac_pulse_breakdown_log.txt, CFPOW_MASK_START: 63, CFPHA_AUTO_SET: False,
+KRPOW_DROP_AMP_VALUE: 2, KFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPHA_MASK_FLOOR: 0.0, KRPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+KFPOW_MASK_WINDOW_END: 301, CPPHA_DROP_AMP_VALUE: 2,
+OUTSIDE_MASK_FORWARD_FILENAME: outside_forward_log, KRPHA_MEAN_END: 3.0,
+KFPOW_MASK_START: 63, KEEP_VALVE_OPEN: False, CRPHA_MASK_LO_MIN: 50,
+CRPOW_MASK_FLOOR: 2000.0, SOL_WOBBLE_OSCILLATION_POINTS: 0, CRPHA_MEAN_START:
+0.0, DC_PV: EBT-INJ-SCOPE-01:P1, KRPHA_MASK_FLOOR: 0.0, CPPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_TYPE: PERCENT, CFPOW_MASK_LEVEL: 25, CFPHA_DROP_AMP_VALUE: 2,
+CRPHA_MASK_TYPE: ABSOLUTE, TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE',
+'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER',
+'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'],
+KRPHA_MASK_WINDOW_END: 3.4, MAGNET_MACHINE_AREA: CLARA_PH1, DC_SPIKE_DELTA:
+0.015, OUTSIDE_MASK_COOLDOWN_TIME: 3000, VAC_VALVE_AREA: CLARA_PH1,
+SOL_WOBBLE_LO: 0.0, KRPOW_MASK_LEVEL: 35.0, KRPHA_DROP_AMP: False,
+CRPHA_MASK_END: 5.0, CRPHA_MEAN_END: 3.0, KFPOW_MEAN_START: 0.68,
+CRPHA_DROP_AMP: False, KFPOW_MEAN_END: 0.75, CFPOW_NUM_AVERAGE_TRACES: 5,
+CPPHA_MASK_END: 5.0, VAC_VALVE: S01-VALV-01, CAVITY_TEMPERATURE_CHECK_TIME:
+1000, CFPHA_DROP_AMP: False, MODULATOR_CHECK_TIME: 1000, SOL_COUNT: 2,
+RF_REPETITION_RATE: 100, CPPHA_MASK_WINDOW_END: 3.4, LOG_RAMP_CURVE_NUMSTEPS:
+200, KFPHA_MEAN_START: 0.68, RF_PROT_CHECK_TIME: 1000, KFPHA_MASK_TYPE:
+ABSOLUTE, MIN_AMP: 500, DC_CHECK_TIME: 1000, PID_on_off: CLA-GUN-H2O-
+PID-02:ON:RB, KRPHA_NUM_AVERAGE_TRACES: 2, KFPHA_MASK_FLOOR: 0.0,
+CRPHA_DROP_AMP_VALUE: 2, KRPHA_MASK_WINDOW_START: 2.4, CRPOW_MASK_TYPE:
+ABSOLUTE, BIN_WIDTH: 400, KFPOW_MASK_FLOOR: 5000, CPPOW_MASK_END: 1.8,
+BINARY_DATA_LOG_FILENAME: data_log, KRPHA_MASK_LO_MIN: 50, KFPOW_MASK_LEVEL: 15,
+OUTSIDE_MASK_CHECK_TIME: 100, MODE: OPERATIONAL, CRPOW_MASK_LO_MIN: 50,
+KLY_PWR_FOR_ACTIVE_PULSE: 500.0, SOL_NAMES: ['L01-SOL1', 'L01-SOL2'],
+CRPHA_MASK_FLOOR: 0.0, GMON_SUFFIX: _GMON, KFPOW_DROP_AMP_VALUE: 3,
+KRPOW_MEAN_END: 3.0, WHEN_VAC_HI_DISABLE_RAMP: True, AMP_PWR_LOG_TIME: 50,
+VAC_SPIKE_DROP_AMP: 5, DC_SPIKE_DECAY_TIME: 2000, CPPHA_MASK_TYPE: ABSOLUTE,
+KFPHA_MASK_SET_TYPE: TIME, KRPOW_MASK_WINDOW_START: 2.4,
+SOL_WOBBLE_OSCILLATION_TIME: 100.0, CFPOW_MASK_SET_TYPE: INDEX,
+CFPOW_MASK_WINDOW_END: 301, LOG_DIRECTORY: C:\Users\dlerlp\Documents\GitHub\Soft
+ware\Apps\RF_Conditioner\v2\logs\Linac20200922\, KFPHA_MASK_LEVEL: 35.0,
+CAVITY_TEMPERATURE_PV: ['CLA-L01-H2O-TT-20:RT'], VAC_SPIKE_DELTA: 5e-09,
+VAC_CHECK_TIME: 200, DC_DECAY_MODE: TIMED, SOL_WOBBLE_HI: 0.0,
+CRPOW_MASK_WINDOW_START: 1.35, CPPHA_NUM_AVERAGE_TRACES: 2,
+CRPHA_NUM_AVERAGE_TRACES: 2, NUM_BUFFER_TRACES: 500, CRPHA_MASK_LEVEL: 35.0,
+CRPOW_CHECK_STREAK: 10, CPPHA_AUTO_SET: False, VAC_SHOULD_DROP_AMP: True,
+KFPHA_CHECK_STREAK: 2, KRPOW_MEAN_START: 0.0, KFPOW_AUTO_SET: False,
+OUTSIDE_MASK_PROBE_FILENAME: outside_probe_log, CPPOW_MASK_FLOOR: 500.0,
+KRPOW_MASK_START: 0.8, DC_SHOULD_DROP_AMP: False, CRPOW_MEAN_START: 0.0,
+CFPOW_DROP_AMP_VALUE: 6, CRPOW_MEAN_END: 3.0, GUI_UPDATE_TIME: 1000,
+CPPOW_MEAN_END: 1.32, CFPOW_MEAN_START: 0.75, KFPHA_DROP_AMP_VALUE: 2,
+KRPHA_DROP_AMP_VALUE: 2, CPPHA_MEAN_END: 1.32, KRPHA_MASK_LEVEL: 35.0,
+PULSE_LENGTH: 765, DEFAULT_RF_INCREASE_LEVEL: 50, KFPHA_MEAN_END: 0.75,
+SHOULD_SOL_WOBBLE: False, CPPOW_MEAN_START: 1.26, VAC_DECAY_MODE: LEVEL,
+PULSE_LENGTH_ERROR: 50, KFPOW_MASK_SET_TYPE: INDEX, CFPOW_MASK_LO_MIN: 500,
+KRPHA_MASK_END: 5.0, CPPOW_MASK_WINDOW_START: 2.4, VAC_MAX_LEVEL_FOR_RAMP:
+5e-09, CFPOW_CHECK_STREAK: 10, CFPHA_MASK_LEVEL: 35.0, CRPHA_MASK_WINDOW_END:
+3.4, CPPHA_CHECK_STREAK: 2, KRPHA_MEAN_START: 0.0, CPPOW_NUM_AVERAGE_TRACES: 2,
+CPPHA_MASK_LEVEL: 35.0, CPPHA_DROP_AMP: False, CAV_PWR_RATIO: 400000,
+CRPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPHA_MASK_END: 5.0,
+LOG_RAMP_CURVE_RAMP_RATE: 0.2, CRPHA_CHECK_STREAK: 2, CRPHA_MASK_START: 0.8,
+KFPHA_MASK_END: 5.0, KFPHA_NUM_AVERAGE_TRACES: 2, WATER_TEMPERATURE_PV_COUNT: 1,
+BREAKDOWN_RATE_AIM: 10, KRPOW_DROP_AMP: False, LOG_RAMP_CURVE_PULSES_PER_STEP:
+60, CPPHA_MASK_FLOOR: 0.0, CPPHA_MASK_SET_TYPE: TIME, KFPHA_MASK_START: 0.8,
+KFPHA_PHASE_MASK_BY_POWER_TRACE: False, WATER_TEMPERATURE_CHECK_TIME: 1000,
+CPPHA_PHASE_MASK_BY_POWER_TRACE: False, CFPOW_MASK_TYPE: PERCENT,
+CFPHA_MASK_WINDOW_START: 2.4, KRPOW_MASK_LO_MIN: 50, CRPOW_MASK_START: 1.05,
+CRPOW_MASK_SET_TYPE: TIME, CPPOW_CHECK_STREAK: 10, CPPHA_MASK_START: 0.8,
+CFPOW_DROP_AMP: False, CPPHA_MASK_LO_MIN: 50, KRPHA_AUTO_SET: False,
+MEAN_TRACES: ['KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER', 'CAVITY_PROBE_POWER',
+'KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE',
+'CAVITY_REVERSE_PHASE', 'CAVITY_PROBE_PHASE'], DC_SPIKE_DECAY_LEVEL: 1.2,
+CRPHA_MASK_WINDOW_START: 2.4, CPPOW_MASK_LO_MIN: 50, CRPOW_DROP_AMP: True,
+KFPOW_CHECK_STREAK: 10, DEFAULT_PULSE_COUNT: 500, CRPOW_NUM_AVERAGE_TRACES: 5,
+VAC_SPIKE_TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE',
+'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'CAVITY_REVERSE_PHASE',
+'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER',
+'CAVITY_PROBE_POWER', 'CAVITY_PROBE_POWER'], CRPOW_MASK_LEVEL: 20000,
+KFPOW_NUM_AVERAGE_TRACES: 2, BINARY_DATA_LOG_TIME: 1000, KRPHA_MASK_SET_TYPE:
+TIME, KFPOW_MASK_WINDOW_START: 300, KFPOW_DROP_AMP: True, KRPOW_MASK_WINDOW_END:
+3.4, NUM_SET_POINTS_TO_FIT: 4, CFPHA_MASK_START: 0.8, CRPOW_AUTO_SET: False,
+CPPOW_MASK_LEVEL: 20, CPPHA_MEAN_START: 1.26, MAX_DELTA_AMP_SP: 300,
+CRPHA_AUTO_SET: False, VAC_PV: CLA-S01-VAC-IMG-01:PRES, KFPOW_MASK_LO_MIN: 500,
+CPPOW_DROP_AMP_VALUE: 2, CAVITY_TEMPERATURE_PV_COUNT: 1, CFPHA_MASK_TYPE:
+ABSOLUTE, VAC_SPIKE_MAX_LEVEL_FOR_OFF: 6e-09, CRPHA_PHASE_MASK_BY_POWER_LEVEL:
+5000.0, EXTRA_BREAKDOWN_DAQ: ['VAC_LEVEL', 'DC_LEVEL', 'BREAKDOWN_RATE',
+'BREAKDOWN_COUNT'], KFPHA_MASK_WINDOW_START: 2.4, KRPHA_MASK_START: 0.8,
+OUTSIDE_MASK_REVERSE_FILENAME: outside_reverse_log, CFPOW_MEAN_END: 0.83,
+NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY: 100000, CFPHA_PHASE_MASK_BY_POWER_TRACE:
+False, CRPOW_MASK_END: 3.5, RF_REPETITION_RATE_ERROR: 50, CFPHA_MASK_WINDOW_END:
+3.4, VAC_SPIKE_DECAY_TIME: 2000, EXTRA_TRACES_ON_BREAKDOWN: 2,
+DC_SPIKE_DROP_AMP: 6, CFPOW_AUTO_SET: False, KFPHA_MASK_WINDOW_END: 3.4,
+KRPOW_MASK_TYPE: ABSOLUTE, DC_NUM_SAMPLES_TO_AVERAGE: 5, KFPHA_DROP_AMP: False,
+LOG_RAMP_START_POWER: 30000, CPPOW_MASK_WINDOW_END: 3.4,
+CFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+
+2020-09-24 12:03:43.170000
+********************************************************************************
+***** src.controllers.main_controller, create rf_conditioning_data object ******
+********************************************************************************
+
+2020-09-24 12:03:43.170000
+Started in debug mode = False
+********************************************************************************
+****************** Print Rationalized kfpow_running_stat_log  ******************
+********************************************************************************
+get_kfpow_running_stat_log complete
+
+2020-09-24 12:03:54.575000
+********************************************************************************
+***** src.controllers.main_controller, create hardware_control_hub object ******
+********************************************************************************
+hardware_control_hub Starting CATAP Hardware Interfaces
+start_llrf_control()  SET AMP_SP = 0, successfully created a L01 LLRF control
+object
+
+2020-09-24 12:03:56.696000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:03:56.696000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find -9999.9999, returning value at 0.0 instead
+
+2020-09-24 12:04:10.994000
+********************************************************************************
+********** src.controllers.main_controller, create monitor_hub object **********
+********************************************************************************
+src.monitors.monitor_hub Starting Data Monitoring
+src.monitors.monitor_hub start_llrf_monitor()
+
+2020-09-24 12:04:12.096000
+src.controllers.hardware_control_hub connected, PV = CLA-S01-VAC-IMG-01:PRES
+with ID = d0,  acquiring data
+
+2020-09-24 12:04:12.111000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+src.monitors.vac_monitor will drop amp on spike detection
+src.monitors.vac_monitor STARTED running
+src.monitors.vac_monitor vac_spike_status = state.UNKNOWN
+src.monitors.vac_monitor vac_spike_status = state.GOOD
+start_vac_monitor successfully started Vacuum Monitoring
+src.monitors.monitor_hub start_daq_frequency_monitor()
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-09-24 12:04:13.198000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d1,  acquiring data
+
+2020-09-24 12:04:13.198000
+src.monitors.vac_monitor level ok, 7.719e-10 < 5e-09
+
+2020-09-24 12:04:13.198000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:04:13.198000
+Connected to CLA-L01-H2O-TT-20:RT id = WATER_TEMP_ID_0
+
+2020-09-24 12:04:13.198000
+start_water_temperature_monitor successfully started Water Temperature
+Monitoring
+
+2020-09-24 12:04:13.198000
+src.monitors.monitor_hub start_cavity_temperature_monitor()
+********************************************************************************
+************************ Connecting to Cavity Temp PVs *************************
+********************************************************************************
+
+2020-09-24 12:04:14.269000
+src.controllers.hardware_control_hub connected, PV = CLA-L01-H2O-TT-20:RT with
+ID = d2,  acquiring data
+
+2020-09-24 12:04:14.269000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:04:14.269000
+Connected to CLA-L01-H2O-TT-20:RT id = CAVITY_TEMP_ID_0
+
+2020-09-24 12:04:14.269000
+start_cavity_temperature_monitor successfully started Cavity Temperature
+Monitoring
+
+2020-09-24 12:04:14.269000
+src.monitors.monitor_hub start_solenoid_monitoring()
+src.monitors.monitor_hub Sanity Check
+is_vac_monitoring = True
+is_llrf_monitoring = True
+is_cavity_temp_monitoring = True
+is_modulator_monitoring = True
+is_rf_heartbeat_monitoring = True
+is_sol_monitoring = True
+is_rf_prot_monitoring = True
+is_outside_mask_monitoring = True
+is_daq_frequency_monitoring = True
+is_water_temp_monitoring = True
+is_vac_valve_monitor = True
+
+2020-09-24 12:04:14.285000
+********************************************************************************
+********** src.data.rf_conditioning_logger start_binary_data_logging  **********
+********************************************************************************
+binary log file added
+llrf_max_amp    p0_all  llrf_output_status      next_sp_decrease
+probe_pha       rev_cav_pha     can_llrf_output_state_OLD
+breakdown_rate_aim      phi_sp  latest_amp_sp_from_ramp num_outside_mask_traces
+next_requested_power_change     modulator_good  p2_current_sp_to_fit
+CAVITY_TEMP_ID_0        p2_current_sp   SP_QUAD_ALL     water_temp_gui
+max_sp_increase ramp_mode       rev_kly_pha     event_pulse_count
+delta_kfpow     cav_pwr_ratio_can_ramp  p1_current_sp_to_fit    vac_level
+gui_can_rf_output       can_rf_output_status_OLD
+bd_rate_calc_first_pulse_number cav_pwr_ratio
+number_of_pulses_in_breakdown_history   probe_outside_mask_count
+current_ramp_index      y_min   rev_kly_pwr     fwd_kly_pha
+active_breakdown_count  last_sp_above_100       time_stamp, (start = 2020-09-24
+12:04:14.338000)        TOR_SCAN        rev_cav_pwr
+SP_QUAD_CURRENT_SP_TO_FIT       last_vac_spike_status   llrf_DAQ_rep_rate_status
+x_max   p0_current_sp_to_fit    amp_ff  c       L01-SOL1        L01-SOL2
+y_max   p1_current_sp   x_min   can_ramp_status kfpower_at_last_amp_sp
+vac_level_can_ramp      last_breakdown_status   reverse_outside_mask_count
+TOR_ACQM        p0_current_sp   breakdown_rate_low      cav_temp
+fwd_cav_pha     BD_state_OLD    rfprot_good     last_amp_sp     vac_spike_status
+event_pulse_count_zero  DC_level        amp_sp  global_mask_checking
+llrf_heart_beat_value   gui_can_ramp    can_llrf_output_state   p1_all
+log_pulse_count llrf_DAQ_rep_rate_aim   catap_max_amp   can_ramp_status_OLD
+p2_all  fwd_kly_pwr     sol_value       log_amp_set     duplicate_pulse_count
+m       pulse_count     fwd_cav_pwr     SP_SLF  WATER_TEMP_ID_0 probe_pwr
+can_rf_output_status    modulator_state elapsed_time    DC_spike_status
+pulses_to_next_ramp     GUI_mod_and_prot_good   breakdown_status
+catap_max_amp_can_ramp_status   main_can_ramp   llrf_DAQ_rep_rate
+vac_valve_status        SP_QUAD_CURRENT rev_power_spike_count   BD_state
+last_ramp_method        required_pulses rfprot_state    total_breakdown_count
+
+<type 'float'>  <type 'float'>  <enum 'state'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <type 'int'>    <type 'int'>    <type 'float'>
+<type 'int'>    <type 'int'>    <type 'bool'>   <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum
+'ramp_method'>    <type 'float'>  <type 'int'>    <type 'float'>  <type 'bool'>
+<type 'float'>  <type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'int'>    <type 'float'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'int'>    <type 'float'>  <type 'float'>  <enum 'state'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'bool'>   <enum 'state'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'float'>  <enum 'state'>
+<type 'bool'>   <type 'float'>  <enum 'state'>  <type 'int'>    <type 'float'>
+<type 'float'>  <type 'bool'>   <type 'float'>  <type 'bool'>   <enum 'state'>
+<type 'float'>  <type 'int'>    <type 'int'>    <type 'float'>  <enum 'state'>
+<type 'float'>  <type 'float'>  <type 'float'>  <type 'int'>    <type 'int'>
+<type 'float'>  <type 'int'>    <type 'float'>  <type 'float'>  <type 'float'>
+<type 'float'>  <enum 'state'>  <class
+'VELA_CLARA_RF_Modulator_Control.L01_MOD_STATE'> <type 'long'>   <enum 'state'>
+<type 'int'>    <type 'bool'>   <enum 'state'>  <type 'bool'>   <type 'bool'>
+<type 'float'>  <class 'VELA_CLARA_Vac_Valve_Control.VALVE_STATE'>      <type
+'float'>  <type 'int'>    <enum 'state'>  <enum 'ramp_method'>    <type 'int'>
+<class 'VELA_CLARA_RF_Protection_Control.RF_PROT_STATUS'>       <type 'int'>
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 2998276
+
+2020-09-24 12:04:14.423000
+********************************************************************************
+src.controllers.main_controller The RF Conditioning is Preparing to Entering
+Main_Loop !
+********************************************************************************
+
+2020-09-24 12:04:14.423000
+enable_llrf, isInterlockActive = True, attempting setInterlockNonActive()
+
+2020-09-24 12:04:14.454000
+enable_llrf, isRFOutput = False, attempting enableRFOutput()
+
+2020-09-24 12:04:14.485000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-09-24 12:04:14.516000
+enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()
+
+2020-09-24 12:04:14.538000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+
+2020-09-24 12:04:14.538000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:04:14.538000
+power_finish = 18608997.2667
+
+2020-09-24 12:04:14.538000
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 18608997.2667
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 18795087.2394, p_start = 30000, p_finish =
+18608997.2667, ramp_rate = 0.2
+set_amp (1451.0) called from log_ramp_up
+
+2020-09-24 12:04:14.639000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (5749.0) called from log_ramp_up
+
+2020-09-24 12:04:15.642000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (8108.0) called from log_ramp_up
+
+2020-09-24 12:04:16.645000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (9856.0) called from log_ramp_up
+set_amp (11276.0) called from log_ramp_up
+
+2020-09-24 12:04:17.648000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (12615.0) called from log_ramp_up
+
+2020-09-24 12:04:18.650000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (13916.0) called from log_ramp_up
+set_amp (14960.0) called from log_ramp_up
+
+2020-09-24 12:04:19.653000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (16026.0) called from log_ramp_up
+
+2020-09-24 12:04:20.656000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (17063.0) called from log_ramp_up
+set_amp (18002.0) called from log_ramp_up
+
+2020-09-24 12:04:21.659000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (18837.0) called from log_ramp_up
+
+2020-09-24 12:04:22.662000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (19697.0) called from log_ramp_up
+set_amp (20576.0) called from log_ramp_up
+
+2020-09-24 12:04:23.665000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (21356.0) called from log_ramp_up
+
+2020-09-24 12:04:24.668000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (22124.0) called from log_ramp_up
+set_amp (22922.0) called from log_ramp_up
+
+2020-09-24 12:04:25.671000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:04:25.686000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 22922.0, returning value at 22919.0 instead
+set_amp (23597.0) called from log_ramp_up
+
+2020-09-24 12:04:26.674000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (24266.0) called from log_ramp_up
+
+2020-09-24 12:04:27.677000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (24856.0) called from log_ramp_up
+set_amp (25557.0) called from log_ramp_up
+
+2020-09-24 12:04:28.679000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (26144.0) called from log_ramp_up
+
+2020-09-24 12:04:29.682000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (26721.0) called from log_ramp_up
+set_amp (27260.0) called from log_ramp_up
+
+2020-09-24 12:04:30.685000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (27869.0) called from log_ramp_up
+
+2020-09-24 12:04:31.688000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (28417.0) called from log_ramp_up
+
+2020-09-24 12:04:32.691000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (28924.0) called from log_ramp_up
+set_amp (29423.0) called from log_ramp_up
+
+2020-09-24 12:04:33.694000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (29962.0) called from log_ramp_up
+
+2020-09-24 12:04:34.697000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (30435.0) called from log_ramp_up
+set_amp (30922.0) called from log_ramp_up
+
+2020-09-24 12:04:35.700000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (31385.0) called from log_ramp_up
+
+2020-09-24 12:04:36.703000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (31860.0) called from log_ramp_up
+
+2020-09-24 12:04:37.706000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (32325.0) called from log_ramp_up
+set_amp (32748.0) called from log_ramp_up
+
+2020-09-24 12:04:38.709000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (33149.0) called from log_ramp_up
+
+2020-09-24 12:04:39.712000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (33554.0) called from log_ramp_up
+
+2020-09-24 12:04:40.715000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (33997.0) called from log_ramp_up
+set_amp (34410.0) called from log_ramp_up
+
+2020-09-24 12:04:41.717000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (34797.0) called from log_ramp_up
+
+2020-09-24 12:04:42.720000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (35198.0) called from log_ramp_up
+set_amp (35541.0) called from log_ramp_up
+
+2020-09-24 12:04:43.723000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (35922.0) called from log_ramp_up
+
+2020-09-24 12:04:44.726000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (36314.0) called from log_ramp_up
+
+2020-09-24 12:04:45.729000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (36676.0) called from log_ramp_up
+set_amp (37000.0) called from log_ramp_up
+
+2020-09-24 12:04:46.732000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (37356.0) called from log_ramp_up
+
+2020-09-24 12:04:47.735000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (37721.0) called from log_ramp_up
+set_amp (38073.0) called from log_ramp_up
+
+2020-09-24 12:04:48.738000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (38422.0) called from log_ramp_up
+
+2020-09-24 12:04:49.741000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (38765.0) called from log_ramp_up
+
+2020-09-24 12:04:50.744000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (39066.0) called from log_ramp_up
+set_amp (39403.0) called from log_ramp_up
+
+2020-09-24 12:04:51.747000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (39730.0) called from log_ramp_up
+
+2020-09-24 12:04:52.749000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (40045.0) called from log_ramp_up
+set_amp (40360.0) called from log_ramp_up
+
+2020-09-24 12:04:53.752000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (40697.0) called from log_ramp_up
+
+2020-09-24 12:04:54.755000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (40977.0) called from log_ramp_up
+
+2020-09-24 12:04:55.758000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (41274.0) called from log_ramp_up
+set_amp (41580.0) called from log_ramp_up
+
+2020-09-24 12:04:56.761000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (41873.0) called from log_ramp_up
+
+2020-09-24 12:04:57.764000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (42149.0) called from log_ramp_up
+
+2020-09-24 12:04:58.766000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (42432.0) called from log_ramp_up
+set_amp (42729.0) called from log_ramp_up
+
+2020-09-24 12:04:59.769000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (43039.0) called from log_ramp_up
+
+2020-09-24 12:05:00.772000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (43325.0) called from log_ramp_up
+
+2020-09-24 12:05:01.775000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (43611.0) called from log_ramp_up
+set_amp (43908.0) called from log_ramp_up
+
+2020-09-24 12:05:02.778000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (44165.0) called from log_ramp_up
+
+2020-09-24 12:05:03.781000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (44439.0) called from log_ramp_up
+set_amp (44736.0) called from log_ramp_up
+
+2020-09-24 12:05:04.784000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (45023.0) called from log_ramp_up
+
+2020-09-24 12:05:05.787000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (45282.0) called from log_ramp_up
+
+2020-09-24 12:05:06.789000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (45531.0) called from log_ramp_up
+set_amp (45802.0) called from log_ramp_up
+
+2020-09-24 12:05:07.792000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (46066.0) called from log_ramp_up
+
+2020-09-24 12:05:08.795000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (46329.0) called from log_ramp_up
+set_amp (46637.0) called from log_ramp_up
+
+2020-09-24 12:05:09.798000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (46894.0) called from log_ramp_up
+
+2020-09-24 12:05:10.801000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (47135.0) called from log_ramp_up
+set_amp (47387.0) called from log_ramp_up
+
+2020-09-24 12:05:11.804000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (47641.0) called from log_ramp_up
+
+2020-09-24 12:05:12.807000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (47898.0) called from log_ramp_up
+
+2020-09-24 12:05:13.810000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (48131.0) called from log_ramp_up
+set_amp (48365.0) called from log_ramp_up
+
+2020-09-24 12:05:14.812000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (48608.0) called from log_ramp_up
+
+2020-09-24 12:05:15.815000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (48840.0) called from log_ramp_up
+
+2020-09-24 12:05:16.818000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (49064.0) called from log_ramp_up
+set_amp (49309.0) called from log_ramp_up
+
+2020-09-24 12:05:17.821000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (49559.0) called from log_ramp_up
+
+2020-09-24 12:05:18.824000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (49820.0) called from log_ramp_up
+set_amp (50091.0) called from log_ramp_up
+
+2020-09-24 12:05:19.827000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (50351.0) called from log_ramp_up
+
+2020-09-24 12:05:20.830000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (50563.0) called from log_ramp_up
+
+2020-09-24 12:05:21.833000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (50782.0) called from log_ramp_up
+set_amp (51021.0) called from log_ramp_up
+
+2020-09-24 12:05:22.836000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (51232.0) called from log_ramp_up
+
+2020-09-24 12:05:23.838000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (51428.0) called from log_ramp_up
+
+2020-09-24 12:05:24.841000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (51623.0) called from log_ramp_up
+set_amp (51814.0) called from log_ramp_up
+
+2020-09-24 12:05:25.844000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (52003.0) called from log_ramp_up
+
+2020-09-24 12:05:26.847000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (52188.0) called from log_ramp_up
+
+2020-09-24 12:05:27.850000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (52383.0) called from log_ramp_up
+set_amp (52594.0) called from log_ramp_up
+
+2020-09-24 12:05:28.853000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (52797.0) called from log_ramp_up
+
+2020-09-24 12:05:29.856000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (52991.0) called from log_ramp_up
+set_amp (53207.0) called from log_ramp_up
+
+2020-09-24 12:05:30.906000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:05:30.906000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 53207.0, returning value at 53206.0 instead
+set_amp (53452.0) called from log_ramp_up
+
+2020-09-24 12:05:31.862000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (53711.0) called from log_ramp_up
+
+2020-09-24 12:05:32.865000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (53920.0) called from log_ramp_up
+set_amp (53993.0) called from log_ramp_up
+
+2020-09-24 12:05:33.868000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (54066.0) called from log_ramp_up
+
+2020-09-24 12:05:34.870000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (54136.0) called from log_ramp_up
+
+2020-09-24 12:05:35.873000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (54205.0) called from log_ramp_up
+set_amp (54272.0) called from log_ramp_up
+
+2020-09-24 12:05:36.876000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:05:36.876000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 54272.0, returning value at 54273.0 instead
+set_amp (54351.0) called from log_ramp_up
+
+2020-09-24 12:05:37.879000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (54436.0) called from log_ramp_up
+
+2020-09-24 12:05:38.882000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (54520.0) called from log_ramp_up
+set_amp (54602.0) called from log_ramp_up
+
+2020-09-24 12:05:39.885000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (54682.0) called from log_ramp_up
+
+2020-09-24 12:05:40.888000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (54788.0) called from log_ramp_up
+set_amp (54899.0) called from log_ramp_up
+
+2020-09-24 12:05:41.905000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:05:41.907000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 54899.0, returning value at 54900.0 instead
+set_amp (55008.0) called from log_ramp_up
+
+2020-09-24 12:05:42.885000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (55121.0) called from log_ramp_up
+
+2020-09-24 12:05:43.888000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (55277.0) called from log_ramp_up
+
+2020-09-24 12:05:44.890000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (55429.0) called from log_ramp_up
+set_amp (55586.0) called from log_ramp_up
+
+2020-09-24 12:05:45.893000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (55747.0) called from log_ramp_up
+
+2020-09-24 12:05:46.896000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (55904.0) called from log_ramp_up
+set_amp (56074.0) called from log_ramp_up
+
+2020-09-24 12:05:47.899000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (56241.0) called from log_ramp_up
+
+2020-09-24 12:05:48.887000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (56399.0) called from log_ramp_up
+
+2020-09-24 12:05:49.890000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (56551.0) called from log_ramp_up
+set_amp (56700.0) called from log_ramp_up
+
+2020-09-24 12:05:50.908000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (56897.0) called from log_ramp_up
+
+2020-09-24 12:05:51.896000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (57089.0) called from log_ramp_up
+
+2020-09-24 12:05:52.898000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (57231.0) called from log_ramp_up
+set_amp (57367.0) called from log_ramp_up
+
+2020-09-24 12:05:53.886000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (57501.0) called from log_ramp_up
+
+2020-09-24 12:05:54.889000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (57671.0) called from log_ramp_up
+
+2020-09-24 12:05:55.891000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (57837.0) called from log_ramp_up
+set_amp (57960.0) called from log_ramp_up
+
+2020-09-24 12:05:56.894000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (58057.0) called from log_ramp_up
+
+2020-09-24 12:05:57.897000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (58151.0) called from log_ramp_up
+
+2020-09-24 12:05:58.900000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (58243.0) called from log_ramp_up
+set_amp (58390.0) called from log_ramp_up
+
+2020-09-24 12:05:59.903000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (58629.0) called from log_ramp_up
+
+2020-09-24 12:06:00.906000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (58789.0) called from log_ramp_up
+set_amp (58914.0) called from log_ramp_up
+
+2020-09-24 12:06:01.909000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (59037.0) called from log_ramp_up
+
+2020-09-24 12:06:02.912000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (59149.0) called from log_ramp_up
+set_amp (59250.0) called from log_ramp_up
+
+2020-09-24 12:06:03.915000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (59348.0) called from log_ramp_up
+
+2020-09-24 12:06:04.918000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (59445.0) called from log_ramp_up
+
+2020-09-24 12:06:05.921000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (59595.0) called from log_ramp_up
+set_amp (59819.0) called from log_ramp_up
+
+2020-09-24 12:06:06.923000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (59978.0) called from log_ramp_up
+
+2020-09-24 12:06:07.926000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (60101.0) called from log_ramp_up
+
+2020-09-24 12:06:08.929000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (60220.0) called from log_ramp_up
+set_amp (60328.0) called from log_ramp_up
+
+2020-09-24 12:06:09.932000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (60414.0) called from log_ramp_up
+
+2020-09-24 12:06:10.935000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (60498.0) called from log_ramp_up
+
+2020-09-24 12:06:11.938000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (60579.0) called from log_ramp_up
+set_amp (60660.0) called from log_ramp_up
+
+2020-09-24 12:06:12.941000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (60745.0) called from log_ramp_up
+
+2020-09-24 12:06:13.944000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (60836.0) called from log_ramp_up
+set_amp (60925.0) called from log_ramp_up
+
+2020-09-24 12:06:14.947000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (61012.0) called from log_ramp_up
+
+2020-09-24 12:06:15.950000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (61097.0) called from log_ramp_up
+
+2020-09-24 12:06:16.953000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (61201.0) called from log_ramp_up
+set_amp (61303.0) called from log_ramp_up
+
+2020-09-24 12:06:17.956000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (61403.0) called from log_ramp_up
+
+2020-09-24 12:06:18.959000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (61501.0) called from log_ramp_up
+set_amp (61611.0) called from log_ramp_up
+
+2020-09-24 12:06:19.961000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (61719.0) called from log_ramp_up
+
+2020-09-24 12:06:20.964000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (61823.0) called from log_ramp_up
+
+2020-09-24 12:06:21.967000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (61925.0) called from log_ramp_up
+set_amp (62019.0) called from log_ramp_up
+
+2020-09-24 12:06:22.970000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (62112.0) called from log_ramp_up
+
+2020-09-24 12:06:23.973000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (62203.0) called from log_ramp_up
+set_amp (62291.0) called from log_ramp_up
+
+2020-09-24 12:06:24.976000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (62396.0) called from log_ramp_up
+
+2020-09-24 12:06:25.979000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (62500.0) called from log_ramp_up
+
+2020-09-24 12:06:26.982000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (62602.0) called from log_ramp_up
+set_amp (62701.0) called from log_ramp_up
+
+2020-09-24 12:06:27.984000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (62781.0) called from log_ramp_up
+
+2020-09-24 12:06:28.987000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (62858.0) called from log_ramp_up
+set_amp (62934.0) called from log_ramp_up
+
+2020-09-24 12:06:29.990000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63008.0) called from log_ramp_up
+
+2020-09-24 12:06:30.993000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63081.0) called from log_ramp_up
+set_amp (63144.0) called from log_ramp_up
+
+2020-09-24 12:06:31.996000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63203.0) called from log_ramp_up
+
+2020-09-24 12:06:32.999000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63260.0) called from log_ramp_up
+
+2020-09-24 12:06:34.002000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63317.0) called from log_ramp_up
+set_amp (63372.0) called from log_ramp_up
+
+2020-09-24 12:06:35.005000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63425.0) called from log_ramp_up
+
+2020-09-24 12:06:36.007000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63478.0) called from log_ramp_up
+
+2020-09-24 12:06:37.010000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63533.0) called from log_ramp_up
+
+2020-09-24 12:06:38.013000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63590.0) called from log_ramp_up
+set_amp (63646.0) called from log_ramp_up
+
+2020-09-24 12:06:39.016000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+set_amp (63701.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3011077
+
+2020-09-24 12:06:39.502000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 63701.0, returning value at 63695.0 instead
+
+2020-09-24 12:06:39.518000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 63701.0, returning value at 63695.0 instead
+
+2020-09-24 12:06:39.518000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-24 12:06:39.518000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+2020-09-24 12:06:40.019000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:41.022000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:42.025000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:43.028000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:44.031000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:45.034000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:46.037000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:47.040000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:48.043000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:49.046000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:50.049000
+amp_vs_kfpow lookup, called from get_kf_running_stat_power_at_set_point, can't
+find 69500.0, returning value at 69482.0 instead
+
+2020-09-24 12:06:50.914000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+
+2020-09-24 12:06:50.914000
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+
+2020-09-24 12:06:50.914000
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+2020-09-24 12:06:50.914000
+
+
+2020-09-24 12:06:50.914000
+DEFAULT__DELTA_GTRTHN_MAX deafault = 63751
+set_amp (63751) called from ramp_up
+set_amp is updating last_amp_sp set to  63701.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3012081
+ramp_up FINISHED, we went from 63701.0 to 63751
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 63801
+set_amp (63801) called from ramp_up
+set_amp is updating last_amp_sp set to  63751.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3013091
+ramp_up FINISHED, we went from 63751.0 to 63801
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 63851
+set_amp (63851) called from ramp_up
+set_amp is updating last_amp_sp set to  63801.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3014095
+ramp_up FINISHED, we went from 63801.0 to 63851
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 63901
+set_amp (63901) called from ramp_up
+set_amp is updating last_amp_sp set to  63851.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3015097
+ramp_up FINISHED, we went from 63851.0 to 63901
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 63951
+set_amp (63951) called from ramp_up
+set_amp is updating last_amp_sp set to  63901.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3016107
+ramp_up FINISHED, we went from 63901.0 to 63951
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64001
+set_amp (64001) called from ramp_up
+set_amp is updating last_amp_sp set to  63951.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3017116
+ramp_up FINISHED, we went from 63951.0 to 64001
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64051
+set_amp (64051) called from ramp_up
+set_amp is updating last_amp_sp set to  64001.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3018125
+ramp_up FINISHED, we went from 64001.0 to 64051
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64101
+set_amp (64101) called from ramp_up
+set_amp is updating last_amp_sp set to  64051.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3019129
+ramp_up FINISHED, we went from 64051.0 to 64101
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 64151
+set_amp (64151) called from ramp_up
+set_amp is updating last_amp_sp set to  64101.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3020138
+ramp_up FINISHED, we went from 64101.0 to 64151
+enable_llrf, isInterlockActive = False
+enable_llrf, isRFOutput = True
+enable_llrf, isPhaseFFLocked = True
+reset_daq_freg, llrf_DAQ_rep_rate_status == BAD
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 18700737.6759
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 18700737.6759
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 18887745.0526, p_start = 30000, p_finish =
+18700737.6759, ramp_rate = 0.2
+set_amp (1451.0) called from log_ramp_up
+set_amp (5764.0) called from log_ramp_up
+set_amp (8129.0) called from log_ramp_up
+set_amp (9881.0) called from log_ramp_up
+set_amp (11313.0) called from log_ramp_up
+set_amp (12649.0) called from log_ramp_up
+set_amp (13948.0) called from log_ramp_up
+set_amp (15004.0) called from log_ramp_up
+set_amp (16071.0) called from log_ramp_up
+set_amp (17113.0) called from log_ramp_up
+set_amp (18047.0) called from log_ramp_up
+set_amp (18890.0) called from log_ramp_up
+set_amp (19763.0) called from log_ramp_up
+set_amp (20635.0) called from log_ramp_up
+set_amp (21424.0) called from log_ramp_up
+set_amp (22193.0) called from log_ramp_up
+set_amp (22992.0) called from log_ramp_up
+set_amp (23667.0) called from log_ramp_up
+set_amp (24333.0) called from log_ramp_up
+set_amp (24934.0) called from log_ramp_up
+set_amp (25634.0) called from log_ramp_up
+set_amp (26218.0) called from log_ramp_up
+set_amp (26791.0) called from log_ramp_up
+set_amp (27363.0) called from log_ramp_up
+set_amp (27958.0) called from log_ramp_up
+set_amp (28507.0) called from log_ramp_up
+set_amp (29006.0) called from log_ramp_up
+set_amp (29520.0) called from log_ramp_up
+set_amp (30053.0) called from log_ramp_up
+set_amp (30536.0) called from log_ramp_up
+set_amp (31024.0) called from log_ramp_up
+set_amp (31487.0) called from log_ramp_up
+set_amp (31971.0) called from log_ramp_up
+set_amp (32430.0) called from log_ramp_up
+set_amp (32851.0) called from log_ramp_up
+set_amp (33256.0) called from log_ramp_up
+set_amp (33679.0) called from log_ramp_up
+set_amp (34121.0) called from log_ramp_up
+set_amp (34523.0) called from log_ramp_up
+set_amp (34931.0) called from log_ramp_up
+set_amp (35309.0) called from log_ramp_up
+set_amp (35670.0) called from log_ramp_up
+set_amp (36061.0) called from log_ramp_up
+set_amp (36447.0) called from log_ramp_up
+set_amp (36801.0) called from log_ramp_up
+set_amp (37128.0) called from log_ramp_up
+set_amp (37507.0) called from log_ramp_up
+set_amp (37871.0) called from log_ramp_up
+set_amp (38223.0) called from log_ramp_up
+set_amp (38582.0) called from log_ramp_up
+set_amp (38906.0) called from log_ramp_up
+set_amp (39227.0) called from log_ramp_up
+set_amp (39569.0) called from log_ramp_up
+set_amp (39893.0) called from log_ramp_up
+set_amp (40211.0) called from log_ramp_up
+set_amp (40547.0) called from log_ramp_up
+set_amp (40857.0) called from log_ramp_up
+set_amp (41144.0) called from log_ramp_up
+set_amp (41462.0) called from log_ramp_up
+set_amp (41764.0) called from log_ramp_up
+set_amp (42052.0) called from log_ramp_up
+set_amp (42332.0) called from log_ramp_up
+set_amp (42635.0) called from log_ramp_up
+set_amp (42949.0) called from log_ramp_up
+set_amp (43249.0) called from log_ramp_up
+set_amp (43536.0) called from log_ramp_up
+set_amp (43843.0) called from log_ramp_up
+set_amp (44113.0) called from log_ramp_up
+set_amp (44386.0) called from log_ramp_up
+set_amp (44690.0) called from log_ramp_up
+set_amp (44987.0) called from log_ramp_up
+set_amp (45257.0) called from log_ramp_up
+set_amp (45510.0) called from log_ramp_up
+set_amp (45788.0) called from log_ramp_up
+set_amp (46060.0) called from log_ramp_up
+set_amp (46330.0) called from log_ramp_up
+set_amp (46648.0) called from log_ramp_up
+set_amp (46909.0) called from log_ramp_up
+set_amp (47159.0) called from log_ramp_up
+set_amp (47418.0) called from log_ramp_up
+set_amp (47682.0) called from log_ramp_up
+set_amp (47942.0) called from log_ramp_up
+set_amp (48183.0) called from log_ramp_up
+set_amp (48428.0) called from log_ramp_up
+set_amp (48678.0) called from log_ramp_up
+set_amp (48914.0) called from log_ramp_up
+set_amp (49150.0) called from log_ramp_up
+set_amp (49408.0) called from log_ramp_up
+set_amp (49674.0) called from log_ramp_up
+set_amp (49946.0) called from log_ramp_up
+set_amp (50234.0) called from log_ramp_up
+set_amp (50470.0) called from log_ramp_up
+set_amp (50688.0) called from log_ramp_up
+set_amp (50937.0) called from log_ramp_up
+set_amp (51171.0) called from log_ramp_up
+set_amp (51377.0) called from log_ramp_up
+set_amp (51580.0) called from log_ramp_up
+set_amp (51782.0) called from log_ramp_up
+set_amp (51980.0) called from log_ramp_up
+set_amp (52175.0) called from log_ramp_up
+set_amp (52378.0) called from log_ramp_up
+set_amp (52601.0) called from log_ramp_up
+set_amp (52814.0) called from log_ramp_up
+set_amp (53018.0) called from log_ramp_up
+set_amp (53256.0) called from log_ramp_up
+set_amp (53515.0) called from log_ramp_up
+set_amp (53793.0) called from log_ramp_up
+set_amp (53948.0) called from log_ramp_up
+set_amp (54025.0) called from log_ramp_up
+set_amp (54101.0) called from log_ramp_up
+set_amp (54175.0) called from log_ramp_up
+set_amp (54248.0) called from log_ramp_up
+set_amp (54325.0) called from log_ramp_up
+set_amp (54417.0) called from log_ramp_up
+set_amp (54508.0) called from log_ramp_up
+set_amp (54596.0) called from log_ramp_up
+set_amp (54682.0) called from log_ramp_up
+set_amp (54797.0) called from log_ramp_up
+set_amp (54916.0) called from log_ramp_up
+set_amp (55033.0) called from log_ramp_up
+set_amp (55172.0) called from log_ramp_up
+set_amp (55339.0) called from log_ramp_up
+set_amp (55504.0) called from log_ramp_up
+set_amp (55681.0) called from log_ramp_up
+set_amp (55853.0) called from log_ramp_up
+set_amp (56036.0) called from log_ramp_up
+set_amp (56219.0) called from log_ramp_up
+set_amp (56394.0) called from log_ramp_up
+set_amp (56562.0) called from log_ramp_up
+set_amp (56735.0) called from log_ramp_up
+set_amp (56952.0) called from log_ramp_up
+set_amp (57147.0) called from log_ramp_up
+set_amp (57301.0) called from log_ramp_up
+set_amp (57451.0) called from log_ramp_up
+set_amp (57628.0) called from log_ramp_up
+
+2020-09-24 12:24:28.978000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 57628.0, returning value at 57636.0 instead
+set_amp (57816.0) called from log_ramp_up
+set_amp (57960.0) called from log_ramp_up
+set_amp (58069.0) called from log_ramp_up
+set_amp (58175.0) called from log_ramp_up
+set_amp (58279.0) called from log_ramp_up
+set_amp (58518.0) called from log_ramp_up
+set_amp (58748.0) called from log_ramp_up
+set_amp (58893.0) called from log_ramp_up
+set_amp (59034.0) called from log_ramp_up
+set_amp (59162.0) called from log_ramp_up
+set_amp (59279.0) called from log_ramp_up
+set_amp (59393.0) called from log_ramp_up
+set_amp (59510.0) called from log_ramp_up
+set_amp (59774.0) called from log_ramp_up
+set_amp (59975.0) called from log_ramp_up
+set_amp (60120.0) called from log_ramp_up
+set_amp (60261.0) called from log_ramp_up
+set_amp (60374.0) called from log_ramp_up
+set_amp (60476.0) called from log_ramp_up
+set_amp (60575.0) called from log_ramp_up
+
+2020-09-24 12:24:42.987000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 60575.0, returning value at 60579.0 instead
+set_amp (60671.0) called from log_ramp_up
+set_amp (60779.0) called from log_ramp_up
+set_amp (60889.0) called from log_ramp_up
+set_amp (60996.0) called from log_ramp_up
+set_amp (61102.0) called from log_ramp_up
+set_amp (61231.0) called from log_ramp_up
+
+2020-09-24 12:24:46.999000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 61231.0, returning value at 61236.0 instead
+set_amp (61358.0) called from log_ramp_up
+set_amp (61482.0) called from log_ramp_up
+set_amp (61618.0) called from log_ramp_up
+
+2020-09-24 12:24:48.989000
+amp_vs_kfpow lookup, called from get_kfp_running_stat_at_current_set_point,
+can't find 61618.0, returning value at 61620.0 instead
+set_amp (61754.0) called from log_ramp_up
+set_amp (61887.0) called from log_ramp_up
+set_amp (62010.0) called from log_ramp_up
+set_amp (62130.0) called from log_ramp_up
+set_amp (62247.0) called from log_ramp_up
+set_amp (62377.0) called from log_ramp_up
+set_amp (62515.0) called from log_ramp_up
+set_amp (62650.0) called from log_ramp_up
+set_amp (62767.0) called from log_ramp_up
+set_amp (62872.0) called from log_ramp_up
+set_amp (62975.0) called from log_ramp_up
+set_amp (63076.0) called from log_ramp_up
+set_amp (63163.0) called from log_ramp_up
+set_amp (63245.0) called from log_ramp_up
+set_amp (63324.0) called from log_ramp_up
+set_amp (63403.0) called from log_ramp_up
+set_amp (63479.0) called from log_ramp_up
+set_amp (63522.0) called from log_ramp_up
+set_amp (63553.0) called from log_ramp_up
+set_amp (63584.0) called from log_ramp_up
+set_amp (63613.0) called from log_ramp_up
+set_amp (63642.0) called from log_ramp_up
+set_amp (63671.0) called from log_ramp_up
+set_amp (63698.0) called from log_ramp_up
+set_amp (63725.0) called from log_ramp_up
+set_amp (63752.0) called from log_ramp_up
+set_amp (63777.0) called from log_ramp_up
+set_amp (63803.0) called from log_ramp_up
+set_amp (63827.0) called from log_ramp_up
+set_amp (63851.0) called from log_ramp_up
+set_amp (63875.0) called from log_ramp_up
+set_amp (63898.0) called from log_ramp_up
+set_amp (64747.0) called from log_ramp_up
+set_amp (64868.0) called from log_ramp_up
+set_amp (64986.0) called from log_ramp_up
+set_amp (65101.0) called from log_ramp_up
+set_amp (65169.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 3108994
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 18700737.6759
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 18700737.6759
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 18887745.0526, p_start = 30000, p_finish =
+18700737.6759, ramp_rate = 0.2
+set_amp (1451.0) called from log_ramp_up
+set_amp (5764.0) called from log_ramp_up
+set_amp (8129.0) called from log_ramp_up
+set_amp (9881.0) called from log_ramp_up
+set_amp (11313.0) called from log_ramp_up
+set_amp (12649.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (13948.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (15004.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (16071.0) called from log_ramp_up
+set_amp (17113.0) called from log_ramp_up
+set_amp (18047.0) called from log_ramp_up
+set_amp (18890.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (19763.0) called from log_ramp_up
+set_amp (20635.0) called from log_ramp_up
+set_amp (21424.0) called from log_ramp_up
+set_amp (22193.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (22992.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (23667.0) called from log_ramp_up
+set_amp (24333.0) called from log_ramp_up
+set_amp (24934.0) called from log_ramp_up
+set_amp (25634.0) called from log_ramp_up
+set_amp (26218.0) called from log_ramp_up
+set_amp (26791.0) called from log_ramp_up
+set_amp (27363.0) called from log_ramp_up
+set_amp (27958.0) called from log_ramp_up
+set_amp (28507.0) called from log_ramp_up
+set_amp (29006.0) called from log_ramp_up
+set_amp (29520.0) called from log_ramp_up
+set_amp (30053.0) called from log_ramp_up
+set_amp (30536.0) called from log_ramp_up
+set_amp (31024.0) called from log_ramp_up
+set_amp (31487.0) called from log_ramp_up
+set_amp (31971.0) called from log_ramp_up
+set_amp (32430.0) called from log_ramp_up
+set_amp (32851.0) called from log_ramp_up
+set_amp (33256.0) called from log_ramp_up
+set_amp (33679.0) called from log_ramp_up
+set_amp (34121.0) called from log_ramp_up
+set_amp (34523.0) called from log_ramp_up
+set_amp (34931.0) called from log_ramp_up
+set_amp (35309.0) called from log_ramp_up
+enable_llrf, isRFOutput = False, attempting enableRFOutput()
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()

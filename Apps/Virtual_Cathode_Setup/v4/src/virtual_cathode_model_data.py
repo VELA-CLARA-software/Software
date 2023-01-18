@@ -276,9 +276,6 @@ class model_data(object):
 	rs_auto_reset  = 'rs_auto_reset'
 	all_value_keys.append(rs_auto_reset)
 
-	hwp_enable_state  = 'hwp_enable_state'
-	all_value_keys.append(hwp_enable_state)
-
 	# laser_buffer_full = 'laser_buffer_full'
 	# all_value_keys.append(laser_buffer_full)
 	# wcm_buffer_full = 'wcm_buffer_full'
@@ -344,7 +341,7 @@ class model_data(object):
 	[values.update({x: 0}) for x in all_value_keys]
 	#
 	# manually set some values
-	values[image_save_dir_root] = '\\\\claraserv3.dl.ac.uk'  # MAGIC_STRING
+	values[image_save_dir_root] = '\\\\claraserv3'  # MAGIC_STRING
 	#
 	# values gets copied to previous_values before values is updated
 	previous_values = {}

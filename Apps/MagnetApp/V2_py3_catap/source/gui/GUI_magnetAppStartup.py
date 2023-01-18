@@ -35,6 +35,7 @@ from CATAP.GlobalTypes import TYPE
 from CATAP.GlobalStates import STATE
 from PyQt5 import QtGui, QtCore, QtWidgets
 from .ui_source.Ui_magnetAppStartup import Ui_magnetAppStartup
+
 import magnetAppGlobals as globals
 #from VELA_CLARA_Magnet_Control import MACHINE_MODE
 #from VELA_CLARA_Magnet_Control import MACHINE_AREA
@@ -85,8 +86,8 @@ class GUI_magnetAppStartup(QtWidgets.QMainWindow, Ui_magnetAppStartup):
         self.appPixMap = QtGui.QPixmap(globals.appIcon)
         self.iconLabel.setPixmap(self.appPixMap)
         self.setWindowTitle("VELA - CLARA Magnet App")
-        self.logo = QtGui.QPixmap(globals.claraIcon)
-        self.scaledLogo = self.logo.scaled(self.logoLabel.size(), QtCore.Qt.KeepAspectRatio)
+        self.logo  = QtGui.QPixmap(globals.claraIcon)
+        self.scaledLogo =  self.logo.scaled(self.logoLabel.size(), QtCore.Qt.KeepAspectRatio)
         self.logoLabel.setPixmap(self.scaledLogo)
         self.setWindowIcon(QtGui.QIcon('magpic.jpg'))
         self.waitMessageLabel.setText("")

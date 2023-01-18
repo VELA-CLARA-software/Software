@@ -64,8 +64,6 @@ class pil_monitor(monitor):
             monitor.data.values[dat.vc_intensity_values][hwp]) / numpy.sqrt(
             len(monitor.data.values[dat.vc_intensity_values][hwp]))
 
-    def is_energy_buffer_full(self):
-        return monitor.las_em_factory.isEnergyBufferFull()
 
     def get_laser_energy(self, hwp):
         monitor.data.values[dat.ophir_values][hwp] = monitor.las_em_factory.getEnergyBuffer(

@@ -112,9 +112,6 @@ class main_controller(object):
         self.view.start_gui_update()
 
 
-        self.view.update_individual_trace_button.clicked.connect(self.handle_update_individual_trace_updating)
-
-
         # CATAP hardware controllers, these live here and are passed to where they are needed
         # self.hardware.start_up() actually creates the objects, this should only be done once,
         # here! so that we don't create multiple controllers
@@ -435,10 +432,9 @@ class main_controller(object):
         '''
         rcd = rf_conditioning_data
         #TODO AJG: update the time/pulses until BDR is low enough to ramp countdowns
-        #TODO AJG: ************** This crashes when BDR is high - why now? it was fine before ***************************
-        # if self.data.values[rcd.breakdown_rate_low] == False:
-        #     self.data.breakdown_rate_able_to_ramp_countdown()
-        #TODO AJG: ******************************************************************************************************
+
+        if self.data.values[rcd.breakdown_rate_low] == False:
+            self.data.breakdown_rate_able_to_ramp_countdown()
 
         #print('\nFrom can_ramp_state\ncan_ramp_status_OLD = {}\ncan_ramp_status = {}'.format(self.data.values[rcd.BD_state_OLD],
         # self.data.values[rcd.BD_state]))
@@ -815,12 +811,6 @@ class main_controller(object):
             self.hardware.llrf_controller.enable_llrf()
         else:
             self.hardware.llrf_controller.disableRFOutput()
-
-    def handle_update_individual_trace_updating(self):
-        # TODO write this function
-        print("TO")
-
-
 
     def quit_app(self, message=""):
         print(message)

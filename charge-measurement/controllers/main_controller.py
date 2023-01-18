@@ -126,83 +126,68 @@ class main_controller(controller_base):
 
     def set_hwp_and_record(self):
         if controller_base.data.values[dat.ready_to_go]:
-            controller_base.data.values[dat.first_measurement] = True
             if controller_base.shutter_handler.is_shutter_closed():
                 controller_base.shutter_handler.open_shutter()
                 time.sleep(1)
             self.logger.message('entering set_hwp_and_record', True)
             self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(3)
+            controller_base.pil_handler.set_pil_buffer(controller_base.data.values[dat.num_shots])
+            controller_base.pil_handler.set_vc_buffer(controller_base.data.values[dat.num_shots])
+            controller_base.charge_handler.set_charge_buffer(controller_base.data.values[dat.num_shots])
+            # controller_base.llrf_handler.enable_rf_output()
+            controller_base.llrf_handler.set_llrf_buffer(controller_base.data.values[dat.num_shots])
             self.stepprog = (controller_base.data.values[dat.set_hwp_end] - controller_base.data.values[
                 dat.set_hwp_start]) / controller_base.data.values[dat.num_steps]
             self.stepspace = numpy.linspace(0,self.stepprog,controller_base.data.values[dat.num_steps])
             self.iterate = 0
             self.hwp_start = controller_base.pil_handler.get_hwp()
             self.has_been_overrange = False
-            self.prev_success = True
-            self.hwp_settings = numpy.linspace(controller_base.data.values[dat.set_hwp_start],
+            for i in numpy.linspace(controller_base.data.values[dat.set_hwp_start],
                                     controller_base.data.values[dat.set_hwp_end],
-                                    controller_base.data.values[dat.num_steps])
-            for i in range(0, len(self.hwp_settings)-1):
+                                    controller_base.data.values[dat.num_steps]):
                 if controller_base.data.values[dat.cancel]:
                     self.clear_values()
                     controller_base.data.values[dat.cancel] = False
                     break
-                controller_base.data.values[dat.data_point_success].update({self.hwp_settings[i]: False})
-                self.logger.message('Setting HWP to '+str(self.hwp_settings[i]), True)
+                controller_base.data.values[dat.data_point_success].update({i: False})
+                self.logger.message('Setting HWP to '+str(i), True)
                 self.gui.progressBar.setValue(self.stepspace[self.iterate]*100)
                 self.iterate +=1
-                controller_base.data.values[dat.hwp_values].append(self.hwp_settings[i])
-
-                controller_base.pil_handler.set_hwp(self.hwp_settings[i])
-                time.sleep(1)
-                while not controller_base.data.values[dat.data_point_success][self.hwp_settings[i]]:
-                    if controller_base.data_monitor.pil_monitor.check_set_equals_read():
-                        while controller_base.pil_handler.get_laser_energy_overrange():
-                            time.sleep(1)
-                            self.range = controller_base.pil_handler.get_laser_energy_range()
-                            time.sleep(1)
-                            self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(self.range-1)
-                            time.sleep(1)
-                            self.has_been_overrange = True
-                            controller_base.shutter_handler.open_shutter()
-                            time.sleep(1)
+                controller_base.data.values[dat.hwp_values].append(i)
+                controller_base.pil_handler.set_hwp(i)
+                self.time_flo = datetime.datetime.now() + datetime.timedelta(seconds=3)
+                while datetime.datetime.now() < self.time_flo:
+                    QApplication.processEvents()
+                    time.sleep(0.1)  # while not controller_base.data.values[dat.data_point_success][i]:
+                # while not controller_base.data.values[dat.data_point_success][i]:
+                if controller_base.data_monitor.pil_monitor.check_set_equals_read():
+                    while controller_base.pil_handler.get_laser_energy_overrange():
+                        time.sleep(1)
+                        self.range = controller_base.pil_handler.get_laser_energy_range()
+                        time.sleep(1)
+                        self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(self.range-1)
+                        time.sleep(1)
+                        self.has_been_overrange = True
+                        controller_base.shutter_handler.open_shutter()
+                        time.sleep(1)
                     #time.sleep(1)
                     QApplication.processEvents()
                     # if not self.has_been_overrange:
                     if controller_base.shutter_handler.is_shutter_closed():
-                        print("clo")
                         controller_base.shutter_handler.open_shutter()
                         time.sleep(1)
                     if controller_base.shutter_handler.is_shutter_open():
-                        print("op")
-                        controller_base.pil_handler.set_pil_buffer(controller_base.data.values[dat.num_shots])
-                        controller_base.pil_handler.set_vc_buffer(controller_base.data.values[dat.num_shots])
-                        controller_base.charge_handler.set_charge_buffer(controller_base.data.values[dat.num_shots])
-                        # controller_base.llrf_handler.enable_rf_output()
-                        controller_base.llrf_handler.set_llrf_buffer(controller_base.data.values[dat.num_shots])
-                        self.time_flo = datetime.datetime.now() + datetime.timedelta(seconds=3) + datetime.timedelta(
+                        self.time_flo = datetime.datetime.now() + datetime.timedelta(
                             seconds=controller_base.data.values[dat.num_shots] / 10)
-                        # while datetime.datetime.now() < self.time_flo:
-                        while not controller_base.data_monitor.pil_monitor.is_energy_buffer_full():
+                        while datetime.datetime.now() < self.time_flo:
                             QApplication.processEvents()
                             time.sleep(0.1)
-                        if not controller_base.data.values[dat.first_measurement]:
-                            self.hwp_prev = self.hwp_settings[i - 1]
-                        else:
-                            self.hwp_prev = None
-                        self.success = controller_base.data_monitor.charge_monitor.update_charge_values(
-                            self.hwp_settings[i],
-                            self.hwp_prev)
-                        if self.success:
-                            controller_base.data_monitor.mag_monitor.update_mag_values(self.hwp_settings[i])
-                            controller_base.data_monitor.pil_monitor.update_vc_values(self.hwp_settings[i])
-                            controller_base.data_monitor.llrf_monitor.update_rf_values(self.hwp_settings[i])
-                            controller_base.data_monitor.pil_monitor.get_laser_energy(self.hwp_settings[i])
-                            controller_base.data.values[dat.first_measurement] = False
-                        # else:
-                            # controller_base.data.values[dat.first_measurement] = True
-                        controller_base.data.values[dat.data_point_success][self.hwp_settings[i]] = True
-
+                        controller_base.data_monitor.mag_monitor.update_mag_values(i)
+                        controller_base.data_monitor.charge_monitor.update_charge_values(i)
+                        controller_base.data_monitor.pil_monitor.update_vc_values(i)
+                        controller_base.data_monitor.llrf_monitor.update_rf_values(i)
+                        controller_base.data_monitor.pil_monitor.get_laser_energy(i)
+                        controller_base.data.values[dat.data_point_success][i] = True
                         self.gui.update_plot()
                         QApplication.processEvents()
                         self.has_been_overrange = False
@@ -213,59 +198,58 @@ class main_controller(controller_base):
             self.gui.progressBar.setValue(100)
             # controller_base.llrf_handler.disable_rf_output()
             controller_base.pil_handler.set_hwp(self.hwp_start)
-            self.laser_energy_range = controller_base.pil_handler.set_laser_energy_range(3)
 
     def clear_values(self):
-            controller_base.data.values[dat.charge_mean] = {}
-            controller_base.data.values[dat.ophir_mean] = {}
-            controller_base.data.values[dat.charge_stderr] = {}
-            controller_base.data.values[dat.ophir_stderr] = {}
-            controller_base.data.values[dat.charge_values] = {}
-            controller_base.data.values[dat.ophir_values] = {}
-            controller_base.data.values[dat.kly_fwd_pwr_values] = {}
-            controller_base.data.values[dat.gun_fwd_pwr_values] = {}
-            controller_base.data.values[dat.gun_pha_sp_values] = {}
-            controller_base.data.values[dat.gun_pha_ff_values] = {}
-            controller_base.data.values[dat.kly_fwd_pwr_mean] = {}
-            controller_base.data.values[dat.gun_fwd_pwr_mean] = {}
-            controller_base.data.values[dat.gun_pha_sp_mean] = {}
-            controller_base.data.values[dat.gun_pha_ff_mean] = {}
-            controller_base.data.values[dat.kly_fwd_pwr_stderr] = {}
-            controller_base.data.values[dat.gun_fwd_pwr_stderr] = {}
-            controller_base.data.values[dat.gun_pha_sp_stderr] = {}
-            controller_base.data.values[dat.gun_pha_ff_stderr] = {}
-            controller_base.data.values[dat.gun_pha_ff_lock_values] = {}
-            controller_base.data.values[dat.vc_intensity_values] = {}
-            controller_base.data.values[dat.vc_x_pix_values] = {}
-            controller_base.data.values[dat.vc_y_pix_values] = {}
-            controller_base.data.values[dat.vc_sig_x_pix_values] = {}
-            controller_base.data.values[dat.vc_sig_y_pix_values] = {}
-            controller_base.data.values[dat.vc_intensity_mean] = {}
-            controller_base.data.values[dat.vc_x_pix_mean] = {}
-            controller_base.data.values[dat.vc_y_pix_mean] = {}
-            controller_base.data.values[dat.vc_sig_x_pix_mean] = {}
-            controller_base.data.values[dat.vc_sig_y_pix_mean] = {}
-            controller_base.data.values[dat.vc_intensity_stderr] = {}
-            controller_base.data.values[dat.vc_x_pix_stderr] = {}
-            controller_base.data.values[dat.vc_y_pix_stderr] = {}
-            controller_base.data.values[dat.vc_sig_x_pix_stderr] = {}
-            controller_base.data.values[dat.vc_sig_y_pix_stderr] = {}
-            controller_base.data.values[dat.sol_values] = {}
-            controller_base.data.values[dat.bsol_values] = {}
-            controller_base.data.values[dat.charge_time_stamp] = {}
-            controller_base.data.values[dat.ophir_time_stamp] = {}
-            controller_base.data.values[dat.gun_fwd_pwr_mean_time_stamp] = {}
-            controller_base.data.values[dat.gun_fwd_pha_mean_time_stamp] = {}
-            controller_base.data.values[dat.kly_fwd_pwr_time_stamp] = {}
-            controller_base.data.values[dat.kly_sp_time_stamp] = {}
-            controller_base.data.values[dat.vc_intensity_time_stamp] = {}
-            controller_base.data.values[dat.vc_x_pix_time_stamp] = {}
-            controller_base.data.values[dat.vc_y_pix_time_stamp] = {}
-            controller_base.data.values[dat.vc_sig_x_pix_time_stamp] = {}
-            controller_base.data.values[dat.vc_sig_y_pix_time_stamp] = {}
-            controller_base.data.values[dat.off_crest_phase_dict] = {}
-            controller_base.data.values[dat.vc_image_name] = {}
-            controller_base.data.values[dat.vc_image_directory] = {}
+        controller_base.data.values[dat.charge_mean] = {}
+        controller_base.data.values[dat.ophir_mean] = {}
+        controller_base.data.values[dat.charge_stderr] = {}
+        controller_base.data.values[dat.ophir_stderr] = {}
+        controller_base.data.values[dat.charge_values] = {}
+        controller_base.data.values[dat.ophir_values] = {}
+        controller_base.data.values[dat.kly_fwd_pwr_values] = {}
+        controller_base.data.values[dat.gun_fwd_pwr_values] = {}
+        controller_base.data.values[dat.gun_pha_sp_values] = {}
+        controller_base.data.values[dat.gun_pha_ff_values] = {}
+        controller_base.data.values[dat.kly_fwd_pwr_mean] = {}
+        controller_base.data.values[dat.gun_fwd_pwr_mean] = {}
+        controller_base.data.values[dat.gun_pha_sp_mean] = {}
+        controller_base.data.values[dat.gun_pha_ff_mean] = {}
+        controller_base.data.values[dat.kly_fwd_pwr_stderr] = {}
+        controller_base.data.values[dat.gun_fwd_pwr_stderr] = {}
+        controller_base.data.values[dat.gun_pha_sp_stderr] = {}
+        controller_base.data.values[dat.gun_pha_ff_stderr] = {}
+        controller_base.data.values[dat.gun_pha_ff_lock_values] = {}
+        controller_base.data.values[dat.vc_intensity_values] = {}
+        controller_base.data.values[dat.vc_x_pix_values] = {}
+        controller_base.data.values[dat.vc_y_pix_values] = {}
+        controller_base.data.values[dat.vc_sig_x_pix_values] = {}
+        controller_base.data.values[dat.vc_sig_y_pix_values] = {}
+        controller_base.data.values[dat.vc_intensity_mean] = {}
+        controller_base.data.values[dat.vc_x_pix_mean] = {}
+        controller_base.data.values[dat.vc_y_pix_mean] = {}
+        controller_base.data.values[dat.vc_sig_x_pix_mean] = {}
+        controller_base.data.values[dat.vc_sig_y_pix_mean] = {}
+        controller_base.data.values[dat.vc_intensity_stderr] = {}
+        controller_base.data.values[dat.vc_x_pix_stderr] = {}
+        controller_base.data.values[dat.vc_y_pix_stderr] = {}
+        controller_base.data.values[dat.vc_sig_x_pix_stderr] = {}
+        controller_base.data.values[dat.vc_sig_y_pix_stderr] = {}
+        controller_base.data.values[dat.sol_values] = {}
+        controller_base.data.values[dat.bsol_values] = {}
+        controller_base.data.values[dat.charge_time_stamp] = {}
+        controller_base.data.values[dat.ophir_time_stamp] = {}
+        controller_base.data.values[dat.gun_fwd_pwr_mean_time_stamp] = {}
+        controller_base.data.values[dat.gun_fwd_pha_mean_time_stamp] = {}
+        controller_base.data.values[dat.kly_fwd_pwr_time_stamp] = {}
+        controller_base.data.values[dat.kly_sp_time_stamp] = {}
+        controller_base.data.values[dat.vc_intensity_time_stamp] = {}
+        controller_base.data.values[dat.vc_x_pix_time_stamp] = {}
+        controller_base.data.values[dat.vc_y_pix_time_stamp] = {}
+        controller_base.data.values[dat.vc_sig_x_pix_time_stamp] = {}
+        controller_base.data.values[dat.vc_sig_y_pix_time_stamp] = {}
+        controller_base.data.values[dat.off_crest_phase_dict] = {}
+        controller_base.data.values[dat.vc_image_name] = {}
+        controller_base.data.values[dat.vc_image_directory] = {}
 
     def calculate_fit(self):
         if self.fitdone == False:

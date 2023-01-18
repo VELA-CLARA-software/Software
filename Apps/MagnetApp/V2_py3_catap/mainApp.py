@@ -19,9 +19,7 @@
 //  Last edit:   05-06-2018
 //  FileName:    magnetApp.py
 //  Description: magnet app main source file, run this one to run the app
-//                THIS IS UPDATED AND WORKING on 24-06-2021, beware solenoid degaussing, solenoid names, and  check
-                   magnets get loaded properly
-                   FOR FULL CATAP VERISON TAKE CARE!
+//
 //
 //*/
 '''

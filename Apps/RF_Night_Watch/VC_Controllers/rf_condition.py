@@ -36,8 +36,7 @@ class rf_condition(QtGui.QApplication):
         if len(argv) == 3:
             self.controller = main_controller(argv, config_file=argv[1], debug = int(argv[2]), debug2=rf_condition.DEBUG_MODE)
         else:
-            config_file = "\\\\claraserv3.dl.ac.uk\\claranet\\apps\\legacy\\config" \
-                          "\\RF_Night_Watch\\CLARA_LRRG.yml"
+            config_file = "\\\\claraserv3\\claranet\\apps\\legacy\\config\\RF_Night_Watch\\CLARA_LRRG.yml"
             self.controller = main_controller(argv, config_file=config_file, debug = 0,
                                               debug2=rf_condition.DEBUG_MODE)
             print("!!ERROR!! WHEN STARTING RF_CONDITION __MAIN__  NOT ENOUGH INPUT VARIABLES PASSED ")

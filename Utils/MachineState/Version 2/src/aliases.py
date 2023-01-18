@@ -1,7 +1,7 @@
 from CATAP.HardwareFactory import TYPE, STATE
 import scipy.interpolate
 
-alias_names = {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
+alias_names =  {"CLA-L01-LRF-CTRL-01": "CLA-L01-CAV",
                "L01": "CLA-L01-CAV",
                "LRRG_GUN": "CLA-LRG1-GUN-CAV",
                "CLA-GUN-LRF-CTRL-01": "CLA-LRG1-GUN-CAV",

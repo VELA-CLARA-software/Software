@@ -274,7 +274,7 @@ class charge_measurement_gui(QMainWindow, Ui_MainWindow, base):
 				self.data.values[dat.qe] * 10**5) + " E-05")
 		self.plotCanvas.draw()
 
-	def update_plot(self, hwp=None):
+	def update_plot(self):
 		if not self.data.values[dat.plots_done]:
 			self.messageLabel.setText('Scanning')
 			self.ophirmean = []

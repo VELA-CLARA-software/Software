@@ -1,12 +1,15 @@
 import numpy
+import os
+import sys
 import scipy.constants
 import scipy.stats
 import math
-import src.aliases as aliases
+import aliases as aliases
 import pandas
 import scipy.interpolate
 import CATAP.HardwareFactory
-
+sys.path.append(os.path.join('\\\\claraserv3.dl.ac.uk', 'claranet', 'packages', 'CATAP', 'Nightly',
+                             'CATAP_Nightly_03_03_2022', 'python36'))
 class UnitConversion(object):
 
     def __init__(self):
@@ -208,7 +211,7 @@ class UnitConversion(object):
     RF forward power to momentum calibration data is saved in the work folders:
     \\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\27\\Gun_power_momentum_scan_cathode22.xlsx
     \\\\fed.cclrc.ac.uk\\Org\\NLab\\ASTeC\\Projects\\VELA\\Work\\2021\\07\\28\\Linac_power_momentum_scan_cathode22.xlsx
-    If new data is added, then you need to set the 'calibrate' variable for this function to point to the new 
+    If new data is added, then you need to set the 'calibrate' variable for this function to point to the new
     spreadsheet location.
     Ensure that the forward power and momentum gain are in the correct columns as given in the function below.
     """

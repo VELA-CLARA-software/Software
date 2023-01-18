@@ -176,18 +176,16 @@ class GUI_FileLoad(QDialog, Ui_FileLoad):
         self.done(0)
 
     def handle_fileLoadView(self):
-        print("handle_fileLoadView")
         if self.selectedFilePath != "":
             textWindow = QPlainTextEdit()
-            print( 'opening file fn = ', self.selectedFilePath + self.selectedFile)
-            fileText = open(self.selectedFilePath + "\\" +self.selectedFile).read()
+            print( 'opening file')
+            fileText = open(self.selectedFilePath + self.selectedFile).read()
             textWindow.setPlainText(fileText)
             textWindow.resize(500, 700)
             textWindow.selectAll()
             font = QFont()
             font.setPointSize(16)
             textWindow.setFont(font)
-
             tc = QTextCursor()
             tc.setPosition(textWindow.document().characterCount())
             textWindow.setTextCursor(tc)

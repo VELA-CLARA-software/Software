@@ -1,7 +1,7 @@
 import os
 import time
-import src.unit_conversion as unit_conversion
-import src.aliases as aliases
+import unit_conversion as unit_conversion
+import aliases as aliases
 import numpy
 class WriteDataToSimFrame(object):
 
@@ -29,21 +29,28 @@ class WriteDataToSimFrame(object):
                             framework.modifyElement(self.keymod, 'k1', float(value['k1']))
                         elif inputdict[section][key]['type'] == 'cavity':
                             if type=='CATAP':
-                                typemod = 1e6
+                                typemod = 1.0e6
                             else:
-                                typemod = 1
+                                typemod = 1.0
                             framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']*typemod))
                             framework.modifyElement(self.keymod, 'phase', value['phase'])
                         elif inputdict[section][key]['type'] == 'solenoid':
-                            if 'BSOL' in key:
-                                framework.modifyElement(self.keymod, 'field_amplitude', 0.3462 * float(value['field_amplitude']))
-                            else:
-                                framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']))
+                            if 'GUN' in key:
+                                framework.modifyElement('CLA-LRG1-MAG-SOL-01', 'field_amplitude', float(value['field_amplitude']))#HMCC
+                            elif 'LRG1' in key:
+                                framework.modifyElement('CLA-LRG1-MAG-BSOL-01', 'field_amplitude',
+                                                        float(value['field_amplitude']))#'HMCC'
+
+                            #if 'BSOL' in key:
+                            #    framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']))
+                            #    #HMCC comment #framework.modifyElement(self.keymod, 'field_amplitude', 0.3462 * float(value['field_amplitude']))
+                            #else:
+                            #    framework.modifyElement(self.keymod, 'field_amplitude', float(value['field_amplitude']))
                         elif inputdict[section][key]['type'] == 'cavity':
-                            framework.generator.sig_x = float(value['x_mm_sig'])
-                            framework.generator.sig_y = float(value['x_mm_sig'])
-                            framework.generator.sig_x = float(value['x_mm_sig'])
-                            framework.generator.sig_x = float(value['x_mm_sig'])
+                            framework.generator.sigma_x = float(value['x_mm_sig'])
+                            framework.generator.sigma_y = float(value['x_mm_sig'])
+                            framework.generator.sigma_x = float(value['x_mm_sig'])
+                            framework.generator.sigma_y = float(value['x_mm_sig'])
 
     def getEnergyDict(self):
         return self.energy
@@ -84,9 +91,9 @@ class WriteDataToSimFrame(object):
         framework.generator.charge = float(inputdict['generator']['charge']['value'] * 1e-12)
         framework.generator.sig_clock = float(inputdict['generator']['sig_clock']['value'])
         # framework.generator.sig_clock = float(inputdict['generator']['sig_clock']['value']) / (2354.82)
-        framework.generator.sig_x = inputdict['generator']['sig_x']['value']
-        framework.generator.sig_y = inputdict['generator']['sig_y']['value']
-        framework.generator.spot_size = float(numpy.mean([inputdict['generator']['sig_x']['value'],inputdict['generator']['sig_y']['value']]))
+        framework.generator.sigma_x = 1.e-3*inputdict['generator']['sigma_x']['value']#HMCC
+        framework.generator.sigma_y = 1.e-3*inputdict['generator']['sigma_y']['value']#HMCC
+        framework.generator.spot_size = float(numpy.mean([inputdict['generator']['sigma_x']['value'],inputdict['generator']['sigma_y']['value']]))
         self.updateFrameworkElements(framework, inputdict, type=type)
 
     def runScript(self, framework, inputdict, modify=False, track=False, sections=None, directory=None):

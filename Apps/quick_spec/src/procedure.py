@@ -64,6 +64,8 @@ class procedure(object):
 
         self.data.values[data.rolling_count] = 0
 
+
+
     # called external to update states
     def update_data(self):
         self.update_cam()

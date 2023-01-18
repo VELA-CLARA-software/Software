@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_SolAdjuster(object):
     def setupUi(self, SolAdjuster):
         SolAdjuster.setObjectName(_fromUtf8("SolAdjuster"))
-        SolAdjuster.resize(212, 463)
+        SolAdjuster.resize(211, 463)
         self.centralwidget = QtGui.QWidget(SolAdjuster)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -173,10 +173,8 @@ class Ui_SolAdjuster(object):
         self.BSol_PSU_State.setText(_translate("SolAdjuster", "ERR", None))
         self.label_6.setText(_translate("SolAdjuster", "Step Size", None))
         self.label_5.setText(_translate("SolAdjuster", "Set Value", None))
-        self.bsol_seti.setToolTip(_translate("SolAdjuster", "<html><head/><body><p>TOOL TIP!</p></body></html>", None))
         self.groupBox_3.setTitle(_translate("SolAdjuster", "Main Solenoid", None))
         self.Sol_PSU_State.setText(_translate("SolAdjuster", "ERR", None))
         self.label_7.setText(_translate("SolAdjuster", "Step Size", None))
         self.label_8.setText(_translate("SolAdjuster", "Set Value", None))
-        self.sol_seti.setToolTip(_translate("SolAdjuster", "<html><head/><body><p><span style=\" font-size:10pt;\">TOOL TIP2!</span></p></body></html>", None))
 

@@ -43,7 +43,6 @@ class vac_valve_monitor(monitor):
         self.old_value = None
         # create a local copy of relevant config data
         self.keep_valve_open = self.config_data[self.config.KEEP_VALVE_OPEN]
-        self.valve_name = self.config_data[self.config.VAC_VALVE]
         if self.hardware.have_controller[CONTROLLER_TYPE.VAC_VALVES]:
             self.set_success = True
             self.start()

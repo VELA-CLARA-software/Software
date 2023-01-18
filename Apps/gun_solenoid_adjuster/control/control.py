@@ -68,16 +68,6 @@ class control(object):
         self.view.sol_stepsize.valueChanged.connect(self.handle_sol_step)
         self.view.bsol_seti.valueChanged.connect(self.handle_bsol_seti)
         self.view.sol_seti.valueChanged.connect(self.handle_sol_seti)
-
-        tip_text = "min = {}\nmax = {}".format(self.procedure.min_sol,self.procedure.max_sol)
-
-        self.view.sol_seti.setToolTip(tip_text)
-
-        tip_text = "min = {}\nmax = {}".format(self.procedure.min_bsol,self.procedure.max_bsol)
-        self.view.bsol_seti.setToolTip(tip_text)
-
-
-
         self.handle_bsol_step()
         self.handle_sol_step()
 

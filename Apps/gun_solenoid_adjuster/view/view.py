@@ -76,6 +76,7 @@ class view(QMainWindow, Ui_SolAdjuster ):
                     elif qevent.lostFocus():
                         self.bsol_seti_has_focus = False
                         self.bsol_seti.setStyleSheet(self.spin_style_sheet)
+
             #
             # if isinstance(qevent, QFocusEvent):
             #     print("event filter = ", str(qobject.objectName()))
@@ -148,15 +149,6 @@ class view(QMainWindow, Ui_SolAdjuster ):
             #print("set sol val = ", procedure.data["sol_seti"])
             self.sol_seti.setValue(procedure.data["sol_seti"])
 
-        if procedure.data["bsol_out_of_range"]:
-            self.bsol_seti.setStyleSheet(" background-color: " + self.red)
-        else:
-            self.bsol_seti.setStyleSheet(" background-color: white")
-
-        if procedure.data["sol_out_of_range"]:
-            self.sol_seti.setStyleSheet(" background-color: " + self.red)
-        else:
-            self.sol_seti.setStyleSheet(" background-color: white")
 
         # else:
         #     self.sol_seti.setStyleSheet(self.spin_style_sheet)

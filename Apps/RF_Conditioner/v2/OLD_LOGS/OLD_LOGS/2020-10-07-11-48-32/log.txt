@@ -1,0 +1,5479 @@
+****************************************************************************************************
+******************* __         __    _  _  ___       _   ___  ___   __         __ ******************
+******************* \ \  ___  / /   | \| |/ _ \     /_\ | _ \/ __|  \ \  ___  / / ******************
+*******************  \ \/ _ \/ /    | .` | (_) |   / _ \|   / (__    \ \/ _ \/ /  ******************
+*******************   \_\___/_/     |_|\_|\___/   /_/ \_\_|_\\___|    \_\___/_/   ******************
+*******************                                                               ******************
+********************************************************************************
+*********************** Log Started 2020-10-07-11-48-32 ************************
+********************************************************************************
+********************************************************************************
+******************************** Configuration *********************************
+********************************************************************************
+config file =
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_LRRG.yml
+dumping parsed config data to text log
+CONFIG_FILE:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\CLARA_LRRG.yml,
+KFPOW_MASK_TYPE: PERCENT, KRPOW_MASK_FLOOR: 1000.0, BREAKDOWN_TRACES:
+['CAVITY_REVERSE_POWER', 'KLYSTRON_FORWARD_POWER', 'CAVITY_FORWARD_POWER'],
+CFPHA_MEAN_END: 2.0, MAX_POW: 0.0, MAX_AMP: 120000, VAC_SPIKE_DECAY_LEVEL: 1.2,
+CFPOW_MASK_WINDOW_START: 4.5, PID_on_off_GMON: CLA-GUN-H2O-PID-02:ON:RB,
+KRPOW_NUM_AVERAGE_TRACES: 2, CFPHA_MASK_SET_TYPE: TIME, CPPOW_MASK_START: 0.8,
+KRPOW_MASK_SET_TYPE: TIME, AMP_PWR_ACCEPTANCE_WINDOW: 750000, CPPOW_DROP_AMP:
+False, CRPOW_DROP_AMP_VALUE: 2, CFPOW_MASK_FLOOR: 1000.0, CRPHA_MASK_SET_TYPE:
+TIME, TEXT_LOG_FILENAME: log.txt, KFPHA_MASK_LO_MIN: 50, KRPOW_CHECK_STREAK: 2,
+VAC_VALVE_CHECK_TIME: 1000, CPPOW_MASK_SET_TYPE: TIME, CFPHA_CHECK_STREAK: 2,
+CPPOW_AUTO_SET: False, KFPOW_MASK_END: 3.4, CFPHA_MEAN_START: 0.0,
+PID_integral_gain: CLA-GUN-H2O-PID-02:INTG:RB, KRPHA_MASK_TYPE: ABSOLUTE,
+VAC_ROLLING_SUM_NUM_SAMPLES: 25, CFPOW_MASK_END: 3.5, CFPHA_NUM_AVERAGE_TRACES:
+2, KRPOW_AUTO_SET: False, KRPHA_PHASE_MASK_BY_POWER_TRACE: False,
+VAC_NUM_SAMPLES_TO_AVERAGE: 7, KFPHA_AUTO_SET: False, CRPOW_MASK_WINDOW_END:
+4.25, CFPHA_MASK_LO_MIN: 50, SOL_CHECK_TIME: 1000, MINIMUM_COOLDOWN_TIME: 3000,
+RF_STRUCTURE: CLARA_LRRG, WATER_TEMPERATURE_PV: ['CLA-GUN-RF-LRRG-01:RT', 'CLA-
+GUN-RF-LRRG-02:RT'], KRPHA_CHECK_STREAK: 2, KRPOW_MASK_END: 5.0,
+LLRF_CHECK_TIME: 50, KFPOW_AMPSP_RUNNING_STATS_LOG_FILENAME: amp_power_log.txt,
+CPPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0, PULSE_COUNT_BREAKDOWN_LOG_FILENAME:
+pulse_breakdown_log.txt, CFPOW_MASK_START: 1.5, CFPHA_AUTO_SET: False,
+KRPOW_DROP_AMP_VALUE: 2, KFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPHA_MASK_FLOOR: 0.0, KRPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+CFPOW_MASK_LEVEL_LO: 10, KFPOW_MASK_WINDOW_END: 3.8, CPPHA_DROP_AMP_VALUE: 2,
+OUTSIDE_MASK_FORWARD_FILENAME: outside_forward_log, KRPHA_MEAN_END: 3.0,
+KFPOW_MASK_START: 1.3, KEEP_VALVE_OPEN: False, CRPHA_MASK_LO_MIN: 50,
+CRPOW_MASK_FLOOR: 5000.0, SOL_WOBBLE_OSCILLATION_POINTS: 0, CRPHA_MEAN_START:
+2.8, DC_PV: EBT-INJ-SCOPE-01:P1, KRPHA_MASK_FLOOR: 0.0, CPPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_TYPE: ABSOLUTE, CFPOW_MASK_LEVEL: 15, CFPHA_DROP_AMP_VALUE: 2,
+CRPHA_MASK_TYPE: ABSOLUTE, TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE',
+'KLYSTRON_REVERSE_PHASE', 'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER',
+'CAVITY_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER',
+'CAVITY_REVERSE_POWER'], KRPHA_MASK_WINDOW_END: 3.4, MAGNET_MACHINE_AREA:
+CLARA_PH1, DC_SPIKE_DELTA: 0.015, PID_proportional_gain: CLA-GUN-H2O-
+PID-02:PROP:RB, OUTSIDE_MASK_COOLDOWN_TIME: 4000, VAC_VALVE_AREA: CLARA_PH1,
+SOL_WOBBLE_LO: 0.0, KRPOW_MASK_LEVEL: 35.0, KRPHA_DROP_AMP: False,
+CRPHA_MASK_END: 5.0, CRPHA_MEAN_END: 3.0, KFPOW_MEAN_START: 2.0, CRPHA_DROP_AMP:
+False, KFPOW_MEAN_END: 2.5, CFPOW_NUM_AVERAGE_TRACES: 2, CPPHA_MASK_END: 5.0,
+VAC_VALVE: S01-VALV-01, PID_set_point: CLA-GUN-H2O-PID-02:SETVAL:RB,
+CAVITY_TEMPERATURE_CHECK_TIME: 1000, CFPHA_DROP_AMP: False,
+MODULATOR_CHECK_TIME: 1000, SOL_COUNT: 2, RF_REPETITION_RATE: 10,
+CPPHA_MASK_WINDOW_END: 3.4, LOG_RAMP_CURVE_NUMSTEPS: 150, KFPHA_MEAN_START: 2.3,
+RF_PROT_CHECK_TIME: 1000, KFPHA_MASK_TYPE: ABSOLUTE, MIN_AMP: 500,
+DC_CHECK_TIME: 1000, PID_on_off: CLA-GUN-H2O-PID-02:ON:RB,
+KRPHA_NUM_AVERAGE_TRACES: 2, KFPHA_MASK_FLOOR: 0.0, CRPHA_DROP_AMP_VALUE: 2,
+KRPHA_MASK_WINDOW_START: 2.4, CRPOW_MASK_TYPE: PERCENT, BIN_WIDTH: 400,
+KFPOW_MASK_FLOOR: 0.0, CPPOW_MASK_END: 5.0, BINARY_DATA_LOG_FILENAME: data_log,
+KRPHA_MASK_LO_MIN: 50, KFPOW_MASK_LEVEL: 35.0, OUTSIDE_MASK_CHECK_TIME: 100,
+MODE: OPERATIONAL, CRPOW_MASK_LO_MIN: 50, KLY_PWR_FOR_ACTIVE_PULSE: 500.0,
+CFPOW_MASK_LEVEL_HI: 40, CRPHA_MASK_FLOOR: 0.0, GMON_SUFFIX: _GMON,
+KFPOW_DROP_AMP_VALUE: 2, KRPOW_MEAN_END: 2.5, WHEN_VAC_HI_DISABLE_RAMP: True,
+AMP_PWR_LOG_TIME: 50, VAC_SPIKE_DROP_AMP: 5, DC_SPIKE_DECAY_TIME: 2000,
+CPPHA_MASK_TYPE: ABSOLUTE, KFPHA_MASK_SET_TYPE: TIME, KRPOW_MASK_WINDOW_START:
+2.4, PID_derivative_gain_GMON: CLA-GUN-H2O-PID-02:DERI:RB,
+SOL_WOBBLE_OSCILLATION_TIME: 100.0, PID_integral_gain_GMON: CLA-GUN-H2O-
+PID-02:INTG:RB, CFPOW_MASK_SET_TYPE: TIME, CFPOW_MASK_WINDOW_END: 4.6,
+LOG_DIRECTORY:
+C:\Users\dlerlp\Documents\GitHub\Software\Apps\RF_Conditioner\v2\logs\,
+KFPHA_MASK_LEVEL: 35.0, CAVITY_TEMPERATURE_PV: ['CLA-GUN-RF-LRRG-01:RT'],
+VAC_SPIKE_DELTA: 1e-08, VAC_CHECK_TIME: 200, PID_set_point_GMON: CLA-GUN-H2O-
+PID-02:SETVAL:RB, DC_DECAY_MODE: TIMED, SOL_WOBBLE_HI: 0.0,
+CRPOW_MASK_WINDOW_START: 3.7, CPPHA_NUM_AVERAGE_TRACES: 2,
+CRPHA_NUM_AVERAGE_TRACES: 2, NUM_BUFFER_TRACES: 500, CRPHA_MASK_LEVEL: 35.0,
+CRPOW_CHECK_STREAK: 2, CPPHA_AUTO_SET: False, VAC_SHOULD_DROP_AMP: True,
+KFPHA_CHECK_STREAK: 2, KRPOW_MEAN_START: 2.0, KFPOW_AUTO_SET: False,
+PID_llrf_max_amp_sp_limit: CLA-GUN-LRF-CTRL-01:vm:dsp:sp_amp:amplitude:DRVH,
+OUTSIDE_MASK_PROBE_FILENAME: outside_probe_log, CPPOW_MASK_FLOOR: 1000.0,
+KRPOW_MASK_START: 0.8, DC_SHOULD_DROP_AMP: False, CRPOW_MEAN_START: 3.2,
+CFPOW_DROP_AMP_VALUE: 6, CRPOW_MEAN_END: 3.6, GUI_UPDATE_TIME: 1000,
+CPPOW_MEAN_END: 2.0, CFPOW_MEAN_START: 3.2, KFPHA_DROP_AMP_VALUE: 2,
+KRPHA_DROP_AMP_VALUE: 2, CPPHA_MEAN_END: 2.0, KRPHA_MASK_LEVEL: 35.0,
+PULSE_LENGTH: 2500, DEFAULT_RF_INCREASE_LEVEL: 50, KFPHA_MEAN_END: 2.75,
+PID_derivative_gain: CLA-GUN-H2O-PID-02:DERI:RB, SHOULD_SOL_WOBBLE: False,
+CPPOW_MEAN_START: 0.0, VAC_DECAY_MODE: LEVEL, SOL_NAMES: ['L01-SOL1',
+'L01-SOL2'], PULSE_LENGTH_ERROR: 50, KFPOW_MASK_SET_TYPE: TIME,
+PID_autotune_state: CLA-GUN-H2O-PID-02:ATUNE:RB, CFPOW_MASK_LO_MIN: 50,
+KRPHA_MASK_END: 5.0, CPPOW_MASK_WINDOW_START: 2.4, VAC_MAX_LEVEL_FOR_RAMP:
+5e-09, CFPOW_CHECK_STREAK: 2, CFPHA_MASK_LEVEL: 35.0, CRPHA_MASK_WINDOW_END:
+3.4, CPPHA_CHECK_STREAK: 2, KRPHA_MEAN_START: 2.5, CPPOW_NUM_AVERAGE_TRACES: 2,
+CPPHA_MASK_LEVEL: 35.0, CPPHA_DROP_AMP: False, CAV_PWR_RATIO: 2.0,
+CRPHA_PHASE_MASK_BY_POWER_TRACE: False, PID_proportional_gain_GMON: CLA-GUN-H2O-
+PID-02:PROP:RB, CFPHA_MASK_END: 5.0, LOG_RAMP_CURVE_RAMP_RATE: 0.2,
+CRPHA_CHECK_STREAK: 2, CRPHA_MASK_START: 0.8, KFPHA_MASK_END: 5.0,
+KFPHA_NUM_AVERAGE_TRACES: 2, PID_output: CLA-GUN-H2O-PID-02:OUTPUT:RB,
+WATER_TEMPERATURE_PV_COUNT: 2, BREAKDOWN_RATE_AIM: 10, KRPOW_DROP_AMP: False,
+LOG_RAMP_CURVE_PULSES_PER_STEP: 15, CPPHA_MASK_FLOOR: 0.0, CPPHA_MASK_SET_TYPE:
+TIME, KFPHA_MASK_START: 0.8, KFPHA_PHASE_MASK_BY_POWER_TRACE: False,
+WATER_TEMPERATURE_CHECK_TIME: 1000, CPPHA_PHASE_MASK_BY_POWER_TRACE: False,
+CFPOW_MASK_TYPE: PERCENT, CFPHA_MASK_WINDOW_START: 2.4, KRPOW_MASK_LO_MIN: 50,
+CRPOW_MASK_START: 1.2, CRPOW_MASK_SET_TYPE: TIME, CPPOW_CHECK_STREAK: 2,
+CPPHA_MASK_START: 0.8, CFPOW_DROP_AMP: False, CPPHA_MASK_LO_MIN: 50,
+KRPHA_AUTO_SET: False, MEAN_TRACES: ['KLYSTRON_FORWARD_POWER',
+'KLYSTRON_REVERSE_POWER', 'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER',
+'KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE', 'CAVITY_FORWARD_PHASE',
+'CAVITY_REVERSE_PHASE'], DC_SPIKE_DECAY_LEVEL: 1.2, CRPHA_MASK_WINDOW_START:
+2.4, CPPOW_MASK_LO_MIN: 50, CRPOW_DROP_AMP: True, KFPOW_CHECK_STREAK: 2,
+DEFAULT_PULSE_COUNT: 1000, CRPOW_NUM_AVERAGE_TRACES: 2,
+VAC_SPIKE_TRACES_TO_SAVE: ['KLYSTRON_FORWARD_PHASE', 'KLYSTRON_REVERSE_PHASE',
+'KLYSTRON_FORWARD_POWER', 'KLYSTRON_REVERSE_POWER', 'CAVITY_REVERSE_PHASE',
+'CAVITY_FORWARD_PHASE', 'CAVITY_FORWARD_POWER', 'CAVITY_REVERSE_POWER'],
+PID_output_GMON: CLA-GUN-H2O-PID-02:OUTPUT:RB, CRPOW_MASK_LEVEL: 35.0,
+KFPOW_NUM_AVERAGE_TRACES: 2, BINARY_DATA_LOG_TIME: 1000, KRPHA_MASK_SET_TYPE:
+TIME, KFPOW_MASK_WINDOW_START: 3.6, KFPOW_DROP_AMP: True, KRPOW_MASK_WINDOW_END:
+3.4, PID_autotune_state_GMON: CLA-GUN-H2O-PID-02:ATUNE:RB,
+NUM_SET_POINTS_TO_FIT: 4, CFPHA_MASK_START: 0.8, CRPOW_AUTO_SET: False,
+CPPOW_MASK_LEVEL: 35.0, CPPHA_MEAN_START: 0.0, MAX_DELTA_AMP_SP: 300,
+CRPHA_AUTO_SET: False, VAC_PV: CLA-LRG1-VAC-IMG-01:P, KFPOW_MASK_LO_MIN: 50,
+CPPOW_DROP_AMP_VALUE: 2, CAVITY_TEMPERATURE_PV_COUNT: 1, CFPHA_MASK_TYPE:
+ABSOLUTE, VAC_SPIKE_MAX_LEVEL_FOR_OFF: 2e-09, CRPHA_PHASE_MASK_BY_POWER_LEVEL:
+5000.0, EXTRA_BREAKDOWN_DAQ: ['VAC_LEVEL', 'DC_LEVEL', 'BREAKDOWN_RATE',
+'BREAKDOWN_COUNT'], KFPHA_MASK_WINDOW_START: 2.4, KRPHA_MASK_START: 0.8,
+OUTSIDE_MASK_REVERSE_FILENAME: outside_reverse_log, CFPOW_MEAN_END: 3.6,
+NUMBER_OF_PULSES_IN_BREAKDOWN_HISTORY: 100000, CFPHA_PHASE_MASK_BY_POWER_TRACE:
+False, CRPOW_MASK_END: 6.0, RF_REPETITION_RATE_ERROR: 3, CFPHA_MASK_WINDOW_END:
+3.4, VAC_SPIKE_DECAY_TIME: 2000, EXTRA_TRACES_ON_BREAKDOWN: 2,
+DC_SPIKE_DROP_AMP: 6, CFPOW_AUTO_SET: False, KFPHA_MASK_WINDOW_END: 3.4,
+KRPOW_MASK_TYPE: ABSOLUTE, DC_NUM_SAMPLES_TO_AVERAGE: 5, KFPHA_DROP_AMP: False,
+LOG_RAMP_START_POWER: 30000, CPPOW_MASK_WINDOW_END: 3.4,
+CFPHA_PHASE_MASK_BY_POWER_LEVEL: 5000.0,
+
+2020-10-07 11:48:33.408000
+********************************************************************************
+***** src.controllers.main_controller, create rf_conditioning_data object ******
+********************************************************************************
+
+2020-10-07 11:48:33.408000
+Started in debug mode = False
+********************************************************************************
+****************** Print Rationalized kfpow_running_stat_log  ******************
+********************************************************************************
+get_kfpow_running_stat_log complete
+
+2020-10-07 11:48:35.572000
+********************************************************************************
+***** src.controllers.main_controller, create hardware_control_hub object ******
+********************************************************************************
+hardware_control_hub Starting CATAP Hardware Interfaces
+start_llrf_control()  SET AMP_SP = 0, successfully created a CLARA_LRRG LLRF
+control object
+
+2020-10-07 11:48:52.080000
+********************************************************************************
+********** src.controllers.main_controller, create monitor_hub object **********
+********************************************************************************
+src.monitors.monitor_hub Starting Data Monitoring
+src.monitors.monitor_hub start_llrf_monitor()
+
+2020-10-07 11:48:53.177000
+src.controllers.hardware_control_hub connected, PV = CLA-LRG1-VAC-IMG-01:P with
+ID = d0,  acquiring data
+src.monitors.vac_monitor will drop amp on spike detection
+src.monitors.vac_monitor STARTED running
+src.monitors.vac_monitor vac_spike_status = state.UNKNOWN
+src.monitors.vac_monitor vac_spike_status = state.GOOD
+start_vac_monitor successfully started Vacuum Monitoring
+src.monitors.monitor_hub start_daq_frequency_monitor()
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-10-07 11:48:54.248000
+src.controllers.hardware_control_hub connected, PV = CLA-GUN-RF-LRRG-01:RT with
+ID = d1,  acquiring data
+
+2020-10-07 11:48:54.248000
+src.monitors.vac_monitor level ok, 6e-10 < 5e-09
+
+2020-10-07 11:48:54.248000
+Connected to CLA-GUN-RF-LRRG-01:RT id = WATER_TEMP_ID_0
+********************************************************************************
+************************* Connecting to Water Temp PVs *************************
+********************************************************************************
+
+2020-10-07 11:48:55.320000
+src.controllers.hardware_control_hub connected, PV = CLA-GUN-RF-LRRG-02:RT with
+ID = d2,  acquiring data
+
+2020-10-07 11:48:55.320000
+Connected to CLA-GUN-RF-LRRG-02:RT id = WATER_TEMP_ID_1
+
+2020-10-07 11:48:55.320000
+start_water_temperature_monitor successfully started Water Temperature
+Monitoring
+
+2020-10-07 11:48:55.320000
+src.monitors.monitor_hub start_cavity_temperature_monitor()
+********************************************************************************
+************************ Connecting to Cavity Temp PVs *************************
+********************************************************************************
+
+2020-10-07 11:48:56.385000
+src.controllers.hardware_control_hub connected, PV = CLA-GUN-RF-LRRG-01:RT with
+ID = d3,  acquiring data
+
+2020-10-07 11:48:56.407000
+Connected to CLA-GUN-RF-LRRG-01:RT id = CAVITY_TEMP_ID_0
+
+2020-10-07 11:48:56.423000
+start_cavity_temperature_monitor successfully started Cavity Temperature
+Monitoring
+
+2020-10-07 11:48:56.423000
+src.monitors.monitor_hub start_solenoid_monitoring()
+src.monitors.monitor_hub Sanity Check
+is_vac_monitoring = True
+is_llrf_monitoring = True
+is_cavity_temp_monitoring = True
+is_modulator_monitoring = True
+is_rf_heartbeat_monitoring = True
+is_sol_monitoring = True
+is_rf_prot_monitoring = True
+is_outside_mask_monitoring = True
+is_daq_frequency_monitoring = True
+is_water_temp_monitoring = True
+is_vac_valve_monitor = True
+
+2020-10-07 11:48:56.439000
+********************************************************************************
+********** src.data.rf_conditioning_logger start_binary_data_logging  **********
+********************************************************************************
+binary log file added
+llrf_max_amp    p0_all  llrf_output_status      next_sp_decrease
+probe_pha       rev_cav_pha     can_llrf_output_state_OLD
+breakdown_rate_aim      phi_sp  latest_amp_sp_from_ramp num_outside_mask_traces
+next_requested_power_change     modulator_good  p2_current_sp_to_fit
+CAVITY_TEMP_ID_0        p2_current_sp   SP_QUAD_ALL     water_temp_gui
+event_pulse_count_zero  max_sp_increase ramp_mode       rev_kly_pha
+event_pulse_count       delta_kfpow     cav_pwr_ratio_can_ramp
+p1_current_sp_to_fit    vac_level       gui_can_rf_output
+can_rf_output_status_OLD        bd_rate_calc_first_pulse_number cav_pwr_ratio
+number_of_pulses_in_breakdown_history   probe_outside_mask_count
+current_ramp_index      y_min   rev_kly_pwr     fwd_kly_pha
+active_breakdown_count  last_sp_above_100       time_stamp, (start = 2020-10-07
+11:48:56.470000)        TOR_SCAN        rev_cav_pwr
+SP_QUAD_CURRENT_SP_TO_FIT       last_vac_spike_status   llrf_DAQ_rep_rate_status
+x_max   p0_current_sp_to_fit    amp_ff  c       L01-SOL1        L01-SOL2
+y_max   p1_current_sp   x_min   can_ramp_status kfpower_at_last_amp_sp
+vac_level_can_ramp      last_breakdown_status   reverse_outside_mask_count
+TOR_ACQM        p0_current_sp   breakdown_rate_low      WATER_TEMP_ID_1 cav_temp
+fwd_cav_pha     BD_state_OLD    rfprot_good     last_amp_sp     vac_spike_status
+DC_level        amp_sp  global_mask_checking    llrf_heart_beat_value
+gui_can_ramp    can_llrf_output_state   p1_all  log_pulse_count
+llrf_DAQ_rep_rate_aim   catap_max_amp   can_ramp_status_OLD     p2_all
+fwd_kly_pwr     sol_value       log_amp_set     duplicate_pulse_count   m
+pulse_count     fwd_cav_pwr     SP_SLF  WATER_TEMP_ID_0 probe_pwr
+can_rf_output_status    elapsed_time    DC_spike_status pulses_to_next_ramp
+GUI_mod_and_prot_good   breakdown_status        catap_max_amp_can_ramp_status
+main_can_ramp   llrf_DAQ_rep_rate       vac_valve_status        SP_QUAD_CURRENT
+modulator_state rev_power_spike_count   BD_state        last_ramp_method
+required_pulses rfprot_state    total_breakdown_count
+
+16      <type 'float'>  16      <type 'float'>  32      <enum 'state'>  16
+<type 'float'>  16      <type 'float'>  16      <type 'float'>  32      <enum
+'state'>  12      <type 'int'>    12      <type 'int'>    16      <type 'float'>
+12      <type 'int'>    12      <type 'int'>    12      <type 'bool'>   16
+<type 'float'>  16      <type 'float'>  16      <type 'float'>  16      <type
+'float'>  16      <type 'float'>  12      <type 'int'>    16      <type 'float'>
+32      <enum 'ramp_method'>    16      <type 'float'>  12      <type 'int'>
+16      <type 'float'>  12      <type 'bool'>   16      <type 'float'>  16
+<type 'float'>  12      <type 'bool'>   32      <enum 'state'>  12      <type
+'int'>    16      <type 'float'>  12      <type 'int'>    12      <type 'int'>
+12      <type 'int'>    16      <type 'float'>  16      <type 'float'>  16
+<type 'float'>  12      <type 'int'>    16      <type 'float'>  <type 'float'>
+12      <type 'int'>    16      <type 'float'>  16      <type 'float'>  32
+<enum 'state'>  32      <enum 'state'>  16      <type 'float'>  16      <type
+'float'>  12      <type 'int'>    16      <type 'float'>  16      <type 'float'>
+16      <type 'float'>  16      <type 'float'>  16      <type 'float'>  16
+<type 'float'>  32      <enum 'state'>  16      <type 'float'>  12      <type
+'bool'>   32      <enum 'state'>  12      <type 'int'>    12      <type 'int'>
+16      <type 'float'>  12      <type 'bool'>   16      <type 'float'>  16
+<type 'float'>  16      <type 'float'>  32      <enum 'state'>  12      <type
+'bool'>   16      <type 'float'>  32      <enum 'state'>  16      <type 'float'>
+16      <type 'float'>  12      <type 'bool'>   16      <type 'float'>  12
+<type 'bool'>   32      <enum 'state'>  16      <type 'float'>  12      <type
+'int'>    12      <type 'int'>    16      <type 'float'>  32      <enum 'state'>
+16      <type 'float'>  16      <type 'float'>  16      <type 'float'>  12
+<type 'int'>    12      <type 'int'>    16      <type 'float'>  12      <type
+'int'>    16      <type 'float'>  16      <type 'float'>  16      <type 'float'>
+16      <type 'float'>  32      <enum 'state'>  18      <type 'long'>   32
+<enum 'state'>  12      <type 'int'>    12      <type 'bool'>   32      <enum
+'state'>  12      <type 'bool'>   12      <type 'bool'>   16      <type 'float'>
+32      <class 'VELA_CLARA_Vac_Valve_Control.VALVE_STATE'>      16      <type
+'float'>  32      <class 'VELA_CLARA_RF_Modulator_Control.GUN_MOD_STATE'> 12
+<type 'int'>    32      <enum 'state'>  32      <enum 'ramp_method'>    12
+<type 'int'>    32      <class
+'VELA_CLARA_RF_Protection_Control.RF_PROT_STATUS'>       12      <type 'int'>
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4765214
+
+2020-10-07 11:48:56.555000
+********************************************************************************
+src.controllers.main_controller The RF Conditioning is Preparing to Entering
+Main_Loop !
+********************************************************************************
+
+2020-10-07 11:48:56.555000
+reset_daq_freg, llrf_DAQ_rep_rate_status == BAD
+
+2020-10-07 11:48:56.586000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:56.639000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:56.693000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:56.755000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:56.808000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:56.871000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:56.940000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:56.993000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.056000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.109000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.172000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.241000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.294000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.357000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.410000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.473000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.542000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.595000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.658000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.711000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.773000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.842000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.896000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:57.958000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.011000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.074000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.142000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.196000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.258000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.312000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.374000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.443000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.497000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.559000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.612000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.675000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.744000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.797000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.860000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.913000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:58.976000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.045000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.098000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.160000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.214000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.276000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.345000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.399000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.461000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.514000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.577000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.646000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.699000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.762000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.815000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.878000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:48:59.947000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.063000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.116000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.179000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.248000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.301000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.364000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.417000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.480000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.549000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.602000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.665000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.718000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.781000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.850000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.903000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:00.966000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.019000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.082000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.151000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.204000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.267000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.320000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.382000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.452000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.505000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.567000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.621000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.683000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.752000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.806000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.868000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:01.900000
+enable_llrf, isRFOutput = False, attempting enableRFOutput()
+
+2020-10-07 11:49:01.953000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.054000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.153000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.254000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.354000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.454000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.555000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.655000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.755000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.856000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:02.956000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.056000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.156000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.256000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.356000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.456000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.556000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.656000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.756000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.856000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:03.956000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.057000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.157000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.257000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.357000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.458000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.558000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.658000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.758000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.858000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:04.958000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.059000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.159000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.259000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.359000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.459000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.560000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.676000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.760000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.860000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:05.960000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.060000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.160000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.260000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.360000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.460000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.560000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.660000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.760000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.860000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:06.961000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.061000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.161000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.262000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.362000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.462000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.563000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.662000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.763000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.863000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:07.963000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.063000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.163000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.264000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.364000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.464000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.565000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.665000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.765000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.865000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:08.966000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.066000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.166000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.266000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.367000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.467000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.568000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.668000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.769000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.869000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:09.969000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.069000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.170000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.270000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.371000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.471000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.571000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.672000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.772000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.872000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:10.973000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.073000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.174000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.274000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.374000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.474000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.575000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.675000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.776000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.876000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:11.976000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.076000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.176000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.276000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.377000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.477000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.577000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.677000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.777000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.878000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:12.978000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.078000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.179000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.279000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.379000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.480000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.580000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.680000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.780000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.880000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:13.980000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.081000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.181000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.281000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.381000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.481000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.581000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.682000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.782000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.882000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:14.982000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:15.082000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:15.182000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:15.283000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:15.383000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:15.484000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:15.584000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:15.715000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:15.815000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:15.915000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.015000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.116000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.216000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.316000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.416000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.516000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.616000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.717000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.817000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:16.917000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.017000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.117000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.217000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.317000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.418000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.518000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.618000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.718000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.818000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:17.919000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.019000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.119000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.219000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.319000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.420000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.520000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.620000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.720000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.820000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:18.920000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.020000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.120000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.221000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.321000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.421000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.522000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.622000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.722000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.823000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:19.923000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.023000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.123000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.224000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.324000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.424000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.525000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.625000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.725000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.825000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:20.925000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.026000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.126000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.227000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.327000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.427000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.527000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.628000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.728000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.829000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:21.929000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.029000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.129000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.229000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.329000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.430000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.530000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.630000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.731000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.831000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:22.931000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.032000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.132000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.232000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.332000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.433000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.533000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.634000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.734000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.834000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:23.934000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.035000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.135000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.235000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.336000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.436000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.536000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.636000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.737000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.837000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:24.937000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.037000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.137000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.237000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.337000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.437000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.537000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.653000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.738000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.838000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:25.938000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.038000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.138000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.238000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.339000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.439000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.539000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.640000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.740000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.840000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:26.940000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.040000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.140000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.240000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.340000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.441000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.541000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.642000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.742000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.842000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:27.942000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.042000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.142000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.242000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.342000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.443000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.543000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.643000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.744000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.844000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:28.944000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:29.045000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:29.161000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:29.246000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:29.346000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:29.446000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:29.546000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:29.647000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:29.785000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:29.970000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.130000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.223000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.301000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.384000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.465000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.544000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.615000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.700000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.784000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.878000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:30.963000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.063000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.163000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.264000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.364000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.464000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.564000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.664000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.764000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.865000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:31.965000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.065000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.165000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.266000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.366000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.466000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.567000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.667000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.768000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.868000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:32.968000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.068000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.168000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.268000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.368000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.469000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.569000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.669000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.769000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.870000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:33.970000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.070000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.171000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.271000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.371000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.472000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.572000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.673000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.773000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.874000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:34.974000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.074000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.175000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.275000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.375000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.476000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.576000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.692000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.777000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.877000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:35.978000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.078000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.178000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.278000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.379000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.479000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.579000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.679000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.779000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.879000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:36.979000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.079000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.180000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.280000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.380000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.480000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.580000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.680000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.781000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.881000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:37.981000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.081000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.181000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.282000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.382000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.482000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.582000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.683000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.783000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.883000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:38.983000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.084000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.184000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.284000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.384000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.485000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.585000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.686000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.786000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.886000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:39.986000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.087000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.187000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.287000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.378000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.457000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.557000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.658000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.758000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.859000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:40.959000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.059000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.160000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.260000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.361000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.461000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.561000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.662000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.762000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.863000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:41.963000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.064000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.164000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.264000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.364000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.464000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.565000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.665000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.766000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.866000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:42.966000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.066000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.166000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.266000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.366000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.467000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.567000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.667000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.767000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.868000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:43.968000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.068000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.168000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.269000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.369000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.470000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.570000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.670000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.771000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.871000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:44.971000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.071000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.171000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.271000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.371000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.471000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.571000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.672000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.772000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.872000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:45.972000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.072000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.172000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.273000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.373000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.473000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.573000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.673000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.774000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.874000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:46.974000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.074000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.174000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.274000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.374000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.474000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.574000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.675000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.775000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.875000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:47.975000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.075000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.176000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.275000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.375000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.476000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.576000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.676000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.776000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.877000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:48.977000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.077000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.178000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.278000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.378000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.478000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.578000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.679000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.779000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.879000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:49.980000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.080000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.180000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.280000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.381000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.481000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.582000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.682000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.783000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.883000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:50.983000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.083000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.184000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.284000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.384000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.485000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.585000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.686000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.786000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.887000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:51.987000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.088000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.188000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.288000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.389000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.489000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.589000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.690000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.790000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.891000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:52.991000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.091000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.192000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.292000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.392000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.493000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.593000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.693000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.793000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.893000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:53.994000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.094000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.194000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.295000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.395000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.495000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.595000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.695000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.795000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.895000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:54.995000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.095000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.195000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.296000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.396000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.496000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.596000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.696000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.796000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.896000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:55.996000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.096000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.197000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.297000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.397000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.497000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.597000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.697000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.798000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.898000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:56.998000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:57.099000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:57.199000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:57.299000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:57.399000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:57.499000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:57.599000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:57.700000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:57.800000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:57.900000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58.100000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58.200000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58.300000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58.400000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58.501000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58.601000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58.701000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58.802000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:58.902000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.002000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.102000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.203000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.303000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.404000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.504000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.604000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.704000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.805000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:49:59.905000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.006000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.106000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.206000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.306000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.406000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.507000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.607000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.707000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.807000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:00.908000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.008000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.108000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.209000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.309000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.409000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.510000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.610000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.710000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.811000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:01.911000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.011000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.111000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.212000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.312000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.412000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.512000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.613000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.713000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.813000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:02.914000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.014000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.114000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.215000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.315000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.415000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.516000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.616000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.717000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.817000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:03.917000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.018000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.118000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.219000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.319000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.419000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.519000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.619000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.719000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.819000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:04.919000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.019000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.120000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.220000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.320000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.420000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.520000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.620000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.736000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.820000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:05.920000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.020000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.120000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.221000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.321000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.421000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.521000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.621000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.721000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.821000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:06.921000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.022000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.122000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.222000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.323000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.423000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.523000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.623000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.723000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.824000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:07.924000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.024000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.124000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.225000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.325000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.425000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.526000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.626000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.726000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.827000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:08.927000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.027000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.128000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.228000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.329000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.429000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.530000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.630000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.730000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.830000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:09.930000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.031000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.131000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.231000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.332000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.432000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.532000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.633000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.733000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.833000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:10.934000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.034000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.135000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.235000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.335000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.436000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.536000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.636000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.737000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.837000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:11.938000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.038000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.138000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.239000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.339000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.439000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.539000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.640000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.740000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.841000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:12.941000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.041000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.142000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.242000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.342000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.443000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.543000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.643000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.743000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.843000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:13.944000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.044000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.144000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.244000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.344000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.445000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.545000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.645000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.745000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.846000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:14.946000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.046000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.146000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.246000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.347000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.447000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.547000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.663000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.747000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.848000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:15.948000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.048000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.149000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.249000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.349000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.450000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.550000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.650000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.751000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.851000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:16.951000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.051000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.151000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.252000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.352000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.452000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.553000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.653000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.753000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.853000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:17.953000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.054000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.154000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.254000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.354000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.455000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.555000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.656000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.756000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.856000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:18.957000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:19.057000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:19.157000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:19.257000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:19.358000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:19.458000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:19.527000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:19.590000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:19.659000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:19.712000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:19.775000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:19.828000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:19.891000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:19.959000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:20.028000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:20.090000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:20.160000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:20.213000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:20.275000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:20.329000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:20.391000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:20.460000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:20.529000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:20.592000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:20.661000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:20.714000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:20.777000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:20.830000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:20.892000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:20.961000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:21.031000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:21.093000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:21.162000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:21.216000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:21.278000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:21.331000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:21.394000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:21.463000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:21.532000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:21.594000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:21.663000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:21.716000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:21.779000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:21.832000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:21.894000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:21.963000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:22.032000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:22.095000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:22.163000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:22.217000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:22.279000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:22.332000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:22.395000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:22.464000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:22.533000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:22.595000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:22.664000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:22.717000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:22.780000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:22.833000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:22.896000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:22.965000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:23.034000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:23.096000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:23.165000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:23.219000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:23.281000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:23.334000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:23.397000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:23.466000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:23.534000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:23.597000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:23.666000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:23.719000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:23.782000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:23.835000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:23.898000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:23.967000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:24.036000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:24.098000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:24.167000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:24.221000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:24.283000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:24.336000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:24.399000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:24.468000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:24.537000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:24.599000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:24.668000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:24.721000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:24.784000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:24.837000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:24.900000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:24.969000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:25.038000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:25.100000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:25.169000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:25.222000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:25.285000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:25.338000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:25.401000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:25.469000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:25.538000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:25.601000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:25.686000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:25.739000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:25.801000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:25.870000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:25.939000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:26.002000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:26.071000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:26.124000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:26.187000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:26.240000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:26.303000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:26.371000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:26.440000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:26.503000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:26.603000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:26.703000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:26.803000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:26.903000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:26.973000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:27.026000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:27.089000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:27.142000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:27.205000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:27.273000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:27.343000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:27.405000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:27.505000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:27.574000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:27.627000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:27.690000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:27.743000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:27.827000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:27.921000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:28.006000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:28.107000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:28.175000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:28.229000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:28.292000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:28.345000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:28.407000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:28.476000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:28.545000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:28.607000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:28.676000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:28.730000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:28.792000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:28.845000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:28.908000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:28.977000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:29.046000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:29.108000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:29.177000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:29.230000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:29.293000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:29.346000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:29.409000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:29.478000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:29.547000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:29.609000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:29.679000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:29.732000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:29.794000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:29.848000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:29.910000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:29.979000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:30.048000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:30.111000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:30.180000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:30.233000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:30.296000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:30.349000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:30.412000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:30.480000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:30.550000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:30.612000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:30.681000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:30.734000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:30.797000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:30.850000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:30.935000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:31.029000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:31.113000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:31.213000
+reset_daq_freg, time passed > 0.02s
+
+2020-10-07 11:50:38.924000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:38.993000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:39.395000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:39.464000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:39.527000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:39.596000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:39.665000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.265000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.328000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.386000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.429000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.497000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.566000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.628000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.697000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.765000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.828000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.897000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:40.966000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.028000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.097000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.166000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.228000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.298000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.366000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.429000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.498000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.567000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.629000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.698000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.767000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.830000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.899000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:41.967000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.030000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.099000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.168000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.230000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.299000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.368000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.430000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.500000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.569000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.631000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.700000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.769000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.831000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.900000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:42.969000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.032000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.100000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.170000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.232000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.302000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.370000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.433000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.502000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.571000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.633000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.702000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.771000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.834000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.902000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:43.971000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.034000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.103000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.172000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.234000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.303000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.372000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.435000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.504000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.573000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.636000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.704000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.773000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.836000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.905000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:44.973000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.036000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.105000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.174000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.236000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.305000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.374000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.437000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.505000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.574000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.674000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.737000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.806000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.875000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:45.937000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:46.006000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:46.075000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:46.137000
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+
+2020-10-07 11:50:46.175000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 4657325.5616
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 4657325.5616
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 4703898.81722, p_start = 30000, p_finish =
+4657325.5616, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (6774.0) called from log_ramp_up
+enable_llrf, isRFOutput = True
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (9159.0) called from log_ramp_up
+set_amp (10963.0) called from log_ramp_up
+set_amp (12638.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+enable_llrf, isPhaseFFLocked = True
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (14069.0) called from log_ramp_up
+reset_daq_freg forcing set_amp(0)
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask False
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+reset_daq_freg, time passed > 0.02s
+set_global_check_mask setGlobalCheckMask True
+set_amp (15436.0) called from log_ramp_up
+set_amp (16530.0) called from log_ramp_up
+set_amp (17571.0) called from log_ramp_up
+set_amp (18584.0) called from log_ramp_up
+set_amp (19594.0) called from log_ramp_up
+set_amp (20509.0) called from log_ramp_up
+set_amp (21373.0) called from log_ramp_up
+set_amp (22212.0) called from log_ramp_up
+set_amp (23022.0) called from log_ramp_up
+set_amp (23744.0) called from log_ramp_up
+set_amp (24483.0) called from log_ramp_up
+set_amp (25213.0) called from log_ramp_up
+set_amp (25885.0) called from log_ramp_up
+set_amp (26507.0) called from log_ramp_up
+set_amp (27148.0) called from log_ramp_up
+set_amp (27723.0) called from log_ramp_up
+set_amp (28306.0) called from log_ramp_up
+set_amp (28861.0) called from log_ramp_up
+set_amp (29413.0) called from log_ramp_up
+set_amp (29902.0) called from log_ramp_up
+set_amp (30343.0) called from log_ramp_up
+set_amp (30808.0) called from log_ramp_up
+set_amp (31214.0) called from log_ramp_up
+set_amp (31639.0) called from log_ramp_up
+set_amp (32079.0) called from log_ramp_up
+set_amp (32474.0) called from log_ramp_up
+set_amp (32882.0) called from log_ramp_up
+set_amp (33244.0) called from log_ramp_up
+set_amp (33558.0) called from log_ramp_up
+set_amp (33860.0) called from log_ramp_up
+set_amp (34210.0) called from log_ramp_up
+set_amp (34516.0) called from log_ramp_up
+set_amp (34806.0) called from log_ramp_up
+set_amp (35102.0) called from log_ramp_up
+set_amp (35405.0) called from log_ramp_up
+set_amp (35679.0) called from log_ramp_up
+set_amp (35935.0) called from log_ramp_up
+set_amp (36183.0) called from log_ramp_up
+set_amp (36426.0) called from log_ramp_up
+set_amp (36665.0) called from log_ramp_up
+set_amp (36920.0) called from log_ramp_up
+set_amp (37164.0) called from log_ramp_up
+set_amp (37383.0) called from log_ramp_up
+set_amp (37590.0) called from log_ramp_up
+set_amp (37785.0) called from log_ramp_up
+set_amp (37990.0) called from log_ramp_up
+set_amp (38212.0) called from log_ramp_up
+set_amp (38415.0) called from log_ramp_up
+set_amp (38604.0) called from log_ramp_up
+set_amp (38790.0) called from log_ramp_up
+set_amp (38973.0) called from log_ramp_up
+set_amp (39151.0) called from log_ramp_up
+set_amp (39324.0) called from log_ramp_up
+set_amp (39491.0) called from log_ramp_up
+set_amp (39603.0) called from log_ramp_up
+set_amp (39708.0) called from log_ramp_up
+set_amp (39810.0) called from log_ramp_up
+set_amp (39929.0) called from log_ramp_up
+set_amp (40215.0) called from log_ramp_up
+set_amp (40398.0) called from log_ramp_up
+set_amp (40536.0) called from log_ramp_up
+set_amp (40669.0) called from log_ramp_up
+set_amp (40765.0) called from log_ramp_up
+set_amp (40849.0) called from log_ramp_up
+set_amp (40929.0) called from log_ramp_up
+set_amp (41008.0) called from log_ramp_up
+set_amp (41083.0) called from log_ramp_up
+set_amp (41172.0) called from log_ramp_up
+set_amp (41261.0) called from log_ramp_up
+set_amp (41348.0) called from log_ramp_up
+set_amp (41432.0) called from log_ramp_up
+set_amp (41521.0) called from log_ramp_up
+set_amp (41644.0) called from log_ramp_up
+set_amp (41764.0) called from log_ramp_up
+set_amp (41880.0) called from log_ramp_up
+set_amp (41970.0) called from log_ramp_up
+set_amp (42052.0) called from log_ramp_up
+set_amp (42132.0) called from log_ramp_up
+set_amp (42209.0) called from log_ramp_up
+set_amp (42284.0) called from log_ramp_up
+set_amp (42371.0) called from log_ramp_up
+set_amp (42458.0) called from log_ramp_up
+set_amp (42542.0) called from log_ramp_up
+set_amp (42624.0) called from log_ramp_up
+set_amp (42704.0) called from log_ramp_up
+set_amp (42780.0) called from log_ramp_up
+set_amp (42854.0) called from log_ramp_up
+set_amp (42925.0) called from log_ramp_up
+set_amp (42995.0) called from log_ramp_up
+set_amp (43062.0) called from log_ramp_up
+set_amp (43122.0) called from log_ramp_up
+set_amp (43174.0) called from log_ramp_up
+set_amp (43225.0) called from log_ramp_up
+set_amp (43274.0) called from log_ramp_up
+set_amp (43321.0) called from log_ramp_up
+set_amp (43367.0) called from log_ramp_up
+set_amp (43412.0) called from log_ramp_up
+set_amp (43455.0) called from log_ramp_up
+set_amp (43497.0) called from log_ramp_up
+set_amp (43545.0) called from log_ramp_up
+set_amp (43593.0) called from log_ramp_up
+set_amp (43639.0) called from log_ramp_up
+set_amp (43684.0) called from log_ramp_up
+set_amp (43728.0) called from log_ramp_up
+set_amp (43770.0) called from log_ramp_up
+set_amp (43811.0) called from log_ramp_up
+set_amp (43851.0) called from log_ramp_up
+set_amp (43889.0) called from log_ramp_up
+set_amp (43921.0) called from log_ramp_up
+set_amp (43949.0) called from log_ramp_up
+set_amp (43977.0) called from log_ramp_up
+set_amp (44003.0) called from log_ramp_up
+set_amp (44029.0) called from log_ramp_up
+set_amp (44054.0) called from log_ramp_up
+set_amp (44079.0) called from log_ramp_up
+set_amp (44102.0) called from log_ramp_up
+set_amp (44125.0) called from log_ramp_up
+set_amp (44147.0) called from log_ramp_up
+set_amp (44169.0) called from log_ramp_up
+set_amp (44190.0) called from log_ramp_up
+set_amp (44210.0) called from log_ramp_up
+set_amp (44230.0) called from log_ramp_up
+set_amp (44249.0) called from log_ramp_up
+set_amp (44267.0) called from log_ramp_up
+set_amp (44285.0) called from log_ramp_up
+set_amp (44304.0) called from log_ramp_up
+set_amp (44327.0) called from log_ramp_up
+set_amp (44349.0) called from log_ramp_up
+set_amp (44370.0) called from log_ramp_up
+set_amp (44391.0) called from log_ramp_up
+set_amp (44411.0) called from log_ramp_up
+set_amp (44431.0) called from log_ramp_up
+set_amp (44450.0) called from log_ramp_up
+set_amp (44468.0) called from log_ramp_up
+set_amp (44486.0) called from log_ramp_up
+set_amp (44503.0) called from log_ramp_up
+set_amp (44520.0) called from log_ramp_up
+set_amp (44536.0) called from log_ramp_up
+set_amp (44552.0) called from log_ramp_up
+set_amp (44567.0) called from log_ramp_up
+set_amp (44582.0) called from log_ramp_up
+set_amp (44596.0) called from log_ramp_up
+set_amp (44610.0) called from log_ramp_up
+set_amp (44624.0) called from log_ramp_up
+set_amp (44637.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4767468
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (44860.0) called from ramp_up
+set_amp is updating last_amp_sp set to  44637.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4768468
+ramp_up FINISHED, we went from 44637.0 to 44860.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (45106.0) called from ramp_up
+set_amp is updating last_amp_sp set to  44860.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4769468
+ramp_up FINISHED, we went from 44860.0 to 45106.0
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, getTrigSource() != TRIG.EXTERNAL, attempting trigExt()
+enable_llrf, isTrigExternal = True
+
+2020-10-07 11:59:30.505000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 342, at pulse count =
+4770127
+Python OME Message: LRRG_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+18422.7, 24954.2 > 24870.7 at i = 340 us = 3.15158. Trace time-stamp = Wed Oct
+07 2020 11:59:30.280264662
+
+2020-10-07 11:59:30.661000
+********************************************************************************
+src.monitors.vac_monitor NEW vacuum spike, #1: either 1.4e-08 > 1e-08 +
+2.53e-09.or 1.4e-08 > 2e-09.
+********************************************************************************
+
+2020-10-07 11:59:31.531000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-07-11-48-32\src.monitors.vac_monito
+r_1
+
+2020-10-07 11:59:31.562000
+src.monitors.vac_monitor level hi, 1.4e-08 > 5e-09
+
+2020-10-07 11:59:31.564000
+src.monitors.outside_mask_trace_monitor adding 1 events
+
+2020-10-07 11:59:31.572000
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-07-11-48-32\LRRG_CAVITY_REVERSE_POW
+ER_1
+
+2020-10-07 11:59:31.765000
+src.monitors.vac_monitor level ok, 2e-09 < 5e-09
+
+2020-10-07 11:59:34.426000
+src.monitors.outside_mask_trace_monitor, cool down ended
+
+2020-10-07 11:59:34.626000
+src.monitors.vac_monitor has_cooled_down
+
+2020-10-07 11:59:34.626000
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 4735793.93387
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 4735793.93387
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 4783151.87321, p_start = 30000, p_finish =
+4735793.93387, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (6836.0) called from log_ramp_up
+set_amp (9226.0) called from log_ramp_up
+set_amp (11048.0) called from log_ramp_up
+set_amp (12753.0) called from log_ramp_up
+set_amp (14179.0) called from log_ramp_up
+set_amp (15572.0) called from log_ramp_up
+set_amp (16676.0) called from log_ramp_up
+set_amp (17766.0) called from log_ramp_up
+set_amp (18747.0) called from log_ramp_up
+set_amp (19772.0) called from log_ramp_up
+set_amp (20734.0) called from log_ramp_up
+set_amp (21575.0) called from log_ramp_up
+set_amp (22432.0) called from log_ramp_up
+set_amp (23236.0) called from log_ramp_up
+set_amp (23993.0) called from log_ramp_up
+set_amp (24741.0) called from log_ramp_up
+set_amp (25507.0) called from log_ramp_up
+set_amp (26128.0) called from log_ramp_up
+set_amp (26802.0) called from log_ramp_up
+set_amp (27421.0) called from log_ramp_up
+set_amp (28015.0) called from log_ramp_up
+set_amp (28597.0) called from log_ramp_up
+set_amp (29189.0) called from log_ramp_up
+set_amp (29714.0) called from log_ramp_up
+set_amp (30184.0) called from log_ramp_up
+set_amp (30674.0) called from log_ramp_up
+set_amp (31102.0) called from log_ramp_up
+set_amp (31521.0) called from log_ramp_up
+set_amp (32004.0) called from log_ramp_up
+set_amp (32410.0) called from log_ramp_up
+set_amp (32838.0) called from log_ramp_up
+set_amp (33224.0) called from log_ramp_up
+set_amp (33553.0) called from log_ramp_up
+set_amp (33870.0) called from log_ramp_up
+set_amp (34239.0) called from log_ramp_up
+set_amp (34555.0) called from log_ramp_up
+set_amp (34863.0) called from log_ramp_up
+set_amp (35178.0) called from log_ramp_up
+set_amp (35496.0) called from log_ramp_up
+set_amp (35773.0) called from log_ramp_up
+set_amp (36042.0) called from log_ramp_up
+set_amp (36302.0) called from log_ramp_up
+set_amp (36559.0) called from log_ramp_up
+set_amp (36823.0) called from log_ramp_up
+set_amp (37095.0) called from log_ramp_up
+set_amp (37332.0) called from log_ramp_up
+set_amp (37558.0) called from log_ramp_up
+set_amp (37769.0) called from log_ramp_up
+set_amp (37989.0) called from log_ramp_up
+set_amp (38229.0) called from log_ramp_up
+set_amp (38446.0) called from log_ramp_up
+set_amp (38651.0) called from log_ramp_up
+set_amp (38854.0) called from log_ramp_up
+set_amp (39052.0) called from log_ramp_up
+set_amp (39244.0) called from log_ramp_up
+set_amp (39431.0) called from log_ramp_up
+set_amp (39575.0) called from log_ramp_up
+set_amp (39693.0) called from log_ramp_up
+set_amp (39807.0) called from log_ramp_up
+set_amp (39952.0) called from log_ramp_up
+set_amp (40270.0) called from log_ramp_up
+set_amp (40443.0) called from log_ramp_up
+set_amp (40596.0) called from log_ramp_up
+set_amp (40730.0) called from log_ramp_up
+set_amp (40826.0) called from log_ramp_up
+set_amp (40918.0) called from log_ramp_up
+set_amp (41008.0) called from log_ramp_up
+set_amp (41096.0) called from log_ramp_up
+set_amp (41201.0) called from log_ramp_up
+set_amp (41304.0) called from log_ramp_up
+set_amp (41403.0) called from log_ramp_up
+set_amp (41500.0) called from log_ramp_up
+set_amp (41646.0) called from log_ramp_up
+set_amp (41788.0) called from log_ramp_up
+set_amp (41919.0) called from log_ramp_up
+set_amp (42020.0) called from log_ramp_up
+set_amp (42118.0) called from log_ramp_up
+set_amp (42212.0) called from log_ramp_up
+set_amp (42305.0) called from log_ramp_up
+set_amp (42415.0) called from log_ramp_up
+set_amp (42522.0) called from log_ramp_up
+set_amp (42625.0) called from log_ramp_up
+set_amp (42725.0) called from log_ramp_up
+set_amp (42821.0) called from log_ramp_up
+set_amp (42914.0) called from log_ramp_up
+set_amp (43004.0) called from log_ramp_up
+set_amp (43092.0) called from log_ramp_up
+set_amp (43163.0) called from log_ramp_up
+set_amp (43230.0) called from log_ramp_up
+set_amp (43296.0) called from log_ramp_up
+set_amp (43360.0) called from log_ramp_up
+set_amp (43421.0) called from log_ramp_up
+set_amp (43481.0) called from log_ramp_up
+set_amp (43547.0) called from log_ramp_up
+set_amp (43615.0) called from log_ramp_up
+set_amp (43681.0) called from log_ramp_up
+set_amp (43745.0) called from log_ramp_up
+set_amp (43807.0) called from log_ramp_up
+set_amp (43867.0) called from log_ramp_up
+set_amp (43920.0) called from log_ramp_up
+set_amp (43965.0) called from log_ramp_up
+set_amp (44008.0) called from log_ramp_up
+set_amp (44049.0) called from log_ramp_up
+set_amp (44090.0) called from log_ramp_up
+set_amp (44129.0) called from log_ramp_up
+set_amp (44167.0) called from log_ramp_up
+set_amp (44204.0) called from log_ramp_up
+set_amp (44240.0) called from log_ramp_up
+set_amp (44275.0) called from log_ramp_up
+set_amp (44310.0) called from log_ramp_up
+set_amp (44348.0) called from log_ramp_up
+set_amp (44386.0) called from log_ramp_up
+set_amp (44422.0) called from log_ramp_up
+set_amp (44457.0) called from log_ramp_up
+set_amp (44490.0) called from log_ramp_up
+set_amp (44523.0) called from log_ramp_up
+set_amp (44555.0) called from log_ramp_up
+set_amp (44586.0) called from log_ramp_up
+set_amp (44616.0) called from log_ramp_up
+set_amp (44645.0) called from log_ramp_up
+set_amp (44673.0) called from log_ramp_up
+set_amp (44701.0) called from log_ramp_up
+set_amp (44733.0) called from log_ramp_up
+set_amp (44764.0) called from log_ramp_up
+set_amp (44795.0) called from log_ramp_up
+set_amp (44824.0) called from log_ramp_up
+set_amp (44853.0) called from log_ramp_up
+set_amp (44880.0) called from log_ramp_up
+set_amp (44907.0) called from log_ramp_up
+set_amp (44933.0) called from log_ramp_up
+set_amp (44959.0) called from log_ramp_up
+set_amp (44983.0) called from log_ramp_up
+set_amp (45007.0) called from log_ramp_up
+set_amp (45030.0) called from log_ramp_up
+set_amp (45052.0) called from log_ramp_up
+set_amp (45074.0) called from log_ramp_up
+set_amp (45095.0) called from log_ramp_up
+set_amp (45111.0) called from log_ramp_up
+set_amp (45127.0) called from log_ramp_up
+set_amp (45141.0) called from log_ramp_up
+set_amp (45155.0) called from log_ramp_up
+set_amp (45169.0) called from log_ramp_up
+set_amp (45182.0) called from log_ramp_up
+set_amp (45195.0) called from log_ramp_up
+set_amp (45208.0) called from log_ramp_up
+set_amp (45220.0) called from log_ramp_up
+set_amp (45232.0) called from log_ramp_up
+set_amp (45243.0) called from log_ramp_up
+set_amp (45254.0) called from log_ramp_up
+set_amp (45265.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4772386
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+enable_llrf, isInterlockActive = True, attempting setInterlockNonActive()
+enable_llrf, isRFOutput = False, attempting enableRFOutput()
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()
+set_global_check_mask setGlobalCheckMask False
+enable_llrf, isPhaseFFLocked = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isPhaseFFLocked = False, attempting lockPhaseFF()
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 4735793.93387
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 4735793.93387
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 4783151.87321, p_start = 30000, p_finish =
+4735793.93387, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+enable_llrf, isInterlockActive = False
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+set_global_check_mask setGlobalCheckMask False
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isRFOutput = True
+enable_llrf, isAmpFFLocked = False, attempting lockAmpFF()
+enable_llrf, isPhaseFFLocked = True
+enable_llrf, isRFOutput = True
+set_global_check_mask setGlobalCheckMask True
+set_amp (6836.0) called from log_ramp_up
+set_amp (9226.0) called from log_ramp_up
+set_amp (11048.0) called from log_ramp_up
+set_amp (12753.0) called from log_ramp_up
+set_amp (14179.0) called from log_ramp_up
+set_amp (15572.0) called from log_ramp_up
+set_amp (16676.0) called from log_ramp_up
+set_amp (17766.0) called from log_ramp_up
+set_amp (18747.0) called from log_ramp_up
+set_amp (19772.0) called from log_ramp_up
+set_amp (20734.0) called from log_ramp_up
+set_amp (21575.0) called from log_ramp_up
+set_amp (22432.0) called from log_ramp_up
+set_amp (23236.0) called from log_ramp_up
+set_amp (23993.0) called from log_ramp_up
+set_amp (24741.0) called from log_ramp_up
+set_amp (25507.0) called from log_ramp_up
+set_amp (26128.0) called from log_ramp_up
+set_amp (26802.0) called from log_ramp_up
+set_amp (27421.0) called from log_ramp_up
+set_amp (28015.0) called from log_ramp_up
+set_amp (28597.0) called from log_ramp_up
+set_amp (29189.0) called from log_ramp_up
+set_amp (29714.0) called from log_ramp_up
+set_amp (30184.0) called from log_ramp_up
+set_amp (30674.0) called from log_ramp_up
+set_amp (31102.0) called from log_ramp_up
+set_amp (31521.0) called from log_ramp_up
+set_amp (32004.0) called from log_ramp_up
+set_amp (32410.0) called from log_ramp_up
+set_amp (32838.0) called from log_ramp_up
+set_amp (33224.0) called from log_ramp_up
+set_amp (33553.0) called from log_ramp_up
+set_amp (33870.0) called from log_ramp_up
+set_amp (34239.0) called from log_ramp_up
+set_amp (34555.0) called from log_ramp_up
+set_amp (34863.0) called from log_ramp_up
+set_amp (35178.0) called from log_ramp_up
+set_amp (35496.0) called from log_ramp_up
+set_amp (35773.0) called from log_ramp_up
+set_amp (36042.0) called from log_ramp_up
+set_amp (36302.0) called from log_ramp_up
+set_amp (36559.0) called from log_ramp_up
+set_amp (36823.0) called from log_ramp_up
+set_amp (37095.0) called from log_ramp_up
+set_amp (37332.0) called from log_ramp_up
+set_amp (37558.0) called from log_ramp_up
+set_amp (37769.0) called from log_ramp_up
+set_amp (37989.0) called from log_ramp_up
+set_amp (38229.0) called from log_ramp_up
+set_amp (38446.0) called from log_ramp_up
+set_amp (38651.0) called from log_ramp_up
+set_amp (38854.0) called from log_ramp_up
+set_amp (39052.0) called from log_ramp_up
+set_amp (39244.0) called from log_ramp_up
+set_amp (39431.0) called from log_ramp_up
+set_amp (39575.0) called from log_ramp_up
+set_amp (39693.0) called from log_ramp_up
+set_amp (39807.0) called from log_ramp_up
+set_amp (39952.0) called from log_ramp_up
+set_amp (40270.0) called from log_ramp_up
+set_amp (40443.0) called from log_ramp_up
+set_amp (40596.0) called from log_ramp_up
+set_amp (40730.0) called from log_ramp_up
+set_amp (40826.0) called from log_ramp_up
+set_amp (40918.0) called from log_ramp_up
+set_amp (41008.0) called from log_ramp_up
+set_amp (41096.0) called from log_ramp_up
+set_amp (41201.0) called from log_ramp_up
+set_amp (41304.0) called from log_ramp_up
+set_amp (41403.0) called from log_ramp_up
+set_amp (41500.0) called from log_ramp_up
+set_amp (41646.0) called from log_ramp_up
+set_amp (41788.0) called from log_ramp_up
+set_amp (41919.0) called from log_ramp_up
+set_amp (42020.0) called from log_ramp_up
+set_amp (42118.0) called from log_ramp_up
+set_amp (42212.0) called from log_ramp_up
+set_amp (42305.0) called from log_ramp_up
+set_amp (42415.0) called from log_ramp_up
+set_amp (42522.0) called from log_ramp_up
+set_amp (42625.0) called from log_ramp_up
+set_amp (42725.0) called from log_ramp_up
+set_amp (42821.0) called from log_ramp_up
+set_amp (42914.0) called from log_ramp_up
+set_amp (43004.0) called from log_ramp_up
+set_amp (43092.0) called from log_ramp_up
+set_amp (43163.0) called from log_ramp_up
+set_amp (43230.0) called from log_ramp_up
+set_amp (43296.0) called from log_ramp_up
+set_amp (43360.0) called from log_ramp_up
+set_amp (43421.0) called from log_ramp_up
+set_amp (43481.0) called from log_ramp_up
+set_amp (43547.0) called from log_ramp_up
+set_amp (43615.0) called from log_ramp_up
+set_amp (43681.0) called from log_ramp_up
+set_amp (43745.0) called from log_ramp_up
+set_amp (43807.0) called from log_ramp_up
+set_amp (43867.0) called from log_ramp_up
+set_amp (43920.0) called from log_ramp_up
+set_amp (43965.0) called from log_ramp_up
+set_amp (44008.0) called from log_ramp_up
+set_amp (44049.0) called from log_ramp_up
+set_amp (44090.0) called from log_ramp_up
+set_amp (44129.0) called from log_ramp_up
+set_amp (44167.0) called from log_ramp_up
+set_amp (44204.0) called from log_ramp_up
+set_amp (44240.0) called from log_ramp_up
+set_amp (44275.0) called from log_ramp_up
+set_amp (44310.0) called from log_ramp_up
+set_amp (44348.0) called from log_ramp_up
+set_amp (44386.0) called from log_ramp_up
+set_amp (44422.0) called from log_ramp_up
+set_amp (44457.0) called from log_ramp_up
+set_amp (44490.0) called from log_ramp_up
+set_amp (44523.0) called from log_ramp_up
+set_amp (44555.0) called from log_ramp_up
+set_amp (44586.0) called from log_ramp_up
+set_amp (44616.0) called from log_ramp_up
+set_amp (44645.0) called from log_ramp_up
+set_amp (44673.0) called from log_ramp_up
+set_amp (44701.0) called from log_ramp_up
+set_amp (44733.0) called from log_ramp_up
+set_amp (44764.0) called from log_ramp_up
+set_amp (44795.0) called from log_ramp_up
+set_amp (44824.0) called from log_ramp_up
+set_amp (44853.0) called from log_ramp_up
+set_amp (44880.0) called from log_ramp_up
+set_amp (44907.0) called from log_ramp_up
+set_amp (44933.0) called from log_ramp_up
+set_amp (44959.0) called from log_ramp_up
+set_amp (44983.0) called from log_ramp_up
+set_amp (45007.0) called from log_ramp_up
+set_amp (45030.0) called from log_ramp_up
+set_amp (45052.0) called from log_ramp_up
+set_amp (45074.0) called from log_ramp_up
+set_amp (45095.0) called from log_ramp_up
+set_amp (45111.0) called from log_ramp_up
+set_amp (45127.0) called from log_ramp_up
+set_amp (45141.0) called from log_ramp_up
+set_amp (45155.0) called from log_ramp_up
+set_amp (45169.0) called from log_ramp_up
+set_amp (45182.0) called from log_ramp_up
+set_amp (45195.0) called from log_ramp_up
+set_amp (45208.0) called from log_ramp_up
+set_amp (45220.0) called from log_ramp_up
+set_amp (45232.0) called from log_ramp_up
+set_amp (45243.0) called from log_ramp_up
+set_amp (45254.0) called from log_ramp_up
+set_amp (45265.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4774647
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (45516.0) called from ramp_up
+set_amp is updating last_amp_sp set to  45265.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4775647
+ramp_up FINISHED, we went from 45265.0 to 45516.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (45706.0) called from ramp_up
+set_amp is updating last_amp_sp set to  45516.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4776647
+ramp_up FINISHED, we went from 45516.0 to 45706.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (45877.0) called from ramp_up
+set_amp is updating last_amp_sp set to  45706.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4777647
+ramp_up FINISHED, we went from 45706.0 to 45877.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (46007.0) called from ramp_up
+set_amp is updating last_amp_sp set to  45877.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4778647
+ramp_up FINISHED, we went from 45877.0 to 46007.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (46117.0) called from ramp_up
+set_amp is updating last_amp_sp set to  46007.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4779647
+ramp_up FINISHED, we went from 46007.0 to 46117.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (46284.0) called from ramp_up
+set_amp is updating last_amp_sp set to  46117.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4780647
+ramp_up FINISHED, we went from 46117.0 to 46284.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (46450.0) called from ramp_up
+set_amp is updating last_amp_sp set to  46284.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4781647
+ramp_up FINISHED, we went from 46284.0 to 46450.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (46620.0) called from ramp_up
+set_amp is updating last_amp_sp set to  46450.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4782647
+ramp_up FINISHED, we went from 46450.0 to 46620.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (46834.0) called from ramp_up
+set_amp is updating last_amp_sp set to  46620.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4783647
+ramp_up FINISHED, we went from 46620.0 to 46834.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (47074.0) called from ramp_up
+set_amp is updating last_amp_sp set to  46834.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4784647
+ramp_up FINISHED, we went from 46834.0 to 47074.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (47318.0) called from ramp_up
+set_amp is updating last_amp_sp set to  47074.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4785647
+ramp_up FINISHED, we went from 47074.0 to 47318.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (47561.0) called from ramp_up
+set_amp is updating last_amp_sp set to  47318.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4786647
+ramp_up FINISHED, we went from 47318.0 to 47561.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (47808.0) called from ramp_up
+set_amp is updating last_amp_sp set to  47561.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4787647
+ramp_up FINISHED, we went from 47561.0 to 47808.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (48098.0) called from ramp_up
+set_amp is updating last_amp_sp set to  47808.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4788647
+ramp_up FINISHED, we went from 47808.0 to 48098.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48148
+set_amp (48148) called from ramp_up
+set_amp is updating last_amp_sp set to  48098.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4789647
+ramp_up FINISHED, we went from 48098.0 to 48148
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48198
+set_amp (48198) called from ramp_up
+set_amp is updating last_amp_sp set to  48148.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4790647
+ramp_up FINISHED, we went from 48148.0 to 48198
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48248
+set_amp (48248) called from ramp_up
+set_amp is updating last_amp_sp set to  48198.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4791647
+ramp_up FINISHED, we went from 48198.0 to 48248
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48298
+set_amp (48298) called from ramp_up
+set_amp is updating last_amp_sp set to  48248.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4792647
+ramp_up FINISHED, we went from 48248.0 to 48298
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+
+DEFAULT__DELTA_GTRTHN_MAX deafault = 48348
+set_amp (48348) called from ramp_up
+set_amp is updating last_amp_sp set to  48298.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4793647
+ramp_up FINISHED, we went from 48298.0 to 48348
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (48645.0) called from ramp_up
+set_amp is updating last_amp_sp set to  48348.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4794647
+ramp_up FINISHED, we went from 48348.0 to 48645.0
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isTrigExternal = True
+
+2020-10-07 12:46:58.471000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 343, at pulse count =
+4794996
+Python OME Message: LRRG_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+35411.6, 50024.6 > 47805.7 at i = 295 us = 2.74637. Trace time-stamp = Wed Oct
+07 2020 12:46:58.334944799
+src.monitors.outside_mask_trace_monitor adding 1 events
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-07-11-48-32\LRRG_CAVITY_REVERSE_POW
+ER_2
+src.monitors.outside_mask_trace_monitor, cool down ended
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 5197131.5879
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 5197131.5879
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 5249102.90378, p_start = 30000, p_finish =
+5197131.5879, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
+set_amp (7157.0) called from log_ramp_up
+set_amp (9630.0) called from log_ramp_up
+set_amp (11645.0) called from log_ramp_up
+set_amp (13403.0) called from log_ramp_up
+set_amp (14922.0) called from log_ramp_up
+set_amp (16286.0) called from log_ramp_up
+set_amp (17481.0) called from log_ramp_up
+set_amp (18653.0) called from log_ramp_up
+set_amp (19803.0) called from log_ramp_up
+set_amp (20879.0) called from log_ramp_up
+set_amp (21843.0) called from log_ramp_up
+set_amp (22805.0) called from log_ramp_up
+set_amp (23681.0) called from log_ramp_up
+set_amp (24564.0) called from log_ramp_up
+set_amp (25450.0) called from log_ramp_up
+set_amp (26185.0) called from log_ramp_up
+set_amp (26975.0) called from log_ramp_up
+set_amp (27686.0) called from log_ramp_up
+set_amp (28394.0) called from log_ramp_up
+set_amp (29095.0) called from log_ramp_up
+set_amp (29730.0) called from log_ramp_up
+set_amp (30292.0) called from log_ramp_up
+set_amp (30873.0) called from log_ramp_up
+set_amp (31387.0) called from log_ramp_up
+set_amp (31971.0) called from log_ramp_up
+set_amp (32480.0) called from log_ramp_up
+set_amp (33010.0) called from log_ramp_up
+set_amp (33448.0) called from log_ramp_up
+set_amp (33854.0) called from log_ramp_up
+set_amp (34321.0) called from log_ramp_up
+set_amp (34713.0) called from log_ramp_up
+set_amp (35124.0) called from log_ramp_up
+set_amp (35540.0) called from log_ramp_up
+set_amp (35906.0) called from log_ramp_up
+set_amp (36259.0) called from log_ramp_up
+set_amp (36610.0) called from log_ramp_up
+set_amp (36980.0) called from log_ramp_up
+set_amp (37325.0) called from log_ramp_up
+set_amp (37640.0) called from log_ramp_up
+set_amp (37943.0) called from log_ramp_up
+set_amp (38290.0) called from log_ramp_up
+set_amp (38597.0) called from log_ramp_up
+set_amp (38898.0) called from log_ramp_up
+set_amp (39194.0) called from log_ramp_up
+set_amp (39482.0) called from log_ramp_up
+set_amp (39674.0) called from log_ramp_up
+set_amp (39855.0) called from log_ramp_up
+set_amp (40289.0) called from log_ramp_up
+set_amp (40554.0) called from log_ramp_up
+set_amp (40769.0) called from log_ramp_up
+set_amp (40931.0) called from log_ramp_up
+set_amp (41088.0) called from log_ramp_up
+set_amp (41275.0) called from log_ramp_up
+set_amp (41460.0) called from log_ramp_up
+set_amp (41717.0) called from log_ramp_up
+set_amp (41966.0) called from log_ramp_up
+set_amp (42164.0) called from log_ramp_up
+set_amp (42369.0) called from log_ramp_up
+set_amp (42599.0) called from log_ramp_up
+set_amp (42821.0) called from log_ramp_up
+set_amp (43034.0) called from log_ramp_up
+set_amp (43216.0) called from log_ramp_up
+set_amp (43381.0) called from log_ramp_up
+set_amp (43550.0) called from log_ramp_up
+set_amp (43738.0) called from log_ramp_up
+set_amp (43915.0) called from log_ramp_up
+set_amp (44054.0) called from log_ramp_up
+set_amp (44189.0) called from log_ramp_up
+set_amp (44322.0) called from log_ramp_up
+set_amp (44471.0) called from log_ramp_up
+set_amp (44614.0) called from log_ramp_up
+set_amp (44755.0) called from log_ramp_up
+set_amp (44893.0) called from log_ramp_up
+set_amp (45027.0) called from log_ramp_up
+set_amp (45155.0) called from log_ramp_up
+set_amp (45279.0) called from log_ramp_up
+set_amp (45399.0) called from log_ramp_up
+set_amp (45516.0) called from log_ramp_up
+set_amp (45632.0) called from log_ramp_up
+set_amp (45745.0) called from log_ramp_up
+set_amp (45854.0) called from log_ramp_up
+set_amp (45958.0) called from log_ramp_up
+set_amp (46058.0) called from log_ramp_up
+set_amp (46154.0) called from log_ramp_up
+set_amp (46248.0) called from log_ramp_up
+set_amp (46337.0) called from log_ramp_up
+set_amp (46421.0) called from log_ramp_up
+set_amp (46503.0) called from log_ramp_up
+set_amp (46583.0) called from log_ramp_up
+set_amp (46660.0) called from log_ramp_up
+set_amp (46741.0) called from log_ramp_up
+set_amp (46828.0) called from log_ramp_up
+set_amp (46911.0) called from log_ramp_up
+set_amp (46992.0) called from log_ramp_up
+set_amp (47071.0) called from log_ramp_up
+set_amp (47138.0) called from log_ramp_up
+set_amp (47199.0) called from log_ramp_up
+set_amp (47257.0) called from log_ramp_up
+set_amp (47314.0) called from log_ramp_up
+set_amp (47369.0) called from log_ramp_up
+set_amp (47423.0) called from log_ramp_up
+set_amp (47475.0) called from log_ramp_up
+set_amp (47520.0) called from log_ramp_up
+set_amp (47559.0) called from log_ramp_up
+set_amp (47597.0) called from log_ramp_up
+set_amp (47634.0) called from log_ramp_up
+set_amp (47670.0) called from log_ramp_up
+set_amp (47705.0) called from log_ramp_up
+set_amp (47739.0) called from log_ramp_up
+set_amp (47772.0) called from log_ramp_up
+set_amp (47803.0) called from log_ramp_up
+set_amp (47834.0) called from log_ramp_up
+set_amp (47864.0) called from log_ramp_up
+set_amp (47893.0) called from log_ramp_up
+set_amp (47928.0) called from log_ramp_up
+set_amp (47965.0) called from log_ramp_up
+set_amp (48000.0) called from log_ramp_up
+set_amp (48035.0) called from log_ramp_up
+set_amp (48068.0) called from log_ramp_up
+set_amp (48101.0) called from log_ramp_up
+set_amp (48132.0) called from log_ramp_up
+set_amp (48163.0) called from log_ramp_up
+set_amp (48192.0) called from log_ramp_up
+set_amp (48221.0) called from log_ramp_up
+set_amp (48249.0) called from log_ramp_up
+set_amp (48275.0) called from log_ramp_up
+set_amp (48302.0) called from log_ramp_up
+set_amp (48334.0) called from log_ramp_up
+set_amp (48364.0) called from log_ramp_up
+set_amp (48394.0) called from log_ramp_up
+set_amp (48423.0) called from log_ramp_up
+set_amp (48451.0) called from log_ramp_up
+set_amp (48478.0) called from log_ramp_up
+set_amp (48504.0) called from log_ramp_up
+set_amp (48529.0) called from log_ramp_up
+set_amp (48554.0) called from log_ramp_up
+set_amp (48578.0) called from log_ramp_up
+set_amp (48601.0) called from log_ramp_up
+set_amp (48624.0) called from log_ramp_up
+set_amp (48645.0) called from log_ramp_up
+set_amp (48666.0) called from log_ramp_up
+set_amp (48687.0) called from log_ramp_up
+set_amp (48705.0) called from log_ramp_up
+set_amp (48720.0) called from log_ramp_up
+set_amp (48734.0) called from log_ramp_up
+set_amp (48748.0) called from log_ramp_up
+set_amp (48761.0) called from log_ramp_up
+set_amp (48774.0) called from log_ramp_up
+set_amp (48787.0) called from log_ramp_up
+set_amp (48799.0) called from log_ramp_up
+Log Ramp finished, calling clear_log_ramp_curve()
+clear_log_ramp_curve called from log_ramp_up
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4797265
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (48911.0) called from ramp_up
+set_amp is updating last_amp_sp set to  48799.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4798265
+ramp_up FINISHED, we went from 48799.0 to 48911.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (48961.0) called from ramp_up
+set_amp is updating last_amp_sp set to  48911.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4799271
+ramp_up FINISHED, we went from 48911.0 to 48961.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (48979.0) called from ramp_up
+set_amp is updating last_amp_sp set to  48961.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4800272
+ramp_up FINISHED, we went from 48961.0 to 48979.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (49000.0) called from ramp_up
+set_amp is updating last_amp_sp set to  48979.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4801272
+ramp_up FINISHED, we went from 48979.0 to 49000.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (49032.0) called from ramp_up
+set_amp is updating last_amp_sp set to  49000.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4802272
+ramp_up FINISHED, we went from 49000.0 to 49032.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (49041.0) called from ramp_up
+set_amp is updating last_amp_sp set to  49032.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4803272
+ramp_up FINISHED, we went from 49032.0 to 49041.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (49048.0) called from ramp_up
+set_amp is updating last_amp_sp set to  49041.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4804272
+ramp_up FINISHED, we went from 49041.0 to 49048.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (49054.0) called from ramp_up
+set_amp is updating last_amp_sp set to  49048.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4805272
+ramp_up FINISHED, we went from 49048.0 to 49054.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 49104
+set_amp (49104) called from ramp_up
+set_amp is updating last_amp_sp set to  49054.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4806272
+ramp_up FINISHED, we went from 49054.0 to 49104
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 49154
+set_amp (49154) called from ramp_up
+set_amp is updating last_amp_sp set to  49104.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4807272
+ramp_up FINISHED, we went from 49104.0 to 49154
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 49204
+set_amp (49204) called from ramp_up
+set_amp is updating last_amp_sp set to  49154.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4808272
+ramp_up FINISHED, we went from 49154.0 to 49204
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 49254
+set_amp (49254) called from ramp_up
+set_amp is updating last_amp_sp set to  49204.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4809272
+ramp_up FINISHED, we went from 49204.0 to 49254
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+Predicted sp is less than current_sp! returning current_sp + 49304
+set_amp (49304) called from ramp_up
+set_amp is updating last_amp_sp set to  49254.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4810272
+ramp_up FINISHED, we went from 49254.0 to 49304
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (49367.0) called from ramp_up
+set_amp is updating last_amp_sp set to  49304.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4811272
+ramp_up FINISHED, we went from 49304.0 to 49367.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (49431.0) called from ramp_up
+set_amp is updating last_amp_sp set to  49367.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4812272
+ramp_up FINISHED, we went from 49367.0 to 49431.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (49501.0) called from ramp_up
+set_amp is updating last_amp_sp set to  49431.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4813272
+ramp_up FINISHED, we went from 49431.0 to 49501.0
+********************************************************************************
+**********************************  Ramp Up  ***********************************
+********************************************************************************
+********************************************************************************
+**************** src.data.rf_conditioning_data set_ramp_values  ****************
+********************************************************************************
+current ramp index = 287 next required pulses = 1000 next power increase = 10000
+set_amp (49579.0) called from ramp_up
+set_amp is updating last_amp_sp set to  49501.0
+src.data.rf_conditioning_data reset_event_pulse_count, new
+event_pulse_count_zero = 4814272
+ramp_up FINISHED, we went from 49501.0 to 49579.0
+enable_llrf, isTrigExternal = False, attempting trigExt()
+enable_llrf, isTrigExternal = True
+
+2020-10-07 13:20:42.914000
+********************************************************************************
+** src.monitors.outside_mask_trace_monitor Collecting Outside Mask Event Data **
+********************************************************************************
+event_pulse_count_zero = 0
+src.data.rf_conditioning_data increasing breakdown count = 344, at pulse count =
+4815211
+Python OME Message: LRRG_CAVITY_REVERSE_POWER HI MASK FAIL: current average =
+35971.5, 49790.5 > 48561.5 at i = 295 us = 2.74637. Trace time-stamp = Wed Oct
+07 2020 13:20:42.634388585
+src.monitors.outside_mask_trace_monitor adding 1 events
+src.data.rf_conditioning_logger pickle_dumped  C:\Users\dlerlp\Documents\GitHub\
+Software\Apps\RF_Conditioner\v2\logs\2020-10-07-11-48-32\LRRG_CAVITY_REVERSE_POW
+ER_3
+src.monitors.outside_mask_trace_monitor, cool down ended
+set_global_check_mask setGlobalCheckMask True
+!!Log Ramp curve is NONE, generating a new one
+power_finish = 5312994.94105
+breakdown_rate_low = True
+Breakdown rate LO, log_ramp power_finish = 5312994.94105
+Log Ramp curve is NONE, generating a new one
+Log Ramp curve_p_finish = 5366124.89046, p_start = 30000, p_finish =
+5312994.94105, ramp_rate = 0.2
+set_amp (2759.0) called from log_ramp_up
