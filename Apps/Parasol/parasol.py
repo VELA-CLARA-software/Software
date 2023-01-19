@@ -1,13 +1,17 @@
 #!python2
 # -*- coding: utf-8 -*-
 
-import sys
-from PyQt4 import QtCore, QtGui
-from rf_sol_tracking import RFSolTracker
-import rf_sol_gui
-import pyqtgraph as pg
-import numpy as np
 import os
+import sys
+
+import numpy as np
+import pyqtgraph
+import pyqtgraph as pg
+from PyQt5 import QtCore, QtWidgets
+
+import rf_sol_gui
+from rf_sol_tracking import RFSolTracker
+
 sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
 try:
     import VELA_CLARA_Magnet_Control as MagCtrl
@@ -43,6 +47,7 @@ image_credits = {
 bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
 # Ui_MainWindow, QtBaseClass = uic.loadUiType(bundle_dir + "/resources/parasol/rf_sol_gui.ui")
 
+
 def noFeedback(method):
     """Wrapper to prevent feedback loops - don't keep cycling through (e.g.) current <-> field calculations."""
     def feedbackless(*args, **kw):
@@ -51,14 +56,14 @@ def noFeedback(method):
     return feedbackless
 
 
-class ParasolApp(QtGui.QMainWindow): #, Ui_MainWindow):
+class ParasolApp(QtWidgets.QMainWindow): #, Ui_MainWindow):
     def __init__(self):
-        QtGui.QMainWindow.__init__(self)
+        QtWidgets.QMainWindow.__init__(self)
         self.machine_mode = 'Offline'
         #TODO: get initial parameters from INI file, and save them as we go
         self.gun = RFSolTracker('Gun-10', quiet=True)
         self.ui = rf_sol_gui.Ui_RF_Solenoid_Tracker()
-        self.MainWindow = QtGui.QMainWindow()
+        self.MainWindow = QtWidgets.QMainWindow()
         self.ui.setupUi(self.MainWindow)
         self.MainWindow.show()
 
@@ -124,6 +129,12 @@ class ParasolApp(QtGui.QMainWindow): #, Ui_MainWindow):
         for plot in (self.ui.E_field_plot, self.ui.B_field_plot, self.ui.momentum_plot,
                      self.ui.larmor_angle_plot, self.ui.E_field_plot, self.ui.xy_plot, self.ui.xdash_ydash_plot):
             plot.showGrid(True, True)
+        self.xy_plots = [pyqtgraph.PlotCurveItem(clear=True, pen=pen, name=name)
+                         for name, pen in [('x', 'w'), ('y', 'g'), ("x'", 'w'), ("y'", 'g')]]
+        self.ui.xy_plot.addItem(self.xy_plots[0])
+        self.ui.xy_plot.addItem(self.xy_plots[1])
+        self.ui.xdash_ydash_plot.addItem(self.xy_plots[2])
+        self.ui.xdash_ydash_plot.addItem(self.xy_plots[3])
 
         self.ui.gun_dropdown.activated.connect(self.gunChanged)
         if MagCtrl is None:
@@ -326,16 +337,15 @@ class ParasolApp(QtGui.QMainWindow): #, Ui_MainWindow):
                 x_range = x_edges[-1] - x_edges[0]
                 y_range = y_edges[-1] - y_edges[0]
                 plot.setImage(histogram, pos=(x_edges[0], y_edges[0]), scale=(x_range / bins, y_range / bins))
-            label_text = "<b>Final beam size</b> ({n:.3g} particles): x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad"
-            self.ui.uend_label.setText(label_text.format(*np.std(x1[:, :, 0], 0) * 1e3, n=n))
+            cov = np.cov(x1[:, 0, 0].flatten(), x1[:, 2, 0].flatten())
+            label_text = u"<b>Final beam size</b> ({n:.3g} particles): x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad, covariance {cov:.3g} mm²"
+            self.ui.uend_label.setText(label_text.format(*np.std(x1[:, :, 0], 0) * 1e3, n=n, cov=cov[0,1]))
         else:
             uend = self.gun.trackBeam(1e-3 * np.matrix(spin_values, dtype='float').T)
-            self.ui.xy_plot.plotItem.legend.items = []
-            self.ui.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 0], pen='w', name='x', clear=True)
-            self.ui.xy_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 2], pen='g', name='y')
-            self.ui.xdash_ydash_plot.plotItem.legend.items = []
-            self.ui.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 1], pen='w', name="x'", clear=True)
-            self.ui.xdash_ydash_plot.plot(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 3], pen='g', name="y'")
+            self.xy_plots[0].setData(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 0])
+            self.xy_plots[1].setData(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 2])
+            self.xy_plots[2].setData(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 1])
+            self.xy_plots[3].setData(self.gun.getZRange(), 1e3 * self.gun.u_array[:, 3])
             self.ui.uend_label.setText("<b>Final particle position</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad".format(*uend.flat))
 
     def machineModeChanged(self, index=None):
@@ -352,7 +362,7 @@ class ParasolApp(QtGui.QMainWindow): #, Ui_MainWindow):
         # self.settings.setValue('machine_mode', mode)
 
 if __name__ == "__main__":
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     window = ParasolApp()
     # window.show()
     sys.exit(app.exec_())

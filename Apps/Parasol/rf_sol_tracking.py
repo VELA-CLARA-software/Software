@@ -10,18 +10,19 @@ Calculates the transfer matrix.
 See Gulliford and Bazarov (2012): http://journals.aps.org/prab/abstract/10.1103/PhysRevSTAB.15.024002#fulltext
 """
 
-import sys, os
+import os
+import sys
 from collections import namedtuple
 from fractions import Fraction
 from functools import wraps, reduce  # for class method decorators
 
-from calcMomentum import calcmomentum # Fortran code to do the momentum calculation
 import numpy as np
 import scipy.constants
 # import scipy.linalg
 import scipy.optimize
 
 import solenoid_field_map as sol_field_map
+from calcMomentum import calcmomentum  # Fortran code to do the momentum calculation
 
 # import clipboard  # for temporary debugging, can copy matrices into Excel
 

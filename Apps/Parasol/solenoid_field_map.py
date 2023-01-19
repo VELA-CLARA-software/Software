@@ -49,7 +49,7 @@ class Solenoid:
             # This should be resolved at some point... TODO
             if name == 'Gun-10':
                 bc_area, bc_turns, sol_area = (856.0, 720.0, 8281.0)
-                self.bc_range = (0.0, 5.0)
+                self.bc_range = (-6.0, 6.0)
                 self.bc_current = 5.0  # reasonable default value
             else:
                 bc_area, bc_turns, sol_area = (2744.82, 54.0, 7225.0)
