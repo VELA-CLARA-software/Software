@@ -23,23 +23,6 @@ os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 # pg.setConfigOption('background', 0.2)
 pg.setConfigOption('foreground', 'w')
 
-image_credits = {
-    'parasol.png': 'https://www.shareicon.net/parasol-sun-umbrella-travel-tools-and-utensils-summer-sunshade-summertime-794079',
-    'Offline.png': 'http://www.iconarchive.com/show/windows-8-icons-by-icons8/Network-Disconnected-icon.html',
-    'Virtual.png': 'https://thenounproject.com/search/?q=simulator&i=237636',
-    'Physical.png': 'http://www.flaticon.com/free-icon/car-compact_31126#term=car&page=1&position=19',
-    'mountain-summit.png': 'http://www.flaticon.com/free-icon/mountain-summit_27798#term=peak&page=1&position=6',
-    'padlock-closed.png': 'https://www.iconfinder.com/icons/49855/closed_padlock_icon#size=32',
-    'padlock-open.png': 'https://www.iconfinder.com/icons/49856/open_padlock_unlocked_unsecure_icon#size=32',
-    'play-button.png': 'http://www.flaticon.com/free-icon/play-button_149657#term=play&page=1&position=11',
-    'pause-symbol.png': 'http://www.flaticon.com/free-icon/pause-symbol_25696#term=pause&page=1&position=7',
-    'submachine-gun.png': 'https://www.flaticon.com/free-icon/submachine-gun_1233',
-    'pistol.png': 'https://www.flaticon.com/free-icon/pistol_116553',
-    'bike.png': 'https://www.flaticon.com/free-icon/man-cycling_60693',
-    'car.png': 'https://www.flaticon.com/free-icon/volkswagen-car-side-view_66906',
-    'jet.png': 'https://www.flaticon.com/free-icon/fighter-jet-silhouette_25431',
-    'rocket.png': 'https://www.flaticon.com/free-icon/small-rocket-ship-silhouette_25452',
-}
 
 # figure out where the script is (or EXE file if we've been bundled)
 bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
