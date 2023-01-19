@@ -254,9 +254,9 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
         if self.machine_mode != 'Offline':
             self.controller.setSI('BSOL', self.bc_spin.value())
             self.controller.setSI('SOL', self.sol_spin.value())
-        self.cathode_field_spin.setValue(sol.getMagneticField(0))
-        self.sol_field_spin.setValue(sol.getPeakMagneticField())
-        self.B_field_plot.plot(sol.getZMap(), sol.getMagneticFieldMap(), pen='r', clear=True)
+        self.cathode_field_spin.setValue(sol.get_magnetic_field(0))
+        self.sol_field_spin.setValue(sol.get_peak_magnetic_field())
+        self.B_field_plot.plot(sol.get_z_map(), sol.get_magnetic_field_map(), pen='r', clear=True)
         self.larmor_angle_plot.plot(self.gun.getZRange(), self.gun.getLarmorAngleMap(), pen='r', clear=True)
         self.larmor_angle_spin.setValue(self.gun.getFinalLarmorAngle())
         self.ustartChanged()
@@ -264,12 +264,12 @@ class ParasolApp(QtGui.QMainWindow, Ui_MainWindow):
     @noFeedback
     def cathodeFieldChanged(self, value=None):
         """The cathode field has been modified - find the bucking coil current that gives this field."""
-        self.bc_spin.setValue(self.gun.solenoid.setCathodeField(value))
+        self.bc_spin.setValue(self.gun.solenoid.set_cathode_field(value))
 
     @noFeedback
     def solPeakFieldChanged(self, value=None):
         """The solenoid peak field has been modified - find the solenoid current that gives this field."""
-        self.sol_spin.setValue(self.gun.solenoid.setPeakMagneticField(value))
+        self.sol_spin.setValue(self.gun.solenoid.set_peak_magnetic_field(value))
 
     @noFeedback
     def momentumChanged(self, value=None):

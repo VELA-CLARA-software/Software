@@ -1,13 +1,14 @@
-#!python2
+#!python3
 # -*- coding: utf-8 -*-
 """Solenoid Field Map
 Ben Shepherd, April 2017
 Given a named solenoid and current, provides a field map.
 Combined solenoid and bucking coil maps are handled too."""
 
-import sys, os
-import numpy as np
+import os
+import sys
 from collections import namedtuple
+import numpy as np
 import scipy.interpolate
 
 # Solenoids that we know about.
@@ -20,18 +21,17 @@ field_map_attr.__new__.__defaults__ = (1, 1, 1, 1)
 # figure out where the script is (or EXE file if we've been bundled)
 bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
 
+
 def interpolate(x, y):
     """Return an interpolation object with some default parameters."""
     if scipy.version.full_version >= '0.17.0':
-        interp = scipy.interpolate.interp1d(x, y, fill_value='extrapolate', bounds_error=False)
-    else:
-        # numpy <0.17.0 doesn't allow extrapolation - so use the values at the start and end
-        x = np.insert(x, 0, -1e99)
-        y = np.insert(y, 0, y[0])
-        x = np.append(x, 1e99)
-        y = np.append(y, y[-1])
-        interp = scipy.interpolate.interp1d(x, y, bounds_error=False)
-    return interp
+        return scipy.interpolate.interp1d(x, y, fill_value='extrapolate', bounds_error=False)
+    # numpy <0.17.0 doesn't allow extrapolation - so use the values at the start and end
+    x = np.insert(x, 0, -1e99)
+    y = np.insert(y, 0, y[0])
+    x = np.append(x, 1e99)
+    y = np.append(y, y[-1])
+    return scipy.interpolate.interp1d(x, y, bounds_error=False)
 
 
 class Solenoid:
@@ -40,7 +40,7 @@ class Solenoid:
     def __init__(self, name, quiet=True):
         """Initialise the class, setting parameters relevant to the named setup."""
         self.quiet = quiet
-        if not name in SOLENOID_LIST:
+        if name not in SOLENOID_LIST:
             raise NotImplementedError('Unknown solenoid "{name}". Valid names are {SOLENOID_LIST}.'.format(**locals()))
         self.name = name
         self.calc_done = False
@@ -61,7 +61,7 @@ class Solenoid:
             # and n <= 3
             # See BJAS' spreadsheet: coeffs-vs-z.xlsx
             # This takes care of interaction between the BC and solenoid
-            field_map_coeffs = np.loadtxt(str(bundle_dir + '/resources/parasol/' + name + '-coeffs-vs-z.csv'), delimiter=',')
+            field_map_coeffs = np.loadtxt(f'{bundle_dir}/resources/parasol/{name}-coeffs-vs-z.csv', delimiter=',')
             self.b_field = field_map_attr(coeffs=field_map_coeffs, z_map=np.arange(0, 401, dtype='float64') * 1e-3,
                                           bc_area=bc_area, bc_turns=bc_turns, sol_area=sol_area, sol_turns=144.0)
             self.z_map = self.b_field.z_map
@@ -75,13 +75,13 @@ class Solenoid:
 
             # Measured solenoid field
             path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\mag - magnets (WP2)\SwissFEL Linac Solenoids' + '\\'
-            x, y, z, Bz = np.loadtxt(path + 'wfs08_YZ.lis', skiprows=17, unpack=True)
+            x, y, z, Bz = np.loadtxt(f'{path}wfs08_YZ.lis', skiprows=17, unpack=True)
             self.bc_current = 199.93  # defined in file
             on_axis = y == 0
             z_list_08 = z[on_axis] / 100  # convert cm -> m
             B_list_08 = Bz[on_axis] * 1e-4 / self.bc_current  # convert G -> T and normalise to current
 
-            x, y, z, Bz = np.loadtxt(path + 'wfs09_YZ.lis', skiprows=17, unpack=True)
+            x, y, z, Bz = np.loadtxt(f'{path}wfs09_YZ.lis', skiprows=17, unpack=True)
             self.sol_current = 199.93  # defined in file
             on_axis = y == 0
             z_list_09 = z[on_axis] / 100  # convert cm -> m
@@ -99,11 +99,12 @@ class Solenoid:
             # print(z_minmax)
             z_map = np.arange(*z_minmax, step=dz)
             B_map = np.zeros((n_sols, len(z_map)))
-            # Here, we reverse the order of B_list since the solenoids are installed with the -Z end (in the measured coordinate system)
-            # at the +Z end (in the machine coordinate system). Source: private email from Vjeran Vrankovic to BJAS 12/7/17:
-            # "you can see on the picture the orientation of the magnets while being measured. The front face with the reference holes is at -Z"
-            # The picture is on the first page of the measurement report "WFS Magnetic Measurements.pdf" in the data files folder
-            # We can see that the connections are on the right-hand side - installed on CLARA they are on the left.
+            # Here, we reverse the order of B_list since the solenoids are installed with the -Z end (in the measured
+            # coordinate system) at the +Z end (in the machine coordinate system). Source: private email from Vjeran
+            # Vrankovic to BJAS 12/7/17: "you can see on the picture the orientation of the magnets while being
+            # measured. The front face with the reference holes is at -Z" The picture is on the first page of the
+            # measurement report "WFS Magnetic Measurements.pdf" in the data files folder We can see that the
+            # connections are on the right-hand side - installed on CLARA they are on the left.
             sol_interp = [scipy.interpolate.interp1d(z_list, B_list[::-1], fill_value=0, bounds_error=False) for
                           z_list, B_list in [[z_list_08, B_list_08], [z_list_09, B_list_09]]]
             for i in range(n_sols):
@@ -116,31 +117,32 @@ class Solenoid:
             self.sol_range = self.bc_range = (-200.0, 200.0)
             self.z_map = z_map
 
-        elif name[:3] == 'gb-':
+        elif name.startswith('gb-'):
             self.bc_current = None
             self.sol_current = 300.0  # just a made-up number
 
             # Define this in a simpler way - then we can just multiply by sol_current to get B-field value
-            z_list, B_list = np.loadtxt(bundle_dir + '/resources/parasol/gb-field-maps/{}_b-field.csv'.format(name), delimiter=',').T
+            filename = f'{bundle_dir}/resources/parasol/gb-field-maps/{name}_b-field.csv'
+            z_list, B_list = np.loadtxt(filename, delimiter=',').T
             self.b_field = np.array([z_list, B_list / self.sol_current])
             self.bc_range = None
             self.sol_range = (0.0, 500.0)
 
-        self.bmax_index = np.argmax(self.getMagneticFieldMap())  # assume this won't change with sol/BC currents
+        self.bmax_index = np.argmax(self.get_magnetic_field_map())  # assume this won't change with sol/BC currents
 
-    def setBuckingCoilCurrent(self, current):
+    def set_bucking_coil_current(self, current):
         """Reset the bucking coil current to a new value."""
         if current != self.bc_current:
             self.bc_current = float(current)
             self.calc_done = False
 
-    def setSolenoidCurrent(self, current):
+    def set_solenoid_current(self, current):
         """Reset the solenoid current to a new value."""
         if current != self.sol_current:
             self.sol_current = float(current)
             self.calc_done = False
 
-    def calcMagneticFieldMap(self):
+    def calc_magnetic_field_map(self):
         """Calculate the magnetic field map for given solenoid and BC currents."""
         if isinstance(self.b_field, tuple):
             # Coefficients describing how the B-field depends on the sol/BC currents
@@ -159,29 +161,29 @@ class Solenoid:
         self.B_interp = interpolate(self.z_map, self.B_map)
         self.calc_done = True
 
-    def getZMap(self):
+    def get_z_map(self):
         """Return the longitudinal (z) coordinates used in the field map."""
         return self.z_map
 
-    def getMagneticFieldMap(self):
+    def get_magnetic_field_map(self):
         """Return the magnetic field map produced by the solenoid and bucking coil."""
         if not self.calc_done:
-            self.calcMagneticFieldMap()
+            self.calc_magnetic_field_map()
         return self.B_map
 
-    def getMagneticField(self, z):
+    def get_magnetic_field(self, z):
         """Return the magnetic field at a given z coordinate."""
         if not self.calc_done:
-            self.calcMagneticFieldMap()
+            self.calc_magnetic_field_map()
         return float(self.B_interp(z))
 
-    def getPeakMagneticField(self):
+    def get_peak_magnetic_field(self):
         """Return the peak solenoid field in T."""
         if not self.calc_done:
-            self.calcMagneticFieldMap()
+            self.calc_magnetic_field_map()
         return float(self.B_map[self.bmax_index])
 
-    def optimiseParam(self, opt_func, operation, x_name, x_units, target=None, target_units=None, tol=1e-6):
+    def optimise_param(self, opt_func, operation, x_name, x_units, target=None, target_units=None, tol=1e-6):
         """General function for optimising a parameter by varying another."""
         # operation should be of form "Set peak field" etc.
         x_init = getattr(self, x_name)
@@ -194,22 +196,24 @@ class Solenoid:
             print('Optimised with {x_name} setting of {0:.3f} {x_units}'.format(float(xopt), **locals()))
         return float(xopt)
 
-    def bcCurrentToCathodeField(self, bci):
-        self.setBuckingCoilCurrent(bci)
-        return self.getMagneticField(0.0)
+    def bc_current_to_cathode_field(self, bci):
+        self.set_bucking_coil_current(bci)
+        return self.get_magnetic_field(0.0)
 
-    def setCathodeField(self, field=0.0):
+    def set_cathode_field(self, field=0.0):
         """Set the cathode field to a given level by changing the bucking coil 
         current, and return the value of this current."""
-        delta_B_sq = lambda bci: (self.bcCurrentToCathodeField(bci) - field) ** 2
-        return self.optimiseParam(delta_B_sq, 'Set field at cathode', 'bc_current', 'A', field, 'T')
+        def delta_b_sq(bci):
+            return (self.bc_current_to_cathode_field(bci) - field) ** 2
+        return self.optimise_param(delta_b_sq, 'Set field at cathode', 'bc_current', 'A', field, 'T')
 
-    def solCurrentToPeakField(self, sol_current):
-        self.setSolenoidCurrent(sol_current)
-        return self.getPeakMagneticField()
+    def sol_current_to_peak_field(self, sol_current):
+        self.set_solenoid_current(sol_current)
+        return self.get_peak_magnetic_field()
 
-    def setPeakMagneticField(self, field):
+    def set_peak_magnetic_field(self, field):
         """Set the peak magnetic field to a given level (in T) by changing the 
         solenoid current, and return the value of this current."""
-        delta_B_sq = lambda soli: (self.solCurrentToPeakField(soli) - field) ** 2
-        return self.optimiseParam(delta_B_sq, 'Set solenoid peak field', 'sol_current', 'A', field, 'T')
+        def delta_b_sq(soli):
+            return (self.sol_current_to_peak_field(soli) - field) ** 2
+        return self.optimise_param(delta_b_sq, 'Set solenoid peak field', 'sol_current', 'A', field, 'T')
