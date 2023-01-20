@@ -7,7 +7,7 @@ import numpy as np
 import pyqtgraph
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtWidgets
-import rf_sol_gui
+from rf_sol_gui import ParasolUI
 from rf_sol_tracking import RFSolTracker
 
 sys.path.insert(0, r'\\apclara1\ControlRoomApps\Controllers\bin\Release')
@@ -41,9 +41,11 @@ def no_feedback(method):
     return feedbackless
 
 
-class ParasolApp(QtWidgets.QMainWindow):  # , Ui_MainWindow):
-    def __init__(self):
-        QtWidgets.QMainWindow.__init__(self)
+class ParasolApp(QtWidgets.QMainWindow):
+    resized = QtCore.pyqtSignal()
+
+    def __init__(self, parent=None):
+        super(ParasolApp, self).__init__(parent=parent)
         self.controller = None
         self.sol_ref = None
         self.bc_ref = None
@@ -51,30 +53,28 @@ class ParasolApp(QtWidgets.QMainWindow):  # , Ui_MainWindow):
         self.machine_mode = 'Offline'
         # TODO: get initial parameters from INI file, and save them as we go
         self.gun = RFSolTracker('Gun-10', quiet=True)
-        self.ui = rf_sol_gui.Ui_RF_Solenoid_Tracker()
         self.MainWindow = QtWidgets.QMainWindow()
-        self.ui.setupUi(self.MainWindow)
+        self.ui = ParasolUI(self.MainWindow)
+        self.resized.connect(self.resize_window)
         self.MainWindow.show()
 
-        # QtGui.QMainWindow.__init__(self)
-        # Ui_MainWindow.__init__(self)
-        # self.setupUi(self)
         self.ui.peak_field_spin.setValue(self.gun.rf_peak_field)
         self.ui.phase_spin.setValue(self.gun.phase)
         self.ui.bc_spin.setValue(self.gun.solenoid.bc_current)
         self.ui.sol_spin.setValue(self.gun.solenoid.sol_current)
         self.crest_phase = float('nan')
         self.phase_lock = self.ui.lock_button.isChecked()
-        self.ui.E_field_plot.setLabels(title='Electric field', left='E [MV/m]', bottom='z [m]')
-        self.ui.B_field_plot.setLabels(title='Magnetic field', left='B [T]', bottom='z [m]')
+        z_label = 'z [m]'
+        self.ui.E_field_plot.setLabels(title='Electric field', left='E [MV/m]', bottom=z_label)
+        self.ui.B_field_plot.setLabels(title='Magnetic field', left='B [T]', bottom=z_label)
         # self.proxy = pg.SignalProxy(self.B_field_plot.scene().sigMouseMoved, rateLimit=60, slot=self.mouseMoved)
 
-        self.ui.momentum_plot.setLabels(title='Momentum', left='p [MeV/c]', bottom='z [m]')
-        self.ui.larmor_angle_plot.setLabels(title='Larmor angle', left='&theta;<sub>L</sub> [&deg;]', bottom='z [m]')
-        self.ui.E_field_plot.setLabels(title='E field', left='E [MV/m]', bottom='z [m]')
-        self.ui.xy_plot.setLabels(title='Particle position', left='x, y [mm]', bottom='z [m]')
+        self.ui.momentum_plot.setLabels(title='Momentum', left='p [MeV/c]', bottom=z_label)
+        self.ui.larmor_angle_plot.setLabels(title='Larmor angle', left='&theta;<sub>L</sub> [&deg;]', bottom=z_label)
+        self.ui.E_field_plot.setLabels(title='E field', left='E [MV/m]', bottom=z_label)
+        self.ui.xy_plot.setLabels(title='Particle position', left='x, y [mm]', bottom=z_label)
         self.ui.xy_plot.addLegend()
-        self.ui.xdash_ydash_plot.setLabels(title='Particle angle', left="x', y' [mrad]", bottom='z [m]')
+        self.ui.xdash_ydash_plot.setLabels(title='Particle angle', left="x', y' [mrad]", bottom=z_label)
         self.ui.xdash_ydash_plot.addLegend()
 
         self.ui.peak_field_spin.valueChanged.connect(self.rf_peak_field_changed)
@@ -141,8 +141,13 @@ class ParasolApp(QtWidgets.QMainWindow):  # , Ui_MainWindow):
         #     "<span style='font-size: 14pt; color: white'> x = %0.2f, <span style='color: white'> y = %0.2f</span>" % (
         #     mousePoint.x(), mousePoint.y()))
 
-    def resizeEvent(self, resize_event):
+    def resizeEvent(self, event):
+        self.resized.emit()
+        return super(ParasolApp, self).resizeEvent(event)
+
+    def resize_window(self):
         # Remove plots one row at a time as the window shrinks
+        # TODO: this doesn't currently work
         height = self.ui.geometry().height()
         show_beam = self.ui.tracking_dropdown.currentIndex() == 1
         self.ui.xy_plot.setVisible(height >= 512 and not show_beam)
