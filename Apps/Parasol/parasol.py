@@ -23,6 +23,9 @@ os.environ["EPICS_CA_MAX_ARRAY_BYTES"] = "10000000"
 # pg.setConfigOption('background', 0.2)
 pg.setConfigOption('foreground', 'w')
 
+# Fix for plots not looking correct on multi-monitor systems with differing DPIs
+# https://github.com/pyqtgraph/pyqtgraph/issues/756#issuecomment-643325887
+QtWidgets.QApplication.setAttribute(QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
 
 # figure out where the script is (or EXE file if we've been bundled)
 bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
@@ -372,6 +375,9 @@ class ParasolApp(QtWidgets.QMainWindow):
             x_range = x_edges[-1] - x_edges[0]
             y_range = y_edges[-1] - y_edges[0]
             plot.setImage(histogram, pos=(x_edges[0], y_edges[0]), scale=(x_range / bins, y_range / bins))
+            plot.ui.histogram.hide()
+            plot.ui.roiBtn.hide()
+            plot.ui.menuBtn.hide()
         cov = np.cov(x1[:, 0, 0].flatten(), x1[:, 2, 0].flatten())
         label_text = u"<b>Final beam size</b> ({n:.3g} particles): x {0:.3g} mm, x' {1:.3g} mrad; " \
                      u"y {2:.3g} mm, y' {3:.3g} mrad, covariance {cov:.3g} mm²"
