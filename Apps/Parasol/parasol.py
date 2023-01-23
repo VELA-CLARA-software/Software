@@ -90,7 +90,7 @@ class ParasolApp(QtWidgets.QMainWindow):
         self.ui.momentum_spin.valueChanged.connect(self.momentum_changed)
         self.ui.larmor_angle_spin.valueChanged.connect(self.larmor_angle_changed)
         self.ui.phase_slider.valueChanged.connect(self.phase_slider_changed)
-        for spin in (self.ui.x_spin, self.ui.xdash_spin, self.ui.y_spin, self.ui.ydash_spin):
+        for spin in (self.ui.x_spin, self.ui.xdash_spin, self.ui.y_spin, self.ui.ydash_spin, self.ui.thickness_spin):
             spin.valueChanged.connect(self.ustart_changed)
         self.ui.tracking_dropdown.activated.connect(self.tracking_dropdown_changed)
 
@@ -308,22 +308,34 @@ class ParasolApp(QtWidgets.QMainWindow):
 
     def tracking_dropdown_changed(self, index=None):
         """The tracking type dropdown has changed. Rerun the tracking."""
-        show_beam = index == 1
+        show_beam = index > 0
         self.ui.xy_plot.setVisible(not show_beam)
         self.ui.xdash_ydash_plot.setVisible(not show_beam)
         self.ui.initial_beam_plot.setVisible(show_beam)
         self.ui.final_beam_plot.setVisible(show_beam)
-        self.ui.ustart_label.setText('Beam size (sigma)' if show_beam else 'Initial particle position')
+        self.ui.ustart_label.setText(['Initial particle position', 'Beam size (sigma)', 'Ellipse parameters'][index])
+        pos_description = ["position of the particle", 'beam size', 'radius of a ring-shaped beam distribution'][index]
+        self.ui.x_spin.setToolTip(f"Initial horizontal {pos_description}")
+        self.ui.y_spin.setToolTip(f"Initial vertical {pos_description}")
+        angle_description = ('angular beam size' if show_beam else 'angle of the particle')
+        self.ui.xdash_spin.setToolTip(f"Initial horizontal {angle_description}")
+        self.ui.ydash_spin.setToolTip(f"Initial vertical {angle_description}")
+        ring = index == 2
+        self.ui.x_label.setText('r&x' if ring else '&x')
+        self.ui.y_label.setText('r&y' if ring else '&y')
+        self.ui.thickness_label.setVisible(ring)
+        self.ui.thickness_spin.setVisible(ring)
         self.ustart_changed()
 
     def ustart_changed(self, value=None):
         """The particle start position has been modified - track the particle/beam through the fields."""
         spin_values = [spin.value() for spin in
                        (self.ui.x_spin, self.ui.xdash_spin, self.ui.y_spin, self.ui.ydash_spin)]
-        if self.ui.tracking_dropdown.currentIndex() == 1:
-            self.plot_beam(spin_values)
-        else:
+        tracking_type = self.ui.tracking_dropdown.currentIndex()
+        if tracking_type == 0:
             self.plot_particle(spin_values)
+        else:
+            self.plot_beam(spin_values, tracking_type)
 
     def plot_particle(self, spin_values):
         uend = self.gun.track_beam(1e-3 * np.matrix(spin_values, dtype='float').T)
@@ -334,10 +346,21 @@ class ParasolApp(QtWidgets.QMainWindow):
         label_template = "<b>Final particle position</b> x {0:.3g} mm, x' {1:.3g} mrad; y {2:.3g} mm, y' {3:.3g} mrad"
         self.ui.uend_label.setText(label_template.format(*uend.flat))
 
-    def plot_beam(self, spin_values):
+    def plot_beam(self, spin_values, tracking_type):
         matrix = self.gun.get_overall_matrix()
         n = 30000
-        x0 = np.matrix([np.random.normal(0, sigma * 1e-3, n) for sigma in spin_values])
+        if tracking_type == 1:  # beam
+            x0 = np.matrix([np.random.normal(0, sigma * 1e-3, n) for sigma in spin_values])
+        else:  # ring
+            alpha = np.linspace(0, 2 * np.pi, n)
+            thickness = self.ui.thickness_spin.value()
+            delta_r = np.random.normal(0, thickness, n)
+            x = (spin_values[0] + delta_r) * 1e-3 * np.cos(alpha)
+            x_dash = np.random.normal(0, spin_values[1] * 1e-3, n)
+            y = (spin_values[2] + delta_r) * 1e-3 * np.sin(alpha)
+            y_dash = np.random.normal(0, spin_values[3] * 1e-3, n)
+            x0 = np.matrix([x, x_dash, y, y_dash])
+
         x1 = np.array([matrix.dot(x.T) for x in x0.T])
 
         bins = 60

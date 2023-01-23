@@ -187,16 +187,21 @@ class ParasolUI(object):
         self.tracking_dropdown = QtWidgets.QComboBox(parent)
         self.tracking_dropdown.addItem("Single particle")
         self.tracking_dropdown.addItem("Beam")
+        self.tracking_dropdown.addItem("Ring")
         ustart_hbox.addWidget(self.tracking_dropdown)
         self.ustart_label = make_label(ustart_hbox, parent, "Initial particle position", True)
-        _, self.x_spin = labelled_spinner(ustart_hbox, parent, "&x", "mm",
-                                          "Initial horizontal position of the particle", 1, 200, -200)
+        self.x_label, self.x_spin = labelled_spinner(ustart_hbox, parent, "&x", "mm",
+                                                     "Initial horizontal position of the particle", 1, 200, -200)
         _, self.xdash_spin = labelled_spinner(ustart_hbox, parent, "x'", "mrad",
                                               "Initial horizontal angle of the particle", 0, 200, -200)
-        _, self.y_spin = labelled_spinner(ustart_hbox, parent, "&y", "mm",
-                                          "Initial vertical position of the particle", 1, 200, -200)
+        self.y_label, self.y_spin = labelled_spinner(ustart_hbox, parent, "&y", "mm",
+                                                     "Initial vertical position of the particle", 1, 200, -200)
         _, self.ydash_spin = labelled_spinner(ustart_hbox, parent, "y'", "mrad",
                                               "Initial vertical angle of the particle", 0, 200, -200)
+        self.thickness_label, self.thickness_spin = labelled_spinner(ustart_hbox, parent, "thickness", "mm",
+                                                                     "Thickness of a ring-shaped beam", 0.1, 10)
+        self.thickness_label.setVisible(False)
+        self.thickness_spin.setVisible(False)
         main_vbox.addLayout(ustart_hbox)
 
         self.xy_plot_hbox = QtWidgets.QHBoxLayout()
