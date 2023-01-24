@@ -148,7 +148,8 @@ class RFSolTracker(object):
         elif name == 'Linac1':
             linac1_folder = astra_folder + r'\Injector\fieldmaps' + '\\'
             # Some of this (Mathematica-exported) data is in fraction form (e.g. 2/25), so we need to convert it
-            fetch_dat = lambda name: np.loadtxt(f'{linac1_folder}L1{name}cell.dat', converters={0: Fraction})
+            fetch_dat = lambda name: np.loadtxt(f'{linac1_folder}L1{name}cell.dat',
+                                                encoding='utf-8', converters={0: Fraction})
             entrance_data = fetch_dat('entrance')
             single_cell_data = fetch_dat('single')
             exit_data = fetch_dat('exit')
