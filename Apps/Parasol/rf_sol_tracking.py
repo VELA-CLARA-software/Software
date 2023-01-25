@@ -34,6 +34,10 @@ c = scipy.constants.speed_of_light
 e = -scipy.constants.elementary_charge
 epsilon_e = m * c ** 2 / e
 
+# figure out where the script is (or EXE file if we've been bundled)
+bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
+data_dir = os.path.join(bundle_dir, 'resources', 'parasol')
+
 
 def millis():
     # http://stackoverflow.com/questions/38319606/how-to-get-millisecond-and-microsecond-resolution-timestamps-in-python
@@ -122,10 +126,9 @@ class RFSolTracker(object):
 
         # Set up the simulation
         self.solenoid = sol_field_map.Solenoid(name, quiet=self.quiet)
-        astra_folder = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA'
+        # from \\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA
         if name[:3] == 'Gun':
-            cav_fieldmap_file = astra_folder + (r'\Archive from Delta + CDR\bas_gun.txt' if name == 'Gun-10'
-                                                else r'\Injector\fieldmaps\HRRG_1D_RF.dat')
+            cav_fieldmap_file = os.path.join(data_dir, 'bas_gun.txt' if name == 'Gun-10' else 'HRRG_1D_RF.dat')
 
             # Read in RF field map and normalise so peak = 1
             cav_fieldmap = np.loadtxt(cav_fieldmap_file, delimiter='\t')
@@ -146,14 +149,15 @@ class RFSolTracker(object):
             self.z_end = 0.981  # location of screen # max(cav_fieldmap[-1, 1], self.solenoid.getZMap()[-1])
 
         elif name == 'Linac1':
-            linac1_folder = astra_folder + r'\Injector\fieldmaps' + '\\'
-            # Some of this (Mathematica-exported) data is in fraction form (e.g. 2/25), so we need to convert it
-            fetch_dat = lambda name: np.loadtxt(f'{linac1_folder}L1{name}cell.dat',
-                                                encoding='utf-8', converters={0: Fraction})
+
+            def fetch_dat(part):
+                # Some of this (Mathematica-exported) data is in fraction form (e.g. 2/25), so we need to convert it
+                return np.loadtxt(os.path.join(data_dir, f'L1{part}cell.dat'), encoding='utf-8', converters={0: Fraction})
+
             entrance_data = fetch_dat('entrance')
             single_cell_data = fetch_dat('single')
             exit_data = fetch_dat('exit')
-            grad_phase_data = np.loadtxt(f'{linac1_folder}RI_linac_grad_phase_error.txt')
+            grad_phase_data = np.loadtxt(os.path.join(data_dir, 'RI_linac_grad_phase_error.txt'))
             # convert from percentage of first to fraction of max
             rel_grads = grad_phase_data[:, 0] / np.max(grad_phase_data[:, 0])
             self.phase_offset = np.cumsum(np.radians(-grad_phase_data[:, 1]))
@@ -172,7 +176,7 @@ class RFSolTracker(object):
             sgl_interp = interpolate(single_cell_data)
             exit_interp = interpolate(exit_data)
 
-            cell_length = 0.033327  # from document: file:///\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168%20CLARA\CLARA-ASTeC%20Folder\Accelerator%20Physics\ASTRA\Injector\CLARA%20v10%20Injector%20Simulations%20v0.3.docx
+            cell_length = 0.033327  # from document: \\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA\Injector\CLARA v10 Injector Simulations v0.3.docx
             self.dz = 0.001
             z_length = n_cells * cell_length + data_z_length  # include a bit extra at the ends
             # self.z_start = -z_length / 2
@@ -205,10 +209,7 @@ class RFSolTracker(object):
                 self.z_end = 0.3
                 self.phase = 295  # to get optimal acceleration
 
-            # figure out where the script is (or EXE file if we've been bundled)
-            bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
-            z_list, E_list = np.loadtxt(f'{bundle_dir}/resources/parasol/gb-field-maps/{name}_e-field.csv',
-                                        delimiter=',').T
+            z_list, E_list = np.loadtxt(os.path.join(data_dir, 'gb-field-maps', f'{name}_e-field.csv'), delimiter=',').T
             self.rf_peak_field = float(np.max(E_list))
             # Normalise
             E_list /= self.rf_peak_field
@@ -565,8 +566,10 @@ class RFSolTracker(object):
     def set_larmor_angle(self, angle):
         """Set the Larmor angle to a given value (in degrees) by changing the
         solenoid current, and return the value of this current."""
+
         def delta_thl_sq(sol_current):
             return (self.sol_current_to_larmor_angle(sol_current) - angle) ** 2
+
         return self.optimise_param(delta_thl_sq, 'Set Larmor angle', 'solenoid.sol_current', 'A', angle, 'degrees')
 
 

@@ -20,6 +20,7 @@ field_map_attr.__new__.__defaults__ = (1, 1, 1, 1)
 
 # figure out where the script is (or EXE file if we've been bundled)
 bundle_dir = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__))
+data_dir = os.path.join(bundle_dir, 'resources', 'parasol')
 
 
 def interpolate(x, y):
@@ -55,7 +56,7 @@ class Solenoid:
             # and n <= 3
             # See BJAS' spreadsheet: coeffs-vs-z.xlsx
             # This takes care of interaction between the BC and solenoid
-            field_map_coeffs = np.loadtxt(f'{bundle_dir}/resources/parasol/{name}-coeffs-vs-z.csv', delimiter=',')
+            field_map_coeffs = np.loadtxt(os.path.join(data_dir, f'{name}-coeffs-vs-z.csv'), delimiter=',')
             self.b_field = field_map_attr(coeffs=field_map_coeffs, z_map=np.arange(0, 401, dtype='float64') * 1e-3,
                                           bc_area=bc_area, bc_turns=bc_turns, sol_area=sol_area, sol_turns=144.0)
             self.z_map = self.b_field.z_map
@@ -68,20 +69,20 @@ class Solenoid:
             # z_list, B_list = np.loadtxt(path + 'SwissFEL_linac_sols.dat').T
 
             # Measured solenoid field
-            path = r'\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\mag - magnets (WP2)\SwissFEL Linac Solenoids' + '\\'
-            x, y, z, Bz = np.loadtxt(f'{path}wfs08_YZ.lis', skiprows=17, unpack=True)
+            # \\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\mag - magnets (WP2)\SwissFEL Linac Solenoids
+            x, y, z, Bz = np.loadtxt(os.path.join(data_dir, 'wfs08_YZ.lis'), skiprows=17, unpack=True)
             self.bc_current = 199.93  # defined in file
             on_axis = y == 0
             z_list_08 = z[on_axis] / 100  # convert cm -> m
             B_list_08 = Bz[on_axis] * 1e-4 / self.bc_current  # convert G -> T and normalise to current
 
-            x, y, z, Bz = np.loadtxt(f'{path}wfs09_YZ.lis', skiprows=17, unpack=True)
+            x, y, z, Bz = np.loadtxt(os.path.join(data_dir, 'wfs09_YZ.lis'), skiprows=17, unpack=True)
             self.sol_current = 199.93  # defined in file
             on_axis = y == 0
             z_list_09 = z[on_axis] / 100  # convert cm -> m
             B_list_09 = Bz[on_axis] * 1e-4 / self.sol_current  # convert G -> T and normalise to current
 
-            # From document: file:///\\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168%20CLARA\CLARA-ASTeC%20Folder\Accelerator%20Physics\ASTRA\Injector\CLARA%20v10%20Injector%20Simulations%20v0.3.docx
+            # From document: \\fed.cclrc.ac.uk\Org\NLab\ASTeC-TDL\Projects\tdl-1168 CLARA\CLARA-ASTeC Folder\Accelerator Physics\ASTRA\Injector\CLARA v10 Injector Simulations v0.3.docx
             cell_length = 0.033327
             n_cells = 61
             n_sols = 2
@@ -116,7 +117,7 @@ class Solenoid:
             self.sol_current = 300.0  # just a made-up number
 
             # Define this in a simpler way - then we can just multiply by sol_current to get B-field value
-            filename = f'{bundle_dir}/resources/parasol/gb-field-maps/{name}_b-field.csv'
+            filename = os.path.join(data_dir, 'gb-field-maps', f'{name}_b-field.csv')
             z_list, B_list = np.loadtxt(filename, delimiter=',').T
             self.b_field = np.array([z_list, B_list / self.sol_current])
             self.bc_range = None
