@@ -44,17 +44,11 @@ class Solenoid:
             raise NotImplementedError('Unknown solenoid "{name}". Valid names are {SOLENOID_LIST}.'.format(**locals()))
         self.name = name
         self.calc_done = False
-        if name[:3] == 'Gun':
-            # 2D models of Gun-10 and Gun-400 solenoids have slightly different sizes for their coils.
-            # This should be resolved at some point... TODO
-            if name == 'Gun-10':
-                bc_area, bc_turns, sol_area = (856.0, 720.0, 8281.0)
-                self.bc_range = (-6.0, 6.0)
-                self.bc_current = 5.0  # reasonable default value
-            else:
-                bc_area, bc_turns, sol_area = (2744.82, 54.0, 7225.0)
-                self.bc_range = (0.0, 400.0)
-                self.bc_current = 400.0  # reasonable default value
+        if name.startswith('Gun'):
+            # Use the same field map for Gun-10 and Gun-400 solenoids, since they are now identical
+            bc_area, bc_turns, sol_area = (2744.82, 54.0, 7225.0)
+            self.bc_range = (0.0, 400.0)
+            self.bc_current = 400.0  # reasonable default value
             # magnetic field map built up from coefficients for x**n and y**n
             # where x = BC current density
             # and y = solenoid current density

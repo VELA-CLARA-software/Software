@@ -4,7 +4,6 @@
 import os
 import sys
 import numpy as np
-import pyqtgraph
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtWidgets
 from rf_sol_gui import ParasolUI
@@ -55,7 +54,10 @@ class ParasolApp(QtWidgets.QMainWindow):
         self.widget_update_timer = None
         self.machine_mode = 'Offline'
         # TODO: get initial parameters from INI file, and save them as we go
-        self.gun = RFSolTracker('Gun-10', quiet=True)
+        self.settings = QtCore.QSettings('STFC', 'Parasol')
+        gun_name = self.settings.value('gun name', 'Gun-10')
+        print(gun_name)
+        self.gun = RFSolTracker(gun_name, quiet=True)
         self.MainWindow = QtWidgets.QMainWindow()
         self.ui = ParasolUI(self.MainWindow)
         self.resized.connect(self.resize_window)
@@ -121,7 +123,7 @@ class ParasolApp(QtWidgets.QMainWindow):
         for plot in (self.ui.E_field_plot, self.ui.B_field_plot, self.ui.momentum_plot,
                      self.ui.larmor_angle_plot, self.ui.E_field_plot, self.ui.xy_plot, self.ui.xdash_ydash_plot):
             plot.showGrid(True, True)
-        self.xy_plots = [pyqtgraph.PlotCurveItem(clear=True, pen=pen, name=name)
+        self.xy_plots = [pg.PlotCurveItem(clear=True, pen=pen, name=name)
                          for name, pen in [('x', 'w'), ('y', 'g'), ("x'", 'w'), ("y'", 'g')]]
         self.ui.xy_plot.addItem(self.xy_plots[0])
         self.ui.xy_plot.addItem(self.xy_plots[1])
@@ -185,7 +187,10 @@ class ParasolApp(QtWidgets.QMainWindow):
 
     def gun_changed(self, index=None):
         """The model has been changed. Refresh the display."""
-        self.gun = RFSolTracker(self.ui.gun_dropdown.currentText(), quiet=True)
+        gun_name = self.ui.gun_dropdown.currentText()
+        self.gun = RFSolTracker(gun_name, quiet=True)
+        self.settings.setValue('gun name', gun_name)
+        print(self.settings.value('gun name', 'xxx'))
         is_linac = 'Linac' in self.gun.name
         self.ui.gun_label.setText('Linac' if is_linac else 'Gun')
         self.ui.bc_label.setText('Solenoid 1 current' if is_linac else 'Bucking coil current')

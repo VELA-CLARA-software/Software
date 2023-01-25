@@ -101,7 +101,8 @@ class ParasolUI(object):
         self.gun_dropdown = combo_box(gun_hbox, parent,
                                       ['Gun-10', 'Gun-400', 'Linac1', 'gb-rf-gun', 'gb-dc-gun'],
                                       '<p>Select the RF/solenoid model to use.</p><p>'
-                                      '<b>Gun-10</b>: VELA/CLARA 10 Hz gun<br><b>Linac1</b>: CLARA Linac 1<br>'
+                                      '<b>Gun-10</b>: VELA/CLARA 10 Hz gun<br>'
+                                      '<b>Gun-400</b>: VELA/CLARA 400 Hz gun<br><b>Linac1</b>: CLARA Linac 1<br>'
                                       '<b>gb-rf-gun</b>: Gulliford-Bazarov RF gun example<br>'
                                       '<b>gb-dc-gun</b>: Gulliford-Bazarov DC gun example</p>')
         self.machine_mode_dropdown = combo_box(gun_hbox, parent, ['Offline', 'Virtual', 'Physical'],
@@ -185,9 +186,7 @@ class ParasolUI(object):
 
         ustart_hbox = QtWidgets.QHBoxLayout()
         self.tracking_dropdown = QtWidgets.QComboBox(parent)
-        self.tracking_dropdown.addItem("Single particle")
-        self.tracking_dropdown.addItem("Beam")
-        self.tracking_dropdown.addItem("Ring")
+        self.tracking_dropdown.addItems(["Single particle", "Beam", "Ring"])
         ustart_hbox.addWidget(self.tracking_dropdown)
         self.ustart_label = make_label(ustart_hbox, parent, "Initial particle position", True)
         self.x_label, self.x_spin = labelled_spinner(ustart_hbox, parent, "&x", "mm",
