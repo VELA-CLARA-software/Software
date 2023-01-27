@@ -283,9 +283,9 @@ class RFSolTracker(object):
         # start conditions
         if not self.quiet:
             print(f'Calculating Larmor angle.\nPeak field: {self.rf_peak_field:.3f} MV/m\nPhase: {self.phase:.1f}°\n'
-                  'Solenoid current: {self.solenoid.sol_current:.3f} A\n'
-                  'Solenoid maximum field: {self.getPeakMagneticField():.3f} T\n'
-                  'Bucking coil current: {self.solenoid.bc_current:.3f} A')
+                  f'Solenoid current: {self.solenoid.sol_current:.3f} A\n'
+                  f'Solenoid maximum field: {self.get_peak_magnetic_field():.3f} T\n'
+                  f'Bucking coil current: {self.solenoid.bc_current:.3f} A')
         # calculation
         b_mid = self.b(self.z_array[:-1] + self.dz / 2)
         p_i = self.p_array[:-1]
@@ -584,9 +584,13 @@ if __name__ == '__main__':
     gun10.set_rf_phase(phase)
     momentum = gun10.get_final_momentum()
     print(f'Final momentum: {momentum:.3f} MeV/c')
-    B_field = 0.2
-    print(f'Peak solenoid field: {B_field:.3f} T')
-    gun10.solenoid.set_peak_magnetic_field(B_field)
+    B_field = 0.14
+    for _ in range(4):  # converge on an answer
+        gun10.solenoid.set_peak_magnetic_field(B_field)
+        gun10.set_cathode_field(0)
+    print(f'Cathode field: {gun10.get_magnetic_field(0):.3f} with BC current of {gun10.solenoid.bc_current:.3f} A')
+    print(f'Peak solenoid field: {gun10.solenoid.get_peak_magnetic_field():.3f} T')
+    print(f'Solenoid current: {gun10.solenoid.sol_current:.3f} A')
     larmor_angle = gun10.get_final_larmor_angle()
     print(f'Final Larmor angle: {larmor_angle:.3f}°')
     x_init = [1, 1, 4, 1]

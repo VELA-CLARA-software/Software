@@ -177,17 +177,16 @@ class Solenoid:
             self.calc_magnetic_field_map()
         return float(self.B_map[self.bmax_index])
 
-    def optimise_param(self, opt_func, operation, x_name, x_units, target=None, target_units=None, tol=1e-6):
+    def optimise_param(self, opt_func, operation, x_name, x_units, target=None, target_units=None):
         """General function for optimising a parameter by varying another."""
         # operation should be of form "Set peak field" etc.
         x_init = getattr(self, x_name)
         if not self.quiet:
-            target_text = '' if target is None else ', target {target:.3f} {target_units}'.format(**locals())
-            print(
-                '{operation}{target_text}, by varying {x_name} starting at {x_init:.3f} {x_units}.'.format(**locals()))
+            target_text = '' if target is None else f', target {target:.3f} {target_units}'
+            print(f'{operation}{target_text}, by varying {x_name} starting at {x_init:.3f} {x_units}.')
         xopt = scipy.optimize.fmin(opt_func, x_init, xtol=1e-3, disp=not self.quiet)
         if not self.quiet:
-            print('Optimised with {x_name} setting of {0:.3f} {x_units}'.format(float(xopt), **locals()))
+            print(f'Optimised with {x_name} setting of {float(xopt):.3f} {x_units}')
         return float(xopt)
 
     def bc_current_to_cathode_field(self, bci):
@@ -211,3 +210,13 @@ class Solenoid:
         def delta_b_sq(soli):
             return (self.sol_current_to_peak_field(soli) - field) ** 2
         return self.optimise_param(delta_b_sq, 'Set solenoid peak field', 'sol_current', 'A', field, 'T')
+
+    # TODO: this should work, but needs a reasonable starting point. Also mods to optimise_param to allow array input.
+    # def set_peak_and_cathode_field(self, peak_field, cathode_field=0.0):
+    #     """Set the peak magnetic field and the cathode field simultaneously,
+    #     and return the value of the solenoid and bucking coil currents."""
+    #     def delta_b_sq(x):
+    #         soli, bci = x
+    #         return (self.bc_current_to_cathode_field(bci) - cathode_field) ** 2 + \
+    #             (self.sol_current_to_peak_field(soli) - peak_field) ** 2
+    #     return self.optimise_param(delta_b_sq, 'Set peak and cathode fields', 'bc_current', 'A', [peak_field, cathode_field], 'T')
