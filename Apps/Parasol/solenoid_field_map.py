@@ -42,12 +42,11 @@ class Solenoid:
         """Initialise the class, setting parameters relevant to the named setup."""
         self.quiet = quiet
         if name not in SOLENOID_LIST:
-            raise NotImplementedError('Unknown solenoid "{name}". Valid names are {SOLENOID_LIST}.'.format(**locals()))
+            raise NotImplementedError(f'Unknown solenoid "{name}". Valid names are {SOLENOID_LIST}.')
         self.name = name
         self.calc_done = False
         if name.startswith('Gun'):
             # Use the same field map for Gun-10 and Gun-400 solenoids, since they are now identical
-            bc_area, bc_turns, sol_area = (2744.82, 54.0, 7225.0)
             self.bc_range = (0.0, 400.0)
             self.bc_current = 400.0  # reasonable default value
             # magnetic field map built up from coefficients for x**n and y**n
@@ -56,9 +55,9 @@ class Solenoid:
             # and n <= 3
             # See BJAS' spreadsheet: coeffs-vs-z.xlsx
             # This takes care of interaction between the BC and solenoid
-            field_map_coeffs = np.loadtxt(os.path.join(data_dir, f'{name}-coeffs-vs-z.csv'), delimiter=',')
+            field_map_coeffs = np.loadtxt(os.path.join(data_dir, 'Gun-400-coeffs-vs-z.csv'), delimiter=',')
             self.b_field = field_map_attr(coeffs=field_map_coeffs, z_map=np.arange(0, 401, dtype='float64') * 1e-3,
-                                          bc_area=bc_area, bc_turns=bc_turns, sol_area=sol_area, sol_turns=144.0)
+                                          bc_area=2744.82, bc_turns=54.0, sol_area=7225.0, sol_turns=144.0)
             self.z_map = self.b_field.z_map
             self.sol_current = 300.0  # reasonable default value
             self.sol_range = (0.0, 500.0)
