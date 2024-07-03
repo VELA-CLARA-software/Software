@@ -16,6 +16,7 @@ from CATAP.PILaserSystem import *
 PIL = PILaserSystem(STATE.VIRTUAL)
 PIL.setup()
 mirror = PIL.getMirror()
+em = PIL.getEnergyMeter()
 # if you camonitor VM-CLA-LAS-OPT-PICO-4C-PM-4:H:MREL while doing this you should see updates
 # current mirror functions
 # 'getVerticalPosition',  'getHorizontalPosition', 'moveDown', 'moveLeft', 'moveRight', 'moveUp', 'setHStep', 'setVStep'
@@ -83,5 +84,6 @@ for x in range(1,xsteps+1):
             ########################################################  
             cameraF.collectAndSave('VIRTUAL_CATHODE')
             q = mon.getValue() # should probab get a buffer of values and take mean stdev.
+            elas = em.getEnergy()
     mirror.moveRight()
 
